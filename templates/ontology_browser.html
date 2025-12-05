@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Ontology Browser</title>
+  <style>
+    :root {
+      --amt-blue: #005596;
+      --amt-blue-light: #0077c8;
+      --amt-dark: #1f2933;
+      --amt-light-bg: #f5f7fb;
+    }
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    }
+    body {
+      margin: 0;
+      background: var(--amt-light-bg);
+      color: var(--amt-dark);
+    }
+    header {
+      background: linear-gradient(90deg, var(--amt-blue) 0%, var(--amt-blue-light) 70%);
+      color: #fff;
+      padding: 14px 32px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.4rem;
+      letter-spacing: 0.03em;
+    }
+    header span.sub {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    header p {
+      margin: 8px 0 0 0;
+      font-size: 0.9rem;
+    }
+    header a {
+      color: #fffbcc;
+      text-decoration: underline;
+      font-weight: 600;
+    }
+    .page {
+      max-width: 1200px;
+      margin: 24px auto 32px;
+      padding: 0 16px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 16px 18px;
+      box-shadow: 0 2px 6px rgba(15,35,52,0.12);
+      border-top: 3px solid var(--amt-blue);
+    }
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+      color: var(--amt-blue);
+      padding-left: 4px;
+    }
+    .tree-container ul {
+      list-style-type: none;
+      padding-left: 1em;
+    }
+    .tree-node {
+      cursor: default;
+      margin: 2px 0;
+    }
+    .icon-box {
+      display: inline-block;
+      width: 1.2em;
+    }
+    .caret-icon-parent {
+      color: var(--amt-blue);
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .caret-icon-parent::before {
+      content: "►";
+      display: inline-block;
+      color: var(--amt-blue);
+    }
+    .label-parent {
+      color: var(--amt-blue);
+      font-weight: 600;
+    }
+    .caret-icon-leaf {
+      color: var(--amt-blue-light);
+    }
+    .caret-icon-leaf::before {
+      content: "■";
+      display: inline-block;
+      color: var(--amt-blue-light);
+      font-size: 0.55em;
+    }
+    .label-leaf {
+      color: var(--amt-blue-light);
+    }
+    .nested {
+      display: none;
+      margin-left: 1.2em;
+    }
+    .nested.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Ontology Browser<br>
+    <span class="sub">Explore the IMTS Product Category Ontology class hierarchy</span>
+  </h1>
+  <p>
+    Back to the query console:
+    <a href="{{ url_for('index') }}">Ontology Query Console</a>
+  </p>
+</header>
+
+<div class="page">
+  <div class="card">
+    <h2>Ontology Browser (Classes)</h2>
+    <div class="tree-container">
+      {% if class_tree %}
+        {% macro render_node(node) -%}
+          <li class="tree-node" title="{{ node.iri }}">
+            {% if node.children %}
+              <span class="icon-box">
+                <span class="caret-icon-parent"></span>
+              </span>
+              <span class="label-parent">{{ node.label }}</span>
+              <ul class="nested">
+                {% for ch in node.children %}
+                  {{ render_node(ch) }}
+                {% endfor %}
+              </ul>
+            {% else %}
+              <span class="icon-box">
+                <span class="caret-icon-leaf"></span>
+              </span>
+              <span class="label-leaf">{{ node.label }}</span>
+            {% endif %}
+          </li>
+        {%- endmacro %}
+        <ul class="tree-root">
+          {{ render_node(class_tree) }}
+        </ul>
+      {% else %}
+        <p>No classes found in ontology.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var togglers = document.getElementsByClassName("caret-icon-parent");
+    for (var i = 0; i < togglers.length; i++) {
+      togglers[i].addEventListener("click", function () {
+        var nested = this.parentElement.parentElement.querySelector(".nested");
+        if (nested) {
+          nested.classList.toggle("active");
+          this.classList.toggle("caret-down");
+        }
+      });
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>AMT Ontology Query Console</title>
+  <style>
+    :root {
+      --amt-blue: #005596;
+      --amt-blue-light: #0077c8;
+      --amt-dark: #1f2933;
+      --amt-light-bg: #f5f7fb;
+    }
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    }
+    body {
+      margin: 0;
+      background: var(--amt-light-bg);
+      color: var(--amt-dark);
+    }
+    header {
+      background: linear-gradient(90deg, var(--amt-blue) 0%, var(--amt-blue-light) 70%);
+      color: #fff;
+      padding: 14px 32px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.4rem;
+      letter-spacing: 0.03em;
+    }
+    header span.sub {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    header p {
+      margin: 8px 0 0 0;
+      font-size: 0.9rem;
+    }
+    header a {
+      color: #fffbcc;
+      text-decoration: underline;
+      font-weight: 600;
+    }
+    .page {
+      max-width: 1200px;
+      margin: 24px auto 32px;
+      padding: 0 16px;
+    }
+
+    .row {
+      display: block !important;
+      width: 100%;
+      margin-bottom: 16px;
+    }
+
+    .left-column {
+      display: block !important;
+      width: 100%;
+    }
+
+    .card {
+      display: block !important;
+      background: #fff;
+      border-radius: 8px;
+      padding: 16px 18px;
+      box-shadow: 0 2px 6px rgba(15,35,52,0.12);
+      border-top: 3px solid var(--amt-blue);
+      width: 100%;
+      margin-bottom: 16px;
+    }
+
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+      color: var(--amt-blue);
+      padding-left: 4px;
+    }
+    label {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #6b7280;
+      display: block;
+      margin-bottom: 4px;
+    }
+    textarea {
+      width: 100%;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      padding: 8px 10px;
+      font-family: "Fira Code", Consolas, monospace;
+      font-size: 0.9rem;
+      resize: vertical;
+      min-height: 140px;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: var(--amt-blue-light);
+      box-shadow: 0 0 0 2px rgba(0,119,200,0.15);
+    }
+    select {
+      width: 100%;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      padding: 6px 8px;
+      font-size: 0.9rem;
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 8px 18px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+    button[name="action"][value="run"],
+    button[name="action"][value="generate"] {
+      background: var(--amt-blue);
+      color: #fff;
+    }
+    button[name="action"][value="csv"] {
+      background: #fff;
+      color: var(--amt-blue);
+      border: 1px solid var(--amt-blue);
+    }
+    button:hover {
+      filter: brightness(1.05);
+    }
+    .error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+      border-radius: 6px;
+      padding: 8px 10px;
+      margin-top: 12px;
+      font-size: 0.85rem;
+    }
+    .info {
+      background: #e0f2fe;
+      color: #075985;
+      border: 1px solid #bae6fd;
+      border-radius: 6px;
+      padding: 8px 10px;
+      margin-top: 8px;
+      font-size: 0.85rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    th, td {
+      border: 1px solid #e5e7eb;
+      padding: 6px 8px;
+      text-align: left;
+    }
+    th {
+      background: #f3f4f6;
+      color: #111827;
+    }
+    tr:nth-child(even) td {
+      background: #f9fafb;
+    }
+    .results-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .results-header h3 {
+      margin: 0;
+      font-size: 1rem;
+      color: var(--amt-dark);
+    }
+    .badge {
+      background: rgba(0,85,150,0.08);
+      color: var(--amt-blue);
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Ontology Query Console<br>
+    <span class="sub">Category Generation and Custom Query Console for IMTS Product Category Ontology (SHACL-validated when available)</span>
+  </h1>
+  <p>
+    Check out the ontology model here:
+    <a href="{{ url_for('ontology') }}">Ontology Browser</a>
+  </p>
+</header>
+
+<div class="page">
+  <form method="POST">
+    <input type="hidden" name="result_source" value="{{ result_source or '' }}">
+    <div class="row">
+      <div class="left-column">
+        <div class="card">
+          <h2>Category Generator</h2>
+          <label for="category_kind">Select user type</label>
+          <select id="category_kind" name="category_kind">
+            <option value="exhibitor" {% if category_kind == 'exhibitor' %}selected{% endif %}>IMTS Exhibitor</option>
+            <option value="visitor" {% if category_kind == 'visitor' %}selected{% endif %}>IMTS Visitor</option>
+          </select>
+          <div class="actions">
+            <button type="submit" name="action" value="generate">Generate</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Custom SPARQL Query</h2>
+          <label for="sparql">Paste a SPARQL SELECT query</label>
+          <textarea id="sparql" name="sparql" rows="12">{{ sparql or '' }}</textarea>
+          <div class="actions">
+            <button type="submit" name="action" value="run">Run Query</button>
+          </div>
+          {% if shacl_msg %}
+          <div class="info">{{ shacl_msg }}</div>
+          {% endif %}
+          {% if error %}
+          <div class="error">{{ error }}</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    {% if headers %}
+    <div class="card">
+      <div class="results-header">
+        <h3>Results</h3>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span class="badge">{{ rows|length }} rows</span>
+          <button type="submit" name="action" value="csv">Download CSV</button>
+        </div>
+      </div>
+      <div style="overflow-x:auto; margin-bottom:10px; max-height:500px; overflow-y:auto;">
+        <table>
+          <tr>{% for h in headers %}<th>{{ h }}</th>{% endfor %}</tr>
+          {% for row in rows %}
+          <tr>{% for v in row %}<td>{{ v }}</td>{% endfor %}</tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+    {% endif %}
+  </form>
+</div>
+</body>
+</html>
