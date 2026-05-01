@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    <group id="Folder Repository, directory=, recursive=true, Auto-Update=true, version=2" prefer="public" xml:base="">
+        <uri id="Automatically generated entry, Timestamp=1777477274529" name="http://amt.org/ontology" uri="amt-ontology.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1777477274529" name="http://ontology.amt.org/product-categories" uri="product-categories-v1.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1777477274529" name="http://ontology.amt.org/users/imts-exhibitor" uri="user-bridge-imts-exhibitor.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1777477274529" name="http://ontology.amt.org/users/imts-visitor" uri="user-bridge-imts-visitor.owl"/>
+    </group>
+</catalog>

@@ -1,0 +1,1080 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:owl="http://www.w3.org/2002/07/owl#"
+         xml:base="http://ontology.amt.org/users/imts-visitor"
+         xmlns="http://ontology.amt.org/users/imts-visitor#">
+
+<owl:Ontology rdf:about="http://ontology.amt.org/users/imts-visitor">
+  <owl:imports rdf:resource="http://ontology.amt.org/product-categories"/>
+</owl:Ontology>
+
+<owl:Class rdf:about="#Additive">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Additive</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Binder_Jetting">
+  <rdfs:subClassOf rdf:resource="#Additive"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#BinderJetting"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Binder Jetting</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Directed_Energy_Deposition_(DED)">
+  <rdfs:subClassOf rdf:resource="#Additive"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#DirectedEnergyDepositionDED"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Directed Energy Deposition (DED)</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Hybrid___Additive_Manufacturing">
+  <rdfs:subClassOf rdf:resource="#Additive"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#HybridAdditiveManufacturing"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hybrid - Additive Manufacturing</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Material_Extrusion">
+  <rdfs:subClassOf rdf:resource="#Additive"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#MaterialExtrusion"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Material Extrusion</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Material_Jetting">
+  <rdfs:subClassOf rdf:resource="#Additive"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#MaterialJetting"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Material Jetting</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Mold___Enabled_Additive_Manufacturing">
+  <rdfs:subClassOf rdf:resource="#Additive"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#MoldEnabledAdditiveManufacturing"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Mold - Enabled Additive Manufacturing</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Powder_Bed_Fusion_(PBF)">
+  <rdfs:subClassOf rdf:resource="#Additive"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#PowderBedFusionPBF"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Powder Bed Fusion (PBF)</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Sheet_Lamination">
+  <rdfs:subClassOf rdf:resource="#Additive"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#SheetLamination"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Sheet Lamination</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Vat_Photopolymerization">
+  <rdfs:subClassOf rdf:resource="#Additive"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#VatPhotopolymerization"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Vat Photopolymerization</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Automated_Systems">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Automated Systems</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Automated_Systems_&amp;_Cells">
+  <rdfs:subClassOf rdf:resource="#Automated_Systems"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Automated Systems &amp; Cells</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Automated_System_&amp;_Cells_for_Assembly_&amp;_Test">
+  <rdfs:subClassOf rdf:resource="#Automated_Systems_&amp;_Cells"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#AutomatedSystemCellsForAssemblyTest"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Automated System &amp; Cells for Assembly &amp; Test</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Automated_System_&amp;_Cells_for_Material_Forming_&amp;_Fabricating">
+  <rdfs:subClassOf rdf:resource="#Automated_Systems_&amp;_Cells"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#AutomatedSystemCellsForMaterialFormingFabricating"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Automated System &amp; Cells for Material Forming &amp; Fabricating</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Automated_System_&amp;_Cells_for_Material_Joining">
+  <rdfs:subClassOf rdf:resource="#Automated_Systems_&amp;_Cells"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#AutomatedSystemCellsForMaterialJoining"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Automated System &amp; Cells for Material Joining</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Automated_System_&amp;_Cells_for_Material_Removal">
+  <rdfs:subClassOf rdf:resource="#Automated_Systems_&amp;_Cells"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#AutomatedSystemCellsForMaterialRemoval"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Automated System &amp; Cells for Material Removal</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Automation_and_Material_Handling">
+  <rdfs:subClassOf rdf:resource="#Automated_Systems"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Automation and Material Handling</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Automatic_Storage/Retrieval_Systems">
+  <rdfs:subClassOf rdf:resource="#Automation_and_Material_Handling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#AutomaticStorageRetrievalSystems"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Automatic Storage/Retrieval Systems</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Bar_Feed_Mechanisms">
+  <rdfs:subClassOf rdf:resource="#Automation_and_Material_Handling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#BarFeedMechanisms"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Bar Feed Mechanisms</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Conveyors_&amp;_Other_Part_Handling_Automation">
+  <rdfs:subClassOf rdf:resource="#Automation_and_Material_Handling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#ConveyorsOtherPartHandlingAutomation"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Conveyors &amp; Other Part Handling Automation</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Forming_Equipment_Loading_&amp;_Positioning">
+  <rdfs:subClassOf rdf:resource="#Automation_and_Material_Handling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#FormingEquipmentLoadingPositioning"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Forming Equipment-Loading &amp; Positioning</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Gantry_Loaders">
+  <rdfs:subClassOf rdf:resource="#Automation_and_Material_Handling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#GantryLoaders"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Gantry Loaders</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Industrial_Automatic_Data_Capturing_and_Identification_Systems">
+  <rdfs:subClassOf rdf:resource="#Automation_and_Material_Handling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#IndustrialAutomaticDataCapturingAndIdentificationSystems"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Industrial Automatic Data Capturing and Identification Systems</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Industrial_Building_Automation_Systems">
+  <rdfs:subClassOf rdf:resource="#Automation_and_Material_Handling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#IndustrialBuildingAutomationSystems"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Industrial Building Automation Systems</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Industrial_Image_Processing_Systems">
+  <rdfs:subClassOf rdf:resource="#Automation_and_Material_Handling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#IndustrialImageProcessingSystems"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Industrial Image Processing Systems</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Industrial_PCs">
+  <rdfs:subClassOf rdf:resource="#Automation_and_Material_Handling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#IndustrialPCs"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Industrial PCs</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Laser_Technology">
+  <rdfs:subClassOf rdf:resource="#Automation_and_Material_Handling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#LaserTechnology"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Laser Technology</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Measuring_and_Test_Systems">
+  <rdfs:subClassOf rdf:resource="#Automation_and_Material_Handling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#MeasuringAndTestSystems"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Measuring and Test Systems</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Mobile_Robots___(AGV_/_UGV_/_AMR_)">
+  <rdfs:subClassOf rdf:resource="#Automation_and_Material_Handling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#MobileRobotsAGVUGVAMR"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Mobile Robots - (AGV / UGV / AMR )</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Multi_Machine_Tool_Storage_Systems">
+  <rdfs:subClassOf rdf:resource="#Automation_and_Material_Handling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#MultiMachineToolStorageSystems"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Multi-Machine Tool-Storage Systems</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Pallet_Changers/Shuttles_and_Programmable_Transfer_Devices">
+  <rdfs:subClassOf rdf:resource="#Automation_and_Material_Handling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#PalletChangersShuttlesAndProgrammableTransferDevices"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Pallet Changers/Shuttles and Programmable Transfer Devices</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Robot_Tooling/Grippers">
+  <rdfs:subClassOf rdf:resource="#Automation_and_Material_Handling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#RobotToolingGrippers"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Robot Tooling/Grippers</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Safety_and_Security_Systems">
+  <rdfs:subClassOf rdf:resource="#Automation_and_Material_Handling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#SafetyAndSecuritySystems"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Safety and Security Systems</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Sensors_and_Actuators">
+  <rdfs:subClassOf rdf:resource="#Automation_and_Material_Handling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#SensorsAndActuators"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Sensors and Actuators</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Stationary_Robots___(Robot_Arm)">
+  <rdfs:subClassOf rdf:resource="#Automation_and_Material_Handling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#StationaryRobotsRobotArm"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Stationary Robots - (Robot Arm)</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Workpiece_Handling,_Loading_and_Feeding_Equipment">
+  <rdfs:subClassOf rdf:resource="#Automation_and_Material_Handling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#WorkpieceHandlingLoadingAndFeedingEquipment"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Workpiece Handling, Loading and Feeding Equipment</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#CAD_/_CAM">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">CAD / CAM</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Software,_Engineering_Analysis_and_Simulation">
+  <rdfs:subClassOf rdf:resource="#CAD_/_CAM"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#SoftwareEngineeringAnalysisAndSimulation"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Software, Engineering Analysis and Simulation</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Controls">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Controls</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Communication,_Networks_and_Field_Bus_Systems">
+  <rdfs:subClassOf rdf:resource="#Controls"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#CommunicationNetworksAndFieldBusSystems"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Communication, Networks and Field Bus Systems</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Computer_Numerical_Control_(CNC)_Units">
+  <rdfs:subClassOf rdf:resource="#Controls"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#ComputerNumericalControlCNCUnits"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Computer Numerical Control (CNC) Units</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Control_Systems,_PLC,_SCADA_Systems">
+  <rdfs:subClassOf rdf:resource="#Controls"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#ControlSystemsPLCSCADASystems"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Control Systems, PLC, SCADA Systems</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Digital_Readout_(DRO)_Units">
+  <rdfs:subClassOf rdf:resource="#Controls"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#DigitalReadoutDROUnits"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Digital Readout (DRO) Units</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Direct_or_Distributive_Numerical_Control_(DNC)_Systems">
+  <rdfs:subClassOf rdf:resource="#Controls"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#DirectOrDistributiveNumericalControlDNCSystems"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Direct or Distributive Numerical Control (DNC) Systems</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Embedded_Systems">
+  <rdfs:subClassOf rdf:resource="#Controls"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#EmbeddedSystems"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Embedded Systems</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Programmable_Logic_Controls_(PLC)">
+  <rdfs:subClassOf rdf:resource="#Controls"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#ProgrammableLogicControlsPLC"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Programmable Logic Controls (PLC)</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Robot_Controllers">
+  <rdfs:subClassOf rdf:resource="#Controls"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#RobotControllers"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Robot Controllers</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Finishing_and_Post_processing">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Finishing and Post-processing</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Buffing_and_Polishing_Machines">
+  <rdfs:subClassOf rdf:resource="#Finishing_and_Post_processing"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#BuffingAndPolishingMachines"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Buffing and Polishing Machines</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Deburring,_Etching,_Cleaning_&amp;_Peening">
+  <rdfs:subClassOf rdf:resource="#Finishing_and_Post_processing"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#DeburringEtchingCleaningPeening"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Deburring, Etching, Cleaning &amp; Peening</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Grinding_Machines,_Centerless">
+  <rdfs:subClassOf rdf:resource="#Finishing_and_Post_processing"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#GrindingMachinesCenterless"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Grinding Machines, Centerless</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Grinding_Machines,_Cylindrical_OD">
+  <rdfs:subClassOf rdf:resource="#Finishing_and_Post_processing"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#GrindingMachinesCylindricalOD"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Grinding Machines, Cylindrical OD</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Grinding_Machines,_Internal_Cylindrical">
+  <rdfs:subClassOf rdf:resource="#Finishing_and_Post_processing"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#GrindingMachinesInternalCylindrical"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Grinding Machines, Internal Cylindrical</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Grinding_Machines,_Surface">
+  <rdfs:subClassOf rdf:resource="#Finishing_and_Post_processing"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#GrindingMachinesSurface"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Grinding Machines, Surface</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Grinding_Machines,_Tool,_Cutter_and_Drill_Point">
+  <rdfs:subClassOf rdf:resource="#Finishing_and_Post_processing"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#GrindingMachinesToolCutterAndDrillPoint"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Grinding Machines, Tool, Cutter and Drill Point</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Honing_Machines">
+  <rdfs:subClassOf rdf:resource="#Finishing_and_Post_processing"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#HoningMachines"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Honing Machines</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Lapping_Machines">
+  <rdfs:subClassOf rdf:resource="#Finishing_and_Post_processing"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#LappingMachines"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Lapping Machines</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Gear_Manufacturing">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Gear Manufacturing</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Gear_Generation_(Bevel)_Machines">
+  <rdfs:subClassOf rdf:resource="#Gear_Manufacturing"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#GearGenerationBevelMachines"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Gear Generation (Bevel) Machines</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Gear_Hobbing_Machines">
+  <rdfs:subClassOf rdf:resource="#Gear_Manufacturing"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#GearHobbingMachines"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Gear Hobbing Machines</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Gear_Rolling_Machines">
+  <rdfs:subClassOf rdf:resource="#Gear_Manufacturing"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#GearRollingMachines"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Gear Rolling Machines</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Gear_Shaping_Machines">
+  <rdfs:subClassOf rdf:resource="#Gear_Manufacturing"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#GearShapingMachines"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Gear Shaping Machines</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Gear_Shaving_Machines">
+  <rdfs:subClassOf rdf:resource="#Gear_Manufacturing"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#GearShavingMachines"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Gear Shaving Machines</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Industrial_AI">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Industrial AI</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Autonomous_AI">
+  <rdfs:subClassOf rdf:resource="#Industrial_AI"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#AutonomousAI"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Autonomous AI</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Generative_AI">
+  <rdfs:subClassOf rdf:resource="#Industrial_AI"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#GenerativeAI"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Generative AI</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Predictive_AI">
+  <rdfs:subClassOf rdf:resource="#Industrial_AI"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#PredictiveAI"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Predictive AI</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Vision_AI">
+  <rdfs:subClassOf rdf:resource="#Industrial_AI"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#VisionAI"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Vision AI</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Joining_and_Forming">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Joining and Forming</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Forming">
+  <rdfs:subClassOf rdf:resource="#Joining_and_Forming"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Forming</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Coil_Handling">
+  <rdfs:subClassOf rdf:resource="#Forming"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#CoilHandling"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Coil Handling</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Press_Brakes">
+  <rdfs:subClassOf rdf:resource="#Forming"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#PressBrakes"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Press Brakes</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Presses,_Hydraulic">
+  <rdfs:subClassOf rdf:resource="#Forming"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#PressesHydraulic"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Presses, Hydraulic</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Presses,_Mechanical">
+  <rdfs:subClassOf rdf:resource="#Forming"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#PressesMechanical"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Presses, Mechanical</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Presses,_Punch">
+  <rdfs:subClassOf rdf:resource="#Forming"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#PressesPunch"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Presses, Punch</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Roll_Forming_and_Bending_Machines">
+  <rdfs:subClassOf rdf:resource="#Forming"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#RollFormingAndBendingMachines"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Roll Forming and Bending Machines</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Shearing">
+  <rdfs:subClassOf rdf:resource="#Forming"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#Shearing"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Shearing</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Wire_Forming_Machines">
+  <rdfs:subClassOf rdf:resource="#Forming"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#WireFormingMachines"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Wire Forming Machines</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Welding">
+  <rdfs:subClassOf rdf:resource="#Joining_and_Forming"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Welding</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Welding_Machines,_Electric">
+  <rdfs:subClassOf rdf:resource="#Welding"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#WeldingMachinesElectric"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Welding Machines, Electric</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Welding_Machines,_Friction">
+  <rdfs:subClassOf rdf:resource="#Welding"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#WeldingMachinesFriction"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Welding Machines, Friction</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Welding_Machines,_Gas">
+  <rdfs:subClassOf rdf:resource="#Welding"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#WeldingMachinesGas"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Welding Machines, Gas</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Welding_Machines,_Laser">
+  <rdfs:subClassOf rdf:resource="#Welding"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#WeldingMachinesLaser"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Welding Machines, Laser</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Welding_Machines,_Systems_or_Robotic">
+  <rdfs:subClassOf rdf:resource="#Welding"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#WeldingMachinesSystemsOrRobotic"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Welding Machines, Systems or Robotic</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Machine_Components_and_Accessories">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Machine Components and Accessories</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Ball/Lead_Screws_and_Repair_Services">
+  <rdfs:subClassOf rdf:resource="#Machine_Components_and_Accessories"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#BallLeadScrewsAndRepairServices"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Ball/Lead Screws and Repair Services</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Compressors">
+  <rdfs:subClassOf rdf:resource="#Machine_Components_and_Accessories"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#Compressors"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Compressors</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Electrical_Switchgear,_Enclosures_and_Components">
+  <rdfs:subClassOf rdf:resource="#Machine_Components_and_Accessories"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#ElectricalSwitchgearEnclosuresAndComponents"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Electrical Switchgear, Enclosures and Components</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Formed_Parts_(castings,_sintered,_etc.)">
+  <rdfs:subClassOf rdf:resource="#Machine_Components_and_Accessories"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#FormedPartsCastingsSinteredEtc"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Formed Parts (castings, sintered, etc.)</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Grinding_Attachments_and_Accessories">
+  <rdfs:subClassOf rdf:resource="#Machine_Components_and_Accessories"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#GrindingAttachmentsAndAccessories"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Grinding Attachments and Accessories</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Indexers_and_Rotary_Tables">
+  <rdfs:subClassOf rdf:resource="#Machine_Components_and_Accessories"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#IndexersAndRotaryTables"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Indexers and Rotary Tables</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Pumps,_Coolant">
+  <rdfs:subClassOf rdf:resource="#Machine_Components_and_Accessories"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#PumpsCoolant"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Pumps, Coolant</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Slides,_Ways,_and_Linear_Guides">
+  <rdfs:subClassOf rdf:resource="#Machine_Components_and_Accessories"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#SlidesWaysAndLinearGuides"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Slides, Ways, and Linear Guides</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Speed_Reducers_and_Gear_Boxes">
+  <rdfs:subClassOf rdf:resource="#Machine_Components_and_Accessories"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#SpeedReducersAndGearBoxes"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Speed Reducers and Gear Boxes</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Spindles">
+  <rdfs:subClassOf rdf:resource="#Machine_Components_and_Accessories"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#Spindles"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Spindles</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Materials">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Materials</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Ferrous_Materials">
+  <rdfs:subClassOf rdf:resource="#Materials"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#FerrousMaterials"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Ferrous Materials</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Intelligent_Materials,_Smart_Materials">
+  <rdfs:subClassOf rdf:resource="#Materials"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#IntelligentMaterialsSmartMaterials"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Intelligent Materials, Smart Materials</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Non_Ferrous_Materials">
+  <rdfs:subClassOf rdf:resource="#Materials"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#NonFerrousMaterials"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Non-Ferrous Materials</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Metrology">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Metrology</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Comparators,_Optical_and_Other">
+  <rdfs:subClassOf rdf:resource="#Metrology"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#ComparatorsOpticalAndOther"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Comparators, Optical and Other</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Coordinate_Measuring_Machines">
+  <rdfs:subClassOf rdf:resource="#Metrology"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#CoordinateMeasuringMachines"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Coordinate Measuring Machines</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Flatness_Measuring_Equipment">
+  <rdfs:subClassOf rdf:resource="#Metrology"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#FlatnessMeasuringEquipment"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Flatness Measuring Equipment</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Flaw_Detection_Equipment">
+  <rdfs:subClassOf rdf:resource="#Metrology"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#FlawDetectionEquipment"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Flaw Detection Equipment</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Hardness_Testing_Equipment">
+  <rdfs:subClassOf rdf:resource="#Metrology"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#HardnessTestingEquipment"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hardness Testing Equipment</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Roundness_Measuring_Equipment">
+  <rdfs:subClassOf rdf:resource="#Metrology"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#RoundnessMeasuringEquipment"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Roundness Measuring Equipment</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Vision_Systems">
+  <rdfs:subClassOf rdf:resource="#Metrology"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#VisionSystems"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Vision Systems</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Plant_Operations_and_Maintenance_Equipment">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Plant Operations and Maintenance Equipment</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Cleaning_and_Degreasing_Equipment">
+  <rdfs:subClassOf rdf:resource="#Plant_Operations_and_Maintenance_Equipment"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#CleaningAndDegreasingEquipment"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Cleaning and Degreasing Equipment</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Coolants,_Cutting_Fluids_and_Oils">
+  <rdfs:subClassOf rdf:resource="#Plant_Operations_and_Maintenance_Equipment"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#CoolantsCuttingFluidsAndOils"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Coolants, Cutting Fluids and Oils</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Dust_Collectors,_Air_Filtration_and_Treatment_Equipment">
+  <rdfs:subClassOf rdf:resource="#Plant_Operations_and_Maintenance_Equipment"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#DustCollectorsAirFiltrationAndTreatmentEquipment"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Dust Collectors, Air Filtration and Treatment Equipment</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Plant_Maintenance_and_Repair_Equipment">
+  <rdfs:subClassOf rdf:resource="#Plant_Operations_and_Maintenance_Equipment"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#PlantMaintenanceAndRepairEquipment"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Plant Maintenance and Repair Equipment</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Safety_Related_Products">
+  <rdfs:subClassOf rdf:resource="#Plant_Operations_and_Maintenance_Equipment"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#SafetyRelatedProducts"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Safety Related Products</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Vacuum_Pumps">
+  <rdfs:subClassOf rdf:resource="#Plant_Operations_and_Maintenance_Equipment"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#VacuumPumps"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Vacuum Pumps</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Services">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Services</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Automation_Services">
+  <rdfs:subClassOf rdf:resource="#Services"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#AutomationServices"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Automation Services</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Contract_Manufacturing_and_Machining_Services">
+  <rdfs:subClassOf rdf:resource="#Services"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#ContractManufacturingAndMachiningServices"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Contract Manufacturing and Machining Services</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Insurance/Financial/HR_Services">
+  <rdfs:subClassOf rdf:resource="#Services"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#InsuranceFinancialHRServices"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Insurance/Financial/HR Services</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Prototyping_or_Design_Services">
+  <rdfs:subClassOf rdf:resource="#Services"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#PrototypingOrDesignServices"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Prototyping or Design Services</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Software_and_Digital_Solutions">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Software and Digital Solutions</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Software,_Administrative">
+  <rdfs:subClassOf rdf:resource="#Software_and_Digital_Solutions"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#SoftwareAdministrative"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Software, Administrative</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Software,_Industrial_IT_&amp;_Others">
+  <rdfs:subClassOf rdf:resource="#Software_and_Digital_Solutions"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#SoftwareIndustrialITOthers"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Software, Industrial IT &amp; Others</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Software,_Production_Floor">
+  <rdfs:subClassOf rdf:resource="#Software_and_Digital_Solutions"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#SoftwareProductionFloor"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Software, Production Floor</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Subtractive">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Subtractive</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#EDM,_ECM,_Laser,_Plasma_and_Water_Jet_Cutting">
+  <rdfs:subClassOf rdf:resource="#Subtractive"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">EDM, ECM, Laser, Plasma and Water Jet Cutting</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#EDM,_Ram_Type">
+  <rdfs:subClassOf rdf:resource="#EDM,_ECM,_Laser,_Plasma_and_Water_Jet_Cutting"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#EDMRamType"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">EDM, Ram Type</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#EDM,_Small_Hole">
+  <rdfs:subClassOf rdf:resource="#EDM,_ECM,_Laser,_Plasma_and_Water_Jet_Cutting"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#EDMSmallHole"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">EDM, Small Hole</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#EDM,_Wire_Type">
+  <rdfs:subClassOf rdf:resource="#EDM,_ECM,_Laser,_Plasma_and_Water_Jet_Cutting"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#EDMWireType"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">EDM, Wire Type</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Electro_Chemical_Machines_(ECM)">
+  <rdfs:subClassOf rdf:resource="#EDM,_ECM,_Laser,_Plasma_and_Water_Jet_Cutting"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#ElectroChemicalMachinesECM"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Electro-Chemical Machines (ECM)</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Laser_Cutting_Systems">
+  <rdfs:subClassOf rdf:resource="#EDM,_ECM,_Laser,_Plasma_and_Water_Jet_Cutting"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#LaserCuttingSystems"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Laser Cutting Systems</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Laser_Marking_Systems">
+  <rdfs:subClassOf rdf:resource="#EDM,_ECM,_Laser,_Plasma_and_Water_Jet_Cutting"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#LaserMarkingSystems"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Laser Marking Systems</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Water_Jet_Cutting_Machines">
+  <rdfs:subClassOf rdf:resource="#EDM,_ECM,_Laser,_Plasma_and_Water_Jet_Cutting"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#WaterJetCuttingMachines"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Water Jet Cutting Machines</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Milling,_Boring,_Drilling_and_Tapping">
+  <rdfs:subClassOf rdf:resource="#Subtractive"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Milling, Boring, Drilling and Tapping</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Boring_Machines">
+  <rdfs:subClassOf rdf:resource="#Milling,_Boring,_Drilling_and_Tapping"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#BoringMachines"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Boring Machines</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Boring_Machines,_Jig">
+  <rdfs:subClassOf rdf:resource="#Milling,_Boring,_Drilling_and_Tapping"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#BoringMachinesJig"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Boring Machines, Jig</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Drilling_and_Tapping_Machines,_CNC">
+  <rdfs:subClassOf rdf:resource="#Milling,_Boring,_Drilling_and_Tapping"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#DrillingAndTappingMachinesCNC"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Drilling and Tapping Machines, CNC</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Machining_Centers,_Horizontal">
+  <rdfs:subClassOf rdf:resource="#Milling,_Boring,_Drilling_and_Tapping"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#MachiningCentersHorizontal"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Machining Centers, Horizontal</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Machining_Centers,_Universal">
+  <rdfs:subClassOf rdf:resource="#Milling,_Boring,_Drilling_and_Tapping"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#MachiningCentersUniversal"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Machining Centers, Universal</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Machining_Centers,_Vertical_Bridge_&amp;_Gantry">
+  <rdfs:subClassOf rdf:resource="#Milling,_Boring,_Drilling_and_Tapping"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#MachiningCentersVerticalBridgeGantry"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Machining Centers, Vertical Bridge &amp; Gantry</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Machining_Centers,_Vertical_Column">
+  <rdfs:subClassOf rdf:resource="#Milling,_Boring,_Drilling_and_Tapping"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#MachiningCentersVerticalColumn"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Machining Centers, Vertical Column</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Milling_Machines,_Profile_and_Duplicating">
+  <rdfs:subClassOf rdf:resource="#Milling,_Boring,_Drilling_and_Tapping"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#MillingMachinesProfileAndDuplicating"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Milling Machines, Profile and Duplicating</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Sawing">
+  <rdfs:subClassOf rdf:resource="#Subtractive"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Sawing</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Abrasive_Cut_Off_Machines">
+  <rdfs:subClassOf rdf:resource="#Sawing"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#AbrasiveCutOffMachines"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Abrasive Cut-Off Machines</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Bandsaws">
+  <rdfs:subClassOf rdf:resource="#Sawing"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#Bandsaws"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Bandsaws</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Bandsaws,_Vertical_Tilt_Frame">
+  <rdfs:subClassOf rdf:resource="#Sawing"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#BandsawsVerticalTiltFrame"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Bandsaws, Vertical Tilt Frame</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Sawing_Machines,_Circular_Cut_Off_Saws_(Cold)">
+  <rdfs:subClassOf rdf:resource="#Sawing"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#SawingMachinesCircularCutOffSawsCold"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Sawing Machines, Circular Cut-Off Saws (Cold)</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Sawing_Machines,_Other">
+  <rdfs:subClassOf rdf:resource="#Sawing"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#SawingMachinesOther"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Sawing Machines, Other</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Turning,_Screw_Machining_and_Thread_Manufacturing">
+  <rdfs:subClassOf rdf:resource="#Subtractive"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Turning, Screw Machining and Thread Manufacturing</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Lathes,_Cut_Off">
+  <rdfs:subClassOf rdf:resource="#Turning,_Screw_Machining_and_Thread_Manufacturing"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#LathesCutOff"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Lathes, Cut-Off</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Lathes,_Horizontal,_CNC">
+  <rdfs:subClassOf rdf:resource="#Turning,_Screw_Machining_and_Thread_Manufacturing"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#LathesHorizontalCNC"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Lathes, Horizontal, CNC</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Lathes,_Horizontal,_CNC_Multi_Spindle">
+  <rdfs:subClassOf rdf:resource="#Turning,_Screw_Machining_and_Thread_Manufacturing"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#LathesHorizontalCNCMultiSpindle"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Lathes, Horizontal, CNC-Multi-Spindle</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Lathes,_Horizontal,_CNC_Swiss_Style_Lathes">
+  <rdfs:subClassOf rdf:resource="#Turning,_Screw_Machining_and_Thread_Manufacturing"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#LathesHorizontalCNCSwissStyleLathes"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Lathes, Horizontal, CNC-Swiss Style Lathes</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Lathes,_Horizontal,_CNC_Twin_Spindle_Machines">
+  <rdfs:subClassOf rdf:resource="#Turning,_Screw_Machining_and_Thread_Manufacturing"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#LathesHorizontalCNCTwinSpindleMachines"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Lathes, Horizontal, CNC-Twin Spindle Machines</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Lathes,_Manual">
+  <rdfs:subClassOf rdf:resource="#Turning,_Screw_Machining_and_Thread_Manufacturing"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#LathesManual"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Lathes, Manual</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Lathes,_Vertical,_CNC">
+  <rdfs:subClassOf rdf:resource="#Turning,_Screw_Machining_and_Thread_Manufacturing"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#LathesVerticalCNC"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Lathes, Vertical, CNC</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Turning_Centers,_Horizontal,_CNC">
+  <rdfs:subClassOf rdf:resource="#Turning,_Screw_Machining_and_Thread_Manufacturing"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#TurningCentersHorizontalCNC"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Turning Centers, Horizontal, CNC</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Turning_Centers,_Inverted_Vertical,_CNC">
+  <rdfs:subClassOf rdf:resource="#Turning,_Screw_Machining_and_Thread_Manufacturing"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#TurningCentersInvertedVerticalCNC"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Turning Centers, Inverted Vertical, CNC</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Turning_Centers,_Twin_Spindle/Twin_Turret">
+  <rdfs:subClassOf rdf:resource="#Turning,_Screw_Machining_and_Thread_Manufacturing"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#TurningCentersTwinSpindleTwinTurret"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Turning Centers, Twin-Spindle/Twin-Turret</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Turning_Centers,_Vertical,_CNC">
+  <rdfs:subClassOf rdf:resource="#Turning,_Screw_Machining_and_Thread_Manufacturing"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#TurningCentersVerticalCNC"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Turning Centers, Vertical, CNC</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Tooling_and_Workholding">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Tooling and Workholding</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Tooling">
+  <rdfs:subClassOf rdf:resource="#Tooling_and_Workholding"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Tooling</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Abrasive_Compounds_and_Slurries">
+  <rdfs:subClassOf rdf:resource="#Tooling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#AbrasiveCompoundsAndSlurries"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Abrasive Compounds and Slurries</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Arbors_(for_Cutters)">
+  <rdfs:subClassOf rdf:resource="#Tooling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#ArborsForCutters"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Arbors (for Cutters)</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Boring_Tools/Bars/Heads">
+  <rdfs:subClassOf rdf:resource="#Tooling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#BoringToolsBarsHeads"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Boring Tools/Bars/Heads</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Carbide_Tooling_&amp;_Coatings">
+  <rdfs:subClassOf rdf:resource="#Tooling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#CarbideToolingCoatings"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Carbide Tooling &amp; Coatings</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Collets,_Solid_and_Master">
+  <rdfs:subClassOf rdf:resource="#Tooling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#ColletsSolidAndMaster"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Collets, Solid and Master</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Diamond_Tooling,_Coating,_Abrasive,_Single_point">
+  <rdfs:subClassOf rdf:resource="#Tooling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#DiamondToolingCoatingAbrasiveSinglePoint"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Diamond Tooling, Coating, Abrasive, Single-point</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Drills">
+  <rdfs:subClassOf rdf:resource="#Tooling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#Drills"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Drills</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#End_Mills">
+  <rdfs:subClassOf rdf:resource="#Tooling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#EndMills"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">End Mills</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Facing_Tools/Heads">
+  <rdfs:subClassOf rdf:resource="#Tooling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#FacingToolsHeads"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Facing Tools/Heads</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Form_Tools">
+  <rdfs:subClassOf rdf:resource="#Tooling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#FormTools"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Form Tools</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Saw_Blades">
+  <rdfs:subClassOf rdf:resource="#Tooling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#SawBlades"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Saw Blades</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Tool_Holders_and_Adapters">
+  <rdfs:subClassOf rdf:resource="#Tooling"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#ToolHoldersAndAdapters"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Tool Holders and Adapters</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Workholding">
+  <rdfs:subClassOf rdf:resource="#Tooling_and_Workholding"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Workholding</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Actuators,_Hydraulic_and_Pneumatic">
+  <rdfs:subClassOf rdf:resource="#Workholding"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#ActuatorsHydraulicAndPneumatic"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Actuators, Hydraulic and Pneumatic</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Arbors,_Expandable_Workholding">
+  <rdfs:subClassOf rdf:resource="#Workholding"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#ArborsExpandableWorkholding"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Arbors, Expandable Workholding</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Chuck_Jaws_and_Collets">
+  <rdfs:subClassOf rdf:resource="#Workholding"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#ChuckJawsAndCollets"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Chuck Jaws and Collets</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Clamps_and_Fixturing_Devices">
+  <rdfs:subClassOf rdf:resource="#Workholding"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#ClampsAndFixturingDevices"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Clamps and Fixturing Devices</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Fixturing_Systems">
+  <rdfs:subClassOf rdf:resource="#Workholding"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#FixturingSystems"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Fixturing Systems</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Mandrels">
+  <rdfs:subClassOf rdf:resource="#Workholding"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#Mandrels"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Mandrels</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Vises_and_Vise_Jaws">
+  <rdfs:subClassOf rdf:resource="#Workholding"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#VisesAndViseJaws"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Vises and Vise Jaws</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Workholding,_Custom">
+  <rdfs:subClassOf rdf:resource="#Workholding"/>
+  <owl:equivalentClass rdf:resource="http://ontology.amt.org/product-categories#WorkholdingCustom"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Workholding, Custom</rdfs:label>
+</owl:Class>
+
+
+</rdf:RDF>

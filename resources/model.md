@@ -386,6 +386,12 @@
         * Software, Manufacturing Execution Systems (MES)
         * Energy Management Software, Systems & Services
         * Software, Production Floor        
+    - Artificial Intelligence
+        * Industrial Artificial Intelligence
+            * Autonomous AI
+            * Generative AI
+            * Predictive AI
+            * Vision AI
 - Process Auxiliary
     - Machine Accessory
         * EDM Filtration Equipment and Supplies
@@ -566,98 +572,3 @@
     * Tooling Materials, Other
     * Workpiece Materials and Stock of All Kinds
     * Intelligent Materials, Smart Materials
-- Capability
-    - Additive Capability
-    - Subtractive Capability
-        - Turning Capability
-        - Milling Capability
-        - Drilling Capability
-        - Tapping Capability
-        - Boring Capability
-        - Broaching Capability
-        - Shaping Capability
-        - Abrasive Machining Capability
-            - Buffing Capability
-            - Polishing Capability
-            - Deburring Capability
-            - Grinding Capability
-            - Honing Capability
-            - Lapping Capability
-        - Sawing Capability
-        - EDM Capability
-        - ECM Capability
-        - Laser Machining Capability
-        - Water Jet Cutting Capability
-        - Plasma Cutting Capability
-        - Screw Machining Capability
-        - Ultrasonic Machining Capability
-        - Gear Manufacturing Capability
-        - Thread Manufacturing Capability
-    - Joining Capability
-        - Welding Capability
-    - Forming Capability
-        - Shearing Capability
-        - Coil Handling Capability
-    - Material Handling Capability
-    - Inspection Capability
-- Manufacturing Process
-    - Additive
-    - Subtractive
-        - Turning
-        - Milling
-        - Drilling
-        - Tapping
-        - Boring
-        - Broaching
-        - Shaping
-        - Abrasive Machining
-            - Buffing
-            - Polishing
-            - Deburring
-            - Grinding
-            - Honing
-            - Lapping
-        - Sawing
-        - EDM
-        - ECM
-        - Laser Machining
-        - Water Jet Cutting
-        - Plasma Cutting
-        - Screw Machining
-        - Ultrasonic Machining
-        - Gear Manufacturing
-        - Thread Manufacturing
-    - Joining
-        - Welding
-    - Forming
-        - Shearing
-        - Coil Handling
-    - Material Handling
-    - Inspection
-- User
-    - IMTS Registration
-        - Software and Digital Solutions
-        - CAD / CAM
-        - Materials
-        - Tooling and Workholding > Tooling
-        - Tooling and Workholding > Workholding
-        - Additive
-        - Subtractive > Turning, Screw Machining and Thread Manufacturing
-        - Subtractive > Broaching and Shaping
-        - Subtractive > EDM, ECM, Laser, Plasma and Water Jet Cutting
-        - Subtractive > Milling, Boring, Drilling and Tapping
-        - Subtractive > Sawing
-        - Joining and Forming > Welding
-        - Joining and Forming > Forming
-        - Gear Manufacturing
-        - Metrology
-        - Finishing and Post-processing
-        - Automated Systems > Automated Systems & Cells
-        - Automated Systems > Automation and Material Handling
-        - Automated Systems > Transfer Machines
-        - Controls
-        - Machine Components and Accessories
-        - Plant Operations and Maintenance Equipment
-        - Services
-        - Special Purpose Equipment
-

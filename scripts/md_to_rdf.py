@@ -1,9 +1,10 @@
-import types
+import types, re
 from pathlib import Path
 from owlready2 import *
 
-ONTO_IRI = "http://amt.org/ontology"
-OUTPUT_FILE = "ontology/amt-ontology-draft1.owl"
+BASE_IRI = "http://ontology.amt.org/product-categories#"
+VERSION_IRI = "http://ontology.amt.org/product-categories/v1.0.0#" # To be manually set in the output file after generation
+OUTPUT_FILE = "ontology/product-categories-v1.owl"
 MD_FILE = "resources/model.md"
 
 # -----------------------------
@@ -11,6 +12,10 @@ MD_FILE = "resources/model.md"
 # -----------------------------
 
 def parse_markdown_tree(path: str):
+    if not Path(path).exists():
+        print(f"Error: {path} not found.")
+        return []
+    
     lines = Path(path).read_text(encoding="utf-8").splitlines()
     nodes = []
     
@@ -53,63 +58,19 @@ def parse_markdown_tree(path: str):
     return root  # [ [label, [children...]], ... ]
 
 # -----------------------------
-# Single ontology with User namespace prefixing
-# -----------------------------
-
-onto = get_ontology(ONTO_IRI)
-
-with onto:
-    # Base capability/specification properties
-    class hasCapability(ObjectProperty):
-        domain = [Thing]
-        range = [Thing]
-
-    class hasSpecification(ObjectProperty):
-        domain = [Thing]
-        range = [Thing]
-
-    # Mirror properties for bidirectionality
-    class hasUser(ObjectProperty):
-        domain = [Thing]
-        range = [Thing]
-
-    class uses(ObjectProperty):
-        domain = [Thing]
-        range = [Thing]
-        inverse_property = hasUser
-
-    # IMTS Registration sub-property hierarchy
-    class hasIMTSRegistrationUser(hasUser):
-        pass
-
-    class IMTSRegistrationUses(uses):
-        pass
-
-    class hasIMTSExhibitorRegistrationUser(hasIMTSRegistrationUser):
-        pass
-
-    class hasIMTSVisitorRegistrationUser(hasIMTSRegistrationUser):
-        pass
-
-    class IMTSExhibitorRegistrationUses(IMTSRegistrationUses):
-        pass
-
-    class IMTSVisitorRegistrationUses(IMTSRegistrationUses):
-        pass
-
-# -----------------------------
 # Helper functions
 # -----------------------------
 
+onto = get_ontology(BASE_IRI)
 class_cache = {}
 
 def make_safe_name(label: str) -> str:
-    import re
+    """Converts label to CamelCase for valid RDF URIs."""
     parts = re.split(r"[^0-9A-Za-z]+", label.strip())
     parts = [p for p in parts if p]
     
     if not parts:
-        parts = ["Anonymous"]
+        parts = ["AnonymousClass"]
         
     camel = "".join(p[0].upper() + p[1:] for p in parts)
     
@@ -118,54 +79,44 @@ def make_safe_name(label: str) -> str:
         
     return camel
 
-def get_or_create_class(raw_label: str, parent, use_user_ns: bool):
+def get_or_create_class(raw_label: str, parent):
     display_label = raw_label.strip()
-    key = (display_label, use_user_ns)
     
-    if key in class_cache:
-        return class_cache[key]
+    if display_label in class_cache:
+        return class_cache[display_label]
 
     safe_name = make_safe_name(display_label)
     
-    # Add User_ prefix for classes in user namespace
-    if use_user_ns:
-        safe_name = f"User_{safe_name}"
-    
     with onto:
         NewClass = types.new_class(safe_name, (parent,))
+        NewClass.label = [display_label]
         
-    NewClass.label = [display_label]
-    class_cache[key] = NewClass
+    class_cache[display_label] = NewClass
     return NewClass
 
-def process_md_tree(tree, parent, in_user_ns: bool):
+def process_md_tree(tree, parent):
     for raw_label, children in tree:
-        display_label = raw_label.strip()
+        cls = get_or_create_class(raw_label, parent)
         
-        # Switch to user namespace at "User" class and stay there
-        use_user_ns = in_user_ns or (display_label == "User")
-        
-        cls = get_or_create_class(raw_label, parent, use_user_ns)
-        
-        # Recurse with updated namespace state
         if children:
-            process_md_tree(children, cls, use_user_ns)
+            process_md_tree(children, cls)
+
 
 # -----------------------------
 # Build and save ontology
 # -----------------------------
 
-print("Parsing Markdown tree...")
-md_tree = parse_markdown_tree(MD_FILE)
+if __name__ == "__main__":
+    print(f"Parsing Markdown tree from {MD_FILE}...")
+    md_tree = parse_markdown_tree(MD_FILE)
 
-print("Processing class hierarchy...")
-process_md_tree(md_tree, Thing, in_user_ns=False)
+    print("Processing lass hierarchy...")
+    process_md_tree(md_tree, Thing)
 
-print(f"Saving ontology to {OUTPUT_FILE}...")
-onto.save(file=OUTPUT_FILE, format="rdfxml")
+    print(f"Saving ontology to {OUTPUT_FILE}...")
+    Path(OUTPUT_FILE).parent.mkdir(parents=True, exist_ok=True)
+    onto.save(file=OUTPUT_FILE, format="rdfxml")
 
-total_classes = len(list(onto.classes()))
-print(f"Ontology saved to {OUTPUT_FILE}")
-print("User classes have 'User_' prefix with proper hierarchy")
-print("Check Protégé Classes tab for correct tree structure")
-print(f"Total classes created: {total_classes}")
+    total_classes = len(list(onto.classes()))
+    print(f"Ontology saved to {OUTPUT_FILE}")
+    print(f"Total classes created: {total_classes}")

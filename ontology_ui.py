@@ -6,35 +6,15 @@ from owlready2 import (
     default_world,
     sync_reasoner,
     ThingClass,
-    Restriction,
+    owl
 )
-from pyshacl import validate
 import rdflib
+import argparse
 
 
-ONTO_PATH = "ontology/amt-ontology.owl"
-SHAPES_PATH = "shacl/amt-shapes.ttl"
-
-DEFAULT_SPARQL_NS = """
-PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX owl:  <http://www.w3.org/2002/07/owl#>
-PREFIX amt:  <http://amt.org/ontology#>
-"""
-
-DEFAULT_SPARQL = """
-SELECT DISTINCT ?Product_Category
-WHERE {
-  ?cls a owl:Class ;
-       rdfs:subClassOf ?r ;
-       rdfs:label ?Product_Category .
-
-  ?r a owl:Restriction ;
-     owl:onProperty amt:hasIMTSExhibitorRegistrationUser ;
-     owl:someValuesFrom amt:User_Controls .
-}
-ORDER BY ?Product_Category"""
-
+ONTO_PATH = "ontology/product-categories-v1.owl"
+BRIDGE_EXHIBITOR_PATH = "ontology/user-bridge-imts-exhibitor.owl"
+BRIDGE_VISITOR_PATH = "ontology/user-bridge-imts-visitor.owl"
 
 # -----------------------------
 # Load ontology and run reasoner ONCE
@@ -47,39 +27,23 @@ with onto:
         debug=0
     )
 
-INFERRED_GRAPH = default_world.as_rdflib_graph()
+# -----------------------------
+# Load bridge ontologies with rdflib (independent of owlready2)
+# -----------------------------
+def load_bridge_graph(path: str) -> rdflib.Graph:
+    """Load a bridge OWL ontology into an rdflib graph, returns empty graph if not found."""
+    g = rdflib.Graph()
+    if os.path.exists(path):
+        g.parse(path, format="xml")
+    return g
+
+
+BRIDGE_EXHIBITOR_GRAPH = load_bridge_graph(BRIDGE_EXHIBITOR_PATH)
+BRIDGE_VISITOR_GRAPH = load_bridge_graph(BRIDGE_VISITOR_PATH)
 
 # -----------------------------
-# Load SHACL shapes if present
+# Ontology helper utilities
 # -----------------------------
-shapes_graph = None
-if os.path.exists(SHAPES_PATH):
-    shapes_graph = rdflib.Graph()
-    shapes_graph.parse(SHAPES_PATH, format="turtle")
-
-
-def run_shacl():
-    if shapes_graph is None:
-        return None, "No SHACL shapes file found; skipping validation."
-
-    conforms, report_graph, report_text = validate(
-        data_graph=INFERRED_GRAPH,
-        shacl_graph=shapes_graph,
-        inference="rdfs",
-        debug=False,
-    )
-    msg = "SHACL validation passed." if conforms \
-          else "SHACL validation FAILED. Results may violate shapes."
-    return conforms, msg
-
-
-def run_sparql(sparql: str):
-    qres = INFERRED_GRAPH.query(sparql)
-    headers = [str(v) for v in qres.vars]
-    rows = [[str(row[v]) if row[v] is not None else "" for v in qres.vars]
-            for row in qres]
-    return headers, rows
-
 
 def rows_to_csv_bytes(headers, rows):
     text_io = StringIO()
@@ -92,101 +56,66 @@ def rows_to_csv_bytes(headers, rows):
     bio.seek(0)
     return bio
 
-
-# -----------------------------
-# Ontology helper utilities
-# -----------------------------
 def get_label(cls: ThingClass) -> str:
     return cls.label[0] if getattr(cls, "label", None) else cls.name
 
 
-def collect_user_subclasses():
-    """All subclasses under User (excluding User itself)."""
-    User = next(
-        (c for c in onto.classes()
-         if getattr(c, "label", None) and any(lbl == "User" for lbl in c.label)),
-        None,
-    )
-    if not User:
-        return []
-
-    collected = []
-
-    def recurse(c):
-        for sub in c.subclasses():
-            collected.append(sub)
-            recurse(sub)
-
-    recurse(User)
-    return collected
-
-
-USER_SUBCLASSES = collect_user_subclasses()
-
-
-def generate_category_rows(kind: str):
+def generate_category_rows(category_kind):
     """
-    kind: 'visitor' or 'exhibitor'
-    Returns (headers, rows) for the 3-column table:
-    Major Category, Sub Category, Product Category
+    Generates CSV rows for Owlready2 ontology objects.
+    Logic:
+    - Major: Parent is owl.Thing.
+    - Sub: Child of Major, has NO equivalent_to.
+    - Product: Child of Major or Sub, HAS equivalent_to.
     """
-    if kind == "visitor":
-        if not hasattr(onto, "hasIMTSVisitorRegistrationUser"):
-            raise RuntimeError("hasIMTSVisitorRegistrationUser not found in ontology")
-        prop = onto.hasIMTSVisitorRegistrationUser
-    elif kind == "exhibitor":
-        if not hasattr(onto, "hasIMTSExhibitorRegistrationUser"):
-            raise RuntimeError("hasIMTSExhibitorRegistrationUser not found in ontology")
-        prop = onto.hasIMTSExhibitorRegistrationUser
-    else:
-        raise ValueError("kind must be 'visitor' or 'exhibitor'")
-
-    # 1. Build mapping: User-subclass -> (Major, Sub)
-    cat_for_user = {}
-
-    for ucls in USER_SUBCLASSES:
-        name = get_label(ucls)
-        if " > " in name:
-            major, sub = name.split(" > ", 1)
-        else:
-            major, sub = name, ""
-        major = major.strip()
-        sub = sub.strip()
-        cat_for_user[ucls] = (major, sub)
-
-    # 2. For each ontology class, check subclass-of restriction on prop
-    rows = []
-    seen = set()
-
-    for cls in onto.classes():
-        product_label = get_label(cls)
-
-        for ax in cls.is_a:
-            if isinstance(ax, Restriction) and ax.property is prop:
-                filler = ax.value
-                if isinstance(filler, ThingClass) and filler in cat_for_user:
-                    major, sub = cat_for_user[filler]
-                    key = (major, sub, product_label)
-                    if key not in seen:
-                        seen.add(key)
-                        rows.append([major, sub, product_label])
-
     headers = ["Major Category", "Sub Category", "Product Category"]
-    rows.sort(key=lambda r: (r[0], r[1], r[2]))
+    rows = []
+
+    if category_kind == "visitor":
+        bridge_onto = get_ontology(BRIDGE_VISITOR_PATH).load()
+    elif category_kind == "exhibitor":
+        bridge_onto = get_ontology(BRIDGE_EXHIBITOR_PATH).load()
+    else:
+        return headers, rows
+    
+    major_categories = [c for c in bridge_onto.classes() if owl.Thing in c.is_a]
+
+    for major in major_categories:
+        major_label = major.label.first() or major.name
+        
+        for child in major.subclasses():
+            child_label = child.label.first() or child.name
+            
+            if child.equivalent_to:
+                rows.append([major_label, "", child_label])
+            else:
+                sub_label = child_label
+                
+                products = list(child.subclasses())
+                if not products:
+                    rows.append([major_label, sub_label, ""])
+                else:
+                    for prod in products:
+                        prod_label = prod.label.first() or prod.name
+                        # Verify it has an equivalent class[cite: 1]
+                        if prod.equivalent_to:
+                            rows.append([major_label, sub_label, prod_label])
+                        else:
+                            # If no equivalent class, it's just another sub-tier
+                            # per your rules, we can skip or list as a leaf
+                            rows.append([major_label, sub_label, prod_label])
+
     return headers, rows
 
 
 # -----------------------------
-# Ontology browser helpers
+# Core ontology browser helpers (owlready2-based)
 # -----------------------------
 def find_root_class():
-    # Use imported owl:Thing as the global root
     thing_iri = "http://www.w3.org/2002/07/owl#Thing"
     thing_cls = default_world[thing_iri]
     if isinstance(thing_cls, ThingClass):
         return thing_cls
-
-    # Fallback: any class in the ontology
     return next(iter(onto.classes()), None)
 
 
@@ -216,8 +145,8 @@ def flatten_tree_for_template(tree):
         converted_children = [conv(ch) for ch in children]
         converted_children.sort(
             key=lambda n: (
-                0 if n["children"] else 1,   # parents first
-                n["label"].lower(),          # then alphabetical
+                0 if n["children"] else 1,
+                n["label"].lower(),
             )
         )
         return {
@@ -230,45 +159,138 @@ def flatten_tree_for_template(tree):
 
 
 # -----------------------------
-# Flask app and template
+# Bridge ontology tree builder (rdflib-based)
+# -----------------------------
+
+RDF_NS = rdflib.namespace.RDF
+RDFS_NS = rdflib.namespace.RDFS
+OWL_NS = rdflib.namespace.OWL
+
+
+def _get_rdf_label(graph: rdflib.Graph, uri) -> str:
+    """Return rdfs:label of a URI node, or the local name as fallback."""
+    for label in graph.objects(uri, RDFS_NS.label):
+        return str(label)
+    local = str(uri).split("#")[-1].split("/")[-1]
+    return local.replace("_", " ")
+
+
+def _find_bridge_roots(graph: rdflib.Graph):
+    """
+    Find top-level classes in the bridge ontology:
+    classes whose only superclass is owl:Thing (or have no superclass in the bridge).
+    Excludes owl:Thing itself and blank nodes.
+    """
+    owl_thing = OWL_NS.Thing
+
+    all_classes = set()
+    for s in graph.subjects(RDF_NS.type, OWL_NS.Class):
+        if isinstance(s, rdflib.URIRef) and s != owl_thing:
+            all_classes.add(s)
+    # Also catch classes only referenced via subClassOf
+    for s, p, o in graph.triples((None, RDFS_NS.subClassOf, None)):
+        if isinstance(s, rdflib.URIRef) and s != owl_thing:
+            all_classes.add(s)
+
+    def is_root(cls):
+        for parent in graph.objects(cls, RDFS_NS.subClassOf):
+            if isinstance(parent, rdflib.URIRef) and parent != owl_thing:
+                return False
+        return True
+
+    return sorted([c for c in all_classes if is_root(c)],
+                  key=lambda c: _get_rdf_label(graph, c).lower())
+
+
+def _build_bridge_subtree(graph: rdflib.Graph, cls_uri, visited=None):
+    """Recursively build a node dict for one bridge ontology class."""
+    if visited is None:
+        visited = set()
+    if cls_uri in visited:
+        return None
+    visited.add(cls_uri)
+
+    label = _get_rdf_label(graph, cls_uri)
+    iri = str(cls_uri)
+
+    # Collect owl:equivalentClass links (to core ontology)
+    equiv_iris = []
+    for eq in graph.objects(cls_uri, OWL_NS.equivalentClass):
+        if isinstance(eq, rdflib.URIRef):
+            equiv_iris.append(str(eq))
+
+    # Find direct children in this graph
+    children_uris = sorted(
+        [s for s in graph.subjects(RDFS_NS.subClassOf, cls_uri)
+         if isinstance(s, rdflib.URIRef) and s != cls_uri],
+        key=lambda c: _get_rdf_label(graph, c).lower()
+    )
+
+    children = []
+    for child_uri in children_uris:
+        child_node = _build_bridge_subtree(graph, child_uri, visited)
+        if child_node is not None:
+            children.append(child_node)
+
+    # Parents before leaves, then alphabetical
+    children.sort(key=lambda n: (0 if n["children"] else 1, n["label"].lower()))
+
+    return {
+        "label": label,
+        "iri": iri,
+        "equiv_iris": equiv_iris,
+        "children": children,
+    }
+
+
+def build_bridge_tree(graph: rdflib.Graph):
+    """
+    Build a virtual root node whose children are the top-level bridge classes.
+    Returns a node dict compatible with the template renderer, or None if empty.
+    """
+    if len(graph) == 0:
+        return None
+
+    roots = _find_bridge_roots(graph)
+    children = []
+    visited = set()
+    for root_uri in roots:
+        node = _build_bridge_subtree(graph, root_uri, visited)
+        if node:
+            children.append(node)
+
+    return {
+        "label": "Bridge Ontology Root",
+        "iri": "",
+        "equiv_iris": [],
+        "children": children,
+    }
+
+
+# Pre-build bridge trees at startup
+BRIDGE_EXHIBITOR_TREE = build_bridge_tree(BRIDGE_EXHIBITOR_GRAPH)
+BRIDGE_VISITOR_TREE = build_bridge_tree(BRIDGE_VISITOR_GRAPH)
+
+
+# -----------------------------
+# Flask app
 # -----------------------------
 app = Flask(__name__)
 
-# -----------------------------
-# Flask route
-# -----------------------------
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     error = None
     headers = rows = None
 
-    if request.method == "POST":
-        sparql = request.form.get("sparql", DEFAULT_SPARQL)
-    else:
-        sparql = DEFAULT_SPARQL  
-
-    category_kind = request.form.get("category_kind", "exhibitor")
-    result_source = request.form.get("result_source", "")
-    shacl_msg = None
-
+    active_tab = request.args.get("tab") or request.form.get("result_source") or "core"
+    
     if request.method == "POST":
         action = request.form.get("action")
+        result_source = request.form.get("result_source", "")
         try:
-            _, shacl_msg = run_shacl()
-
-            if action == "run":
-                headers, rows = run_sparql(DEFAULT_SPARQL_NS + sparql)
-                result_source = "sparql"
-
-            elif action == "generate":
-                headers, rows = generate_category_rows(category_kind)
-                result_source = category_kind
-
-            elif action == "csv":
-                if result_source == "sparql":
-                    headers, rows = run_sparql(DEFAULT_SPARQL_NS + sparql)
-                    filename = "Custom Query results.csv"
-                elif result_source == "visitor":
+            if action == "csv":
+                if result_source == "visitor":
                     headers, rows = generate_category_rows("visitor")
                     filename = "IMTS Visitor Categories.csv"
                 elif result_source == "exhibitor":
@@ -276,7 +298,7 @@ def index():
                     filename = "IMTS Exhibitor Categories.csv"
                 else:
                     headers, rows = [], []
-                    filename = "results.csv"
+                    filename = "nan.csv"
 
                 sio = rows_to_csv_bytes(headers, rows)
                 return send_file(
@@ -289,32 +311,37 @@ def index():
         except Exception as e:
             error = str(e)
 
-    # Build ontology browser tree
-    tree = flatten_tree_for_template(build_class_tree(ROOT_CLASS))
+    core_tree = flatten_tree_for_template(build_class_tree(ROOT_CLASS))
+    active_tab = request.args.get("tab", "core")
 
-    return render_template(
-        "index.html",
-        sparql=sparql,
-        error=error,
-        headers=headers,
-        rows=rows,
-        shacl_msg=shacl_msg,
-        category_kind=category_kind,
-        result_source=result_source,
-        class_tree=tree,
-    )
-
-@app.route("/ontology", methods=["GET"])
-def ontology():
-    # Build ontology browser tree
-    tree = flatten_tree_for_template(build_class_tree(ROOT_CLASS))
-
-    # you can pass a minimal context here
     return render_template(
         "ontology_browser.html",
-        class_tree=tree,
+        class_tree=core_tree,
+        exhibitor_tree=BRIDGE_EXHIBITOR_TREE,
+        visitor_tree=BRIDGE_VISITOR_TREE,
+        active_tab=active_tab,
+        headers=headers,
+        rows=rows
     )
 
 
 if __name__ == "__main__":
-    app.run(host="192.168.0.186", port=5000, debug=True)
+    parser = argparse.ArgumentParser(description="Run the Flask app with custom host and port.")
+
+    parser.add_argument(
+        "--host",
+        type=str,
+        default="127.0.0.1",
+        help="Host address to bind to (default: 127.0.0.1)"
+    )
+
+    parser.add_argument(
+        "--port",
+        type=int,
+        default=5000,
+        help="Port to listen on (default: 5000)"
+    )
+
+    args = parser.parse_args()
+
+    app.run(host=args.host, port=args.port, debug=True)
