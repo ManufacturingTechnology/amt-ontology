@@ -3,16 +3,16 @@
 This repository contains the ontology model, source resources, and automation scripts for the AMT Ontology project. It specifically focuses on Product Category model and bridging IMTS (International Manufacturing Technology Show) exhibitor and visitor data with semantic web structures.
 
 ## Project Structure
-
-AMT-ONTOLOGY/
-├── dist/                   # Generated output data (CSV format)
-├── ontology/               # OWL ontology files; core and user-bridge ontologies
-├── resources/              # Source CSV data and markdown models
-├── scripts/                # Python utility scripts for data transformation
-├── templates/              # HTML templates for the ontology browser
-├── ontology_ui.py          # Main UI application for interacting with the ontology
-├── requirements.txt        # Python dependencies
-└── README.md               # Project documentation
+    
+    AMT-ONTOLOGY/
+    ├── dist/                   # Generated output data (CSV format)
+    ├── ontology/               # OWL ontology files; core and user-bridge ontologies
+    ├── resources/              # Source CSV data and markdown models
+    ├── scripts/                # Python utility scripts for data transformation
+    ├── templates/              # HTML templates for the ontology browser
+    ├── ontology_ui.py          # Main UI application for interacting with the ontology
+    ├── requirements.txt        # Python dependencies
+    └── README.md               # Project documentation
 
 
 ## Components
