@@ -78,9 +78,5 @@ Open UI in browser (assuming default ip and ports used)
 
     127.0.0.1/5000
 
-Go to relevant tab and download relevant CSV.
+Go to relevant tab and download CSV.
 
-
-## Create OWL from MD
-
-python .\scripts\md_to_rdf.py
