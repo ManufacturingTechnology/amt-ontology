@@ -1,92 +1,132 @@
-import pandas as pd
-from owlready2 import *
-import os
-import argparse
+"""
+rdf_to_csv.py
+=============
+Export a user bridge OWL ontology back into a three-column category CSV.
 
-def export_to_csv(user_onto, output_csv_path):
+The script reads a bridge ontology (produced by ``csv_to_rdf.py``) and
+reconstructs the Major Category → Sub Category → Product Category hierarchy
+by inspecting the class structure within the user namespace.
+
+Classification rules applied during export
+------------------------------------------
+- **Major Category**: classes in the user ontology namespace whose only
+  declared superclass is ``owl:Thing``.
+- **Sub Category**: immediate children of a Major class that themselves have
+  further subclasses.
+- **Product Category**: leaf classes (no subclasses), either directly under a
+  Major class or under a Sub class.
+
+Output CSV columns
+------------------
+    Major Category, Sub Category, Product Category
+
+Usage
+-----
+    python rdf_to_csv.py --ontology <bridge.owl> \\
+                         --core <core.owl> \\
+                         [--output <output.csv>]
+"""
+
+import argparse
+import os
+
+import pandas as pd
+from owlready2 import Thing, World, onto_path
+
+
+def export_to_csv(user_onto, output_csv_path: str) -> None:
+    """
+    Walk the user bridge ontology class hierarchy and write a three-column CSV.
+
+    Parameters
+    ----------
+    user_onto : owlready2.Ontology
+        Loaded bridge ontology whose classes belong to the user namespace.
+    output_csv_path : str
+        Destination path for the output CSV file.
+    """
     rows = []
-    
-    # 1. Identify "Major Categories" 
-    # These are classes in the user namespace whose only parent is 'Thing'
+
+    # Major categories: classes in the user namespace whose only superclass is Thing
     major_categories = [
-        c for c in user_onto.classes() 
+        c
+        for c in user_onto.classes()
         if Thing in c.is_a and c.namespace == user_onto
     ]
-
-    print(f"Found {len(major_categories)} Major Categories. Exporting...")
+    print(f"Found {len(major_categories)} major categories. Exporting...")
 
     for major in major_categories:
         major_label = major.label[0] if major.label else major.name
-        
-        # Get immediate subclasses
-        children = list(major.subclasses())
-        
-        if not children:
-            # Case: Major category with no children (Optional handling)
-            continue
 
-        for child in children:
-            # We determine if the child is a "Sub Category" or a "Product Category"
-            # Logic: If the child has further subclasses, it's a Sub Category.
-            # If it has NO subclasses, it's a Product Category.
-            
+        for child in major.subclasses():
             grandchildren = list(child.subclasses())
-            
+
             if grandchildren:
-                # This child is a SUB CATEGORY
+                # Child is a Sub Category
                 sub_label = child.label[0] if child.label else child.name
-                for gchild in grandchildren:
-                    prod_label = gchild.label[0] if gchild.label else gchild.name
+                for grandchild in grandchildren:
+                    prod_label = grandchild.label[0] if grandchild.label else grandchild.name
                     rows.append({
                         "Major Category": major_label,
                         "Sub Category": sub_label,
-                        "Product Category": prod_label
+                        "Product Category": prod_label,
                     })
             else:
-                # This child is a PRODUCT CATEGORY (Directly under Major)
+                # Child is a Product Category directly under Major
                 prod_label = child.label[0] if child.label else child.name
                 rows.append({
                     "Major Category": major_label,
-                    "Sub Category": "",  # Keep empty as requested
-                    "Product Category": prod_label
+                    "Sub Category": "",
+                    "Product Category": prod_label,
                 })
 
-    # Create DataFrame and Save
-    df = pd.DataFrame(rows)
-    # Reorder columns to ensure correct format
-    df = df[["Major Category", "Sub Category", "Product Category"]]
+    df = pd.DataFrame(rows, columns=["Major Category", "Sub Category", "Product Category"])
     df.to_csv(output_csv_path, index=False)
-    print(f"Successfully exported {len(df)} rows to {output_csv_path}")
+    print(f"Exported {len(df)} rows to {output_csv_path}")
+
+
+# ---------------------------------------------------------------------------
+# Entry point
+# ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Export User Bridge Ontology to CSV.")
-    parser.add_argument("--ontology", required=True, help="Path to the .owl user bridge file.")
-    parser.add_argument("--core", required=True, help="Path to the local Core .owl file.")
-    parser.add_argument("--output", default="exported_user_data.csv", help="Path for the output CSV.")
+    parser = argparse.ArgumentParser(
+        description="Export a user bridge OWL ontology to a three-column category CSV."
+    )
+    parser.add_argument(
+        "--ontology", required=True, help="Path to the user bridge .owl file."
+    )
+    parser.add_argument(
+        "--core", required=True, help="Path to the core product-category .owl file."
+    )
+    parser.add_argument(
+        "--output",
+        default="exported_user_data.csv",
+        help="Destination path for the output CSV (default: exported_user_data.csv).",
+    )
     args = parser.parse_args()
 
-    # 1. Create a World
     my_world = World()
 
-    # 2. Add the directories to the search path
     core_path = os.path.abspath(args.core)
     user_path = os.path.abspath(args.ontology)
+
+    # Add both directories to owlready2's search path so that import
+    # declarations in the bridge file can resolve the core ontology locally
     onto_path.append(os.path.dirname(core_path))
     onto_path.append(os.path.dirname(user_path))
 
-    print(f"Loading local Core Ontology first: {core_path}")
+    print(f"Loading core ontology: {core_path}")
     try:
-        # Loading the core first satisfies the 'import' requirement of the bridge
         my_world.get_ontology(core_path).load()
-    except Exception as e:
-        print(f"Warning: Could not pre-load core, export might fail if imports are strict: {e}")
+    except Exception as exc:
+        print(f"Warning: Could not pre-load core ontology ({exc}). Import resolution may fail.")
 
-    print(f"Loading User Bridge: {user_path}")
+    print(f"Loading user bridge ontology: {user_path}")
     try:
-        # Now load the user ontology from the same world
         user_onto = my_world.get_ontology(user_path).load()
-    except Exception as e:
-        print(f"Error loading user ontology: {e}")
-        exit(1)
+    except Exception as exc:
+        print(f"Error: Could not load user bridge ontology: {exc}")
+        raise SystemExit(1)
 
     export_to_csv(user_onto, args.output)
