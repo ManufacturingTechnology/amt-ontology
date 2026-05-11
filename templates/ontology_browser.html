@@ -3,690 +3,483 @@
 <head>
   <meta charset="utf-8">
   <title>Ontology Browser</title>
-  <style>
-    :root {
-      --amt-blue: #005596;
-      --amt-blue-light: #0077c8;
-      --amt-dark: #1f2933;
-      --amt-light-bg: #f5f7fb;
-      --tab-active-bg: #fff;
-      --tab-inactive-bg: #dce8f4;
-      --tab-hover-bg: #eaf2fb;
-      --equiv-color: #6d7c8a;
-      --equiv-dot: #a3b8c8;
-    }
-    * {
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
-    body {
-      margin: 0;
-      background: var(--amt-light-bg);
-      color: var(--amt-dark);
-    }
+  <link rel="stylesheet" href="{{ url_for('static', filename='browser.css') }}">
 
-    /* ── Header ── */
-    header {
-      background: linear-gradient(90deg, var(--amt-blue) 0%, var(--amt-blue-light) 70%);
-      color: #fff;
-      padding: 14px 32px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.25);
-    }
-    header h1 { margin: 0; font-size: 1.4rem; letter-spacing: 0.03em; }
-    header span.sub { font-size: 0.9rem; opacity: 0.9; }
-    header p { margin: 8px 0 0 0; font-size: 0.9rem; }
-    header a { color: #fffbcc; text-decoration: underline; font-weight: 600; }
-
-    /* ── Page shell ── */
-    .page {
-      max-width: 1200px;
-      margin: 24px auto 32px;
-      padding: 0 16px;
-    }
-
-    /* ── Tab bar ── */
-    .tab-bar {
-      display: flex;
-      gap: 0;
-      border-bottom: 2px solid var(--amt-blue);
-      margin-bottom: 0;
-      flex-wrap: wrap;
-    }
-    .tab-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 10px 22px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      cursor: pointer;
-      background: var(--tab-inactive-bg);
-      color: var(--amt-blue);
-      border: 1px solid #b0c9e0;
-      border-bottom: none;
-      border-radius: 6px 6px 0 0;
-      margin-right: 3px;
-      transition: background 0.15s, color 0.15s;
-      user-select: none;
-    }
-    .tab-btn:hover { background: var(--tab-hover-bg); }
-    .tab-btn.active {
-      background: var(--tab-active-bg);
-      color: var(--amt-blue);
-      border-color: var(--amt-blue);
-      border-bottom: 2px solid #fff;
-      margin-bottom: -2px;
-      z-index: 1;
-    }
-    .tab-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      display: inline-block;
-      flex-shrink: 0;
-    }
-    .dot-core     { background: var(--amt-blue); }
-    .dot-exhibitor{ background: #0a7e45; }
-    .dot-visitor  { background: #b36000; }
-
-    /* ── Card ── */
-    .card {
-      background: #fff;
-      border-radius: 0 8px 8px 8px;
-      padding: 16px 18px;
-      box-shadow: 0 2px 6px rgba(15,35,52,0.12);
-      border: 1px solid var(--amt-blue);
-      border-top: 3px solid var(--amt-blue);
-    }
-    .card.card-exhibitor { border-top-color: #0a7e45; }
-    .card.card-visitor   { border-top-color: #b36000; }
-
-    .card-header {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
-    }
-    .card-header-text h2 {
-      margin: 0 0 2px;
-      font-size: 1.05rem;
-      color: var(--amt-blue);
-    }
-    .card-header-text h2.exhibitor-title { color: #0a7e45; }
-    .card-header-text h2.visitor-title   { color: #b36000; }
-    .card-header-text p  {
-      margin: 0;
-      font-size: 0.8rem;
-      color: #6b7280;
-      max-width: 680px;
-    }
-
-    /* ── Search ── */
-    .search-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-    .search-box {
-      flex: 1;
-      max-width: 340px;
-      padding: 6px 10px 6px 30px;
-      border: 1px solid #d1d5db;
-      border-radius: 999px;
-      font-size: 0.85rem;
-      background: #f9fafb url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E") no-repeat 10px center;
-    }
-    .search-box:focus {
-      outline: none;
-      border-color: var(--amt-blue-light);
-      box-shadow: 0 0 0 2px rgba(0,119,200,0.15);
-    }
-    .expand-all-btn, .collapse-all-btn {
-      padding: 5px 12px;
-      border-radius: 999px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      cursor: pointer;
-      border: 1px solid #c9d8e8;
-      background: #f0f4fa;
-      color: var(--amt-blue);
-      letter-spacing: 0.03em;
-      transition: background 0.12s;
-    }
-    .expand-all-btn:hover, .collapse-all-btn:hover { background: #dce8f4; }
-
-    /* ── Stats badge ── */
-    .stats-badge {
-      margin-left: auto;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      flex-shrink: 0;
-    }
-    .badge {
-      background: rgba(0,85,150,0.09);
-      color: var(--amt-blue);
-      border-radius: 999px;
-      padding: 3px 10px;
-      font-size: 0.74rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      white-space: nowrap;
-    }
-    .badge.exhibitor-badge { background: rgba(10,126,69,0.09); color: #0a7e45; }
-    .badge.visitor-badge   { background: rgba(179,96,0,0.09);  color: #b36000; }
-
-    /* ── Panel visibility ── */
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; }
-
-    /* ── Tree ── */
-    .tree-container { margin-top: 4px; }
-    .tree-container ul {
-      list-style-type: none;
-      padding-left: 0.95em;
-      margin: 0;
-    }
-    .tree-root { padding-left: 0 !important; }
-
-    .tree-node { margin: 2px 0; }
-
-    /* toggle icon */
-    .icon-box {
-      display: inline-block;
-      width: 1.15em;
-      text-align: center;
-      flex-shrink: 0;
-    }
-    .caret-icon-parent {
-      color: var(--amt-blue);
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 0.65em;
-      vertical-align: middle;
-      transition: transform 0.18s;
-      display: inline-block;
-    }
-    .caret-icon-parent::before { content: "▶"; }
-    .caret-icon-parent.open { transform: rotate(90deg); }
-
-    .caret-icon-leaf {
-      color: var(--amt-blue-light);
-      font-size: 0.5em;
-      vertical-align: middle;
-    }
-    .caret-icon-leaf::before { content: "■"; }
-
-    /* labels */
-    .node-row {
-      display: inline-flex;
-      align-items: baseline;
-      gap: 5px;
-      border-radius: 4px;
-      padding: 1px 4px;
-      transition: background 0.1s;
-    }
-    .node-row:hover { background: #eaf2fb; }
-
-    .label-parent { color: var(--amt-blue); font-weight: 600; font-size: 0.92rem; }
-    .label-leaf   { color: #374151; font-size: 0.88rem; }
-
-    /* bridge-specific colours */
-    .exhibitor .label-parent { color: #0a7e45; }
-    .exhibitor .caret-icon-parent { color: #0a7e45; }
-    .exhibitor .caret-icon-leaf   { color: #3db87a; }
-    .exhibitor .node-row:hover    { background: #eafaf2; }
-
-    .visitor .label-parent { color: #b36000; }
-    .visitor .caret-icon-parent { color: #b36000; }
-    .visitor .caret-icon-leaf   { color: #e07f00; }
-    .visitor .node-row:hover    { background: #fef3e2; }
-
-    /* equiv link */
-    .equiv-link {
-      font-size: 0.72rem;
-      color: var(--equiv-color);
-      font-style: italic;
-      white-space: nowrap;
-    }
-    .equiv-link::before {
-      content: "≡ ";
-      color: var(--equiv-dot);
-      font-style: normal;
-    }
-
-    /* nested children */
-    .nested { display: none; margin-left: 0.8em; border-left: 1px dashed #c5d5e8; padding-left: 0.5em; }
-    .nested.active { display: block; }
-
-    /* ── Hidden by search ── */
-    .tree-node.hidden { display: none !important; }
-
-    /* ── Empty state ── */
-    .empty-state {
-      text-align: center;
-      padding: 40px 20px;
-      color: #9ca3af;
-      font-size: 0.9rem;
-    }
-    .empty-state svg { margin-bottom: 10px; opacity: 0.35; }
-  </style>
+  <!-- Mermaid (loaded once; rendering is deferred until the diagram tab is active) -->
+  <script type="module" src="{{ url_for('static', filename='browser.js') }}"></script>
 </head>
 <body>
 
 <header>
   <h1>Ontology Browser<br>
-    <span class="sub">Explore AMT Product Category Ontology &amp; Specific User Views</span>
+    <span class="sub">Explore the AMT Ontology Suite &amp; User Views</span>
   </h1>
 </header>
 
 <div class="page">
 
-  <!-- Tab bar -->
+  {% if error %}
+    <div class="error-banner">⚠️ {{ error }}</div>
+  {% endif %}
+
+  {#
+     Resolve outer / inner tab selection. The query parameter `tab`
+     can be a compound key like "pc-exhibitor" (outer "pc", inner
+     "exhibitor"); we split it here so the templating stays simple.
+  #}
+  {% set outer_tab = 'im' if active_tab.startswith('im')
+                     else ('ind' if active_tab.startswith('ind') else 'pc') %}
+  {% set pc_sub  = 'exhibitor' if active_tab == 'pc-exhibitor'
+                  else ('visitor' if active_tab == 'pc-visitor'
+                  else 'core') %}
+  {% set ind_sub = 'view' if active_tab == 'ind-view' else 'core' %}
+  {% set im_sub  = 'detail' if active_tab == 'im-detail' else 'core' %}
+
+  <!-- ══════════ OUTER TAB BAR ══════════ -->
   <div class="tab-bar" role="tablist">
-    <button class="tab-btn {% if active_tab == 'core' %}active{% endif %}"
-            role="tab" aria-controls="panel-core" data-tab="core">
-      <span class="tab-dot dot-core"></span>Core Ontology
+    <button class="tab-btn {% if outer_tab == 'im' %}active{% endif %}"
+            role="tab" aria-controls="panel-im" data-tab="im">
+      <span class="tab-dot dot-im"></span>Information Model
     </button>
-    <button class="tab-btn {% if active_tab == 'exhibitor' %}active{% endif %}"
-            role="tab" aria-controls="panel-exhibitor" data-tab="exhibitor">
-      <span class="tab-dot dot-exhibitor"></span>IMTS Exhibitor
+    <button class="tab-btn {% if outer_tab == 'pc' %}active{% endif %}"
+            role="tab" aria-controls="panel-pc" data-tab="pc">
+      <span class="tab-dot dot-pc"></span>Product Categories
     </button>
-    <button class="tab-btn {% if active_tab == 'visitor' %}active{% endif %}"
-            role="tab" aria-controls="panel-visitor" data-tab="visitor">
-      <span class="tab-dot dot-visitor"></span>IMTS Visitor
+    <button class="tab-btn {% if outer_tab == 'ind' %}active{% endif %}"
+            role="tab" aria-controls="panel-ind" data-tab="ind">
+      <span class="tab-dot dot-ind"></span>Industries
     </button>
   </div>
 
-  <!-- ══════════ CORE PANEL ══════════ -->
-  <div id="panel-core"
-       class="tab-panel {% if active_tab == 'core' %}active{% endif %}">
-    <div class="card">
-      <div class="card-header">
-        <div class="card-header-text">
-          <h2>Product Categories</h2>
-          <p>Base ontology defining all manufacturing device, infrastructure, software, material, service, and process auxiliary category classes.</p>
-          <p> All User ontologies map their own category hierarchies to classes in this ontology via <code>owl:equivalentClass</code>.</p>
-        </div>
-        <div class="stats-badge">
-          <span class="badge" id="core-total-count">Loading…</span>
-        </div>
-      </div>
+  {#
+     -------------------------------------------------------------------------
+     Reusable Jinja macros
+     -------------------------------------------------------------------------
+  #}
 
-      <div class="search-row">
-        <input class="search-box" type="search" placeholder="Filter categories…"
-               id="search-core" autocomplete="off">
-        <button class="expand-all-btn"   data-tree="core-tree">Expand All</button>
-        <button class="collapse-all-btn" data-tree="core-tree">Collapse All</button>
-        <div class="stats-badge">
-          <span class="badge" id="core-cat-count">Loading…</span>
-        </div>
-      </div>
+  {# Plain class tree: used for Product Categories (core) and Industries (core). #}
+  {% macro render_class_node(node) -%}
+    <li class="tree-node" data-label="{{ node.label | lower }}" title="{{ node.iri }}">
+      {% if node.children %}
+        <span class="icon-box">
+          <span class="caret-icon-parent" role="button" tabindex="0"
+                aria-label="Toggle {{ node.label }}"></span>
+        </span>
+        <span class="node-row">
+          <span class="label-parent">{{ node.label }}</span>
+        </span>
+        <ul class="nested">
+          {% for ch in node.children %}{{ render_class_node(ch) }}{% endfor %}
+        </ul>
+      {% else %}
+        <span class="icon-box"><span class="caret-icon-leaf"></span></span>
+        <span class="node-row"><span class="label-leaf">{{ node.label }}</span></span>
+      {% endif %}
+    </li>
+  {%- endmacro %}
 
-      <div class="tree-container" id="core-tree">
-        {% if class_tree %}
-          {% macro render_core(node) -%}
-            <li class="tree-node" data-label="{{ node.label | lower }}" title="{{ node.iri }}">
-              {% if node.children %}
-                <span class="icon-box">
-                  <span class="caret-icon-parent" role="button" tabindex="0"
-                        aria-label="Toggle {{ node.label }}"></span>
-                </span>
-                <span class="node-row">
-                  <span class="label-parent">{{ node.label }}</span>
-                </span>
-                <ul class="nested">
-                  {% for ch in node.children %}{{ render_core(ch) }}{% endfor %}
-                </ul>
-              {% else %}
-                <span class="icon-box"><span class="caret-icon-leaf"></span></span>
-                <span class="node-row"><span class="label-leaf">{{ node.label }}</span></span>
-              {% endif %}
-            </li>
-          {%- endmacro %}
-          <ul class="tree-root">
-            {% for ch in class_tree.children %}{{ render_core(ch) }}{% endfor %}
-          </ul>
-        {% else %}
-          <div class="empty-state">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="1.5">
-              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/>
-              <line x1="12" y1="16" x2="12.01" y2="16"/>
-            </svg>
-            <p>No classes found in core ontology.</p>
+  {# IM class tree: like render_class_node but renders an inline           #}
+  {# property table beneath each class node.                               #}
+  {% macro render_im_node(node) -%}
+    <li class="tree-node" data-label="{{ node.label | lower }}" title="{{ node.iri }}">
+      {% if node.children %}
+        <span class="icon-box">
+          <span class="caret-icon-parent" role="button" tabindex="0"
+                aria-label="Toggle {{ node.label }}"></span>
+        </span>
+        <span class="node-row">
+          <span class="label-parent">{{ node.label }}</span>
+        </span>
+      {% else %}
+        <span class="icon-box"><span class="caret-icon-leaf"></span></span>
+        <span class="node-row"><span class="label-leaf label-parent">{{ node.label }}</span></span>
+      {% endif %}
+      {% if node.properties %}
+        <div class="prop-list">
+          {% for p in node.properties %}
+            <div class="prop-row" title="{{ p.iri }}">
+              <span class="prop-name">{{ p.label }}</span>
+              {% if p.card %}<span class="prop-card">{{ p.card }}</span>{% endif %}
+              {% if p.range %}<span class="prop-range">{{ p.range }}</span>{% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% if node.children %}
+        <ul class="nested">
+          {% for ch in node.children %}{{ render_im_node(ch) }}{% endfor %}
+        </ul>
+      {% endif %}
+    </li>
+  {%- endmacro %}
+
+  {# View tree: Collections + nested groups; leaves get the inline           #}
+  {# "≡ <local-name>" hint via equiv_iris.                                  #}
+  {% macro render_view_node(node) -%}
+    <li class="tree-node" data-label="{{ node.label | lower }}" title="{{ node.iri }}">
+      {% if node.children %}
+        <span class="icon-box">
+          <span class="caret-icon-parent" role="button" tabindex="0"
+                aria-label="Toggle {{ node.label }}"></span>
+        </span>
+        <span class="node-row">
+          <span class="label-parent">{{ node.label }}</span>
+          {% if node.equiv_iris %}
+            {% set short = node.equiv_iris[0].split('#')[-1].replace('_',' ') %}
+            <span class="equiv-link" title="{{ node.equiv_iris[0] }}">{{ short }}</span>
+          {% endif %}
+        </span>
+        <ul class="nested">
+          {% for ch in node.children %}{{ render_view_node(ch) }}{% endfor %}
+        </ul>
+      {% else %}
+        <span class="icon-box"><span class="caret-icon-leaf"></span></span>
+        <span class="node-row">
+          <span class="label-leaf">{{ node.label }}</span>
+          {% if node.equiv_iris %}
+            {% set short = node.equiv_iris[0].split('#')[-1].replace('_',' ') %}
+            <span class="equiv-link" title="{{ node.equiv_iris[0] }}">{{ short }}</span>
+          {% endif %}
+        </span>
+      {% endif %}
+    </li>
+  {%- endmacro %}
+
+  <!-- ══════════ INFORMATION MODEL PANEL (with sub-tabs) ══════════ -->
+  <div id="panel-im"
+       class="tab-panel panel-im {% if outer_tab == 'im' %}active{% endif %}">
+
+    <div class="sub-tab-bar" role="tablist">
+      <button class="sub-tab-btn {% if im_sub == 'core' %}active{% endif %}"
+              role="tab" data-outer="im" data-sub="core" data-target="sub-im-core">
+        <span class="sub-dot sub-dot-im-core"></span>Core
+      </button>
+      <button class="sub-tab-btn {% if im_sub == 'detail' %}active{% endif %}"
+              role="tab" data-outer="im" data-sub="detail" data-target="sub-im-detail">
+        <span class="sub-dot sub-dot-im-detail"></span>Detailed Diagram
+      </button>
+    </div>
+
+    <!-- ── IM core (containment tree) sub-panel ── -->
+    <div id="sub-im-core" class="sub-panel {% if im_sub == 'core' %}active{% endif %}">
+      <div class="card card-im">
+        <div class="card-header">
+          <div class="card-header-text">
+            <h2 class="im-title">Information Model — Containment Tree</h2>
+            <p>Core entities (Visitor, Exhibitor, Company, IMTS, AMT) with their object and datatype property restrictions, expressed as <code>owl:Restriction</code> nodes on each class.</p>
           </div>
-        {% endif %}
+          <div class="stats-badge">
+            <span class="badge im-badge" id="im-core-total-count">Loading…</span>
+          </div>
+        </div>
+
+        <div class="search-row">
+          <input class="search-box" type="search" placeholder="Filter classes…"
+                 id="search-im-core" autocomplete="off">
+          <button class="expand-all-btn"   data-tree="im-core-tree">Expand All</button>
+          <button class="collapse-all-btn" data-tree="im-core-tree">Collapse All</button>
+        </div>
+
+        <div class="tree-container im" id="im-core-tree">
+          {% if im_tree %}
+            <ul class="tree-root">
+              {% for ch in im_tree.children %}{{ render_im_node(ch) }}{% endfor %}
+            </ul>
+          {% else %}
+            <div class="empty-state">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              <p>No classes found in the Information Model ontology.<br>
+                 Place <code>im.owl</code> in the <code>ontology/</code> folder.</p>
+            </div>
+          {% endif %}
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- ══════════ EXHIBITOR PANEL ══════════ -->
-  <div id="panel-exhibitor"
-       class="tab-panel {% if active_tab == 'exhibitor' %}active{% endif %}">
-    <div class="card card-exhibitor">
-      <div class="card-header">
-        <div class="card-header-text">
-          <h2 class="exhibitor-title">IMTS Exhibitor Product Categories</h2>
-          <p>User-facing category hierarchy for IMTS Exhibitor registration. </p>
-          <p>Each leaf class is linked via <code>owl:equivalentClass</code> to the corresponding class in the core product-category ontology.</p>
-        </div>
-        <div class="stats-badge">
-          <span class="badge exhibitor-badge" id="exhibitor-total-count">Loading…</span>
-        </div>
-      </div>
-
-      <div class="search-row">
-        <input class="search-box" type="search" placeholder="Filter categories…"
-               id="search-exhibitor" autocomplete="off">
-        <button class="expand-all-btn"   data-tree="exhibitor-tree">Expand All</button>
-        <button class="collapse-all-btn" data-tree="exhibitor-tree">Collapse All</button>
-        <div class="stats-badge">
-          <span class="badge exhibitor-badge" id="exhibitor-cat-count">Loading…</span>
-        </div>
-      </div>
-
-      <div class="tree-container exhibitor" id="exhibitor-tree">
-        {% if exhibitor_tree and exhibitor_tree.children %}
-          {% macro render_bridge_ex(node) -%}
-            <li class="tree-node" data-label="{{ node.label | lower }}" title="{{ node.iri }}">
-              {% if node.children %}
-                <span class="icon-box">
-                  <span class="caret-icon-parent" role="button" tabindex="0"
-                        aria-label="Toggle {{ node.label }}"></span>
-                </span>
-                <span class="node-row">
-                  <span class="label-parent">{{ node.label }}</span>
-                  {% if node.equiv_iris %}
-                    {% set short = node.equiv_iris[0].split('#')[-1].replace('_',' ') %}
-                    <span class="equiv-link" title="{{ node.equiv_iris[0] }}">{{ short }}</span>
-                  {% endif %}
-                </span>
-                <ul class="nested">
-                  {% for ch in node.children %}{{ render_bridge_ex(ch) }}{% endfor %}
-                </ul>
-              {% else %}
-                <span class="icon-box"><span class="caret-icon-leaf"></span></span>
-                <span class="node-row">
-                  <span class="label-leaf">{{ node.label }}</span>
-                  {% if node.equiv_iris %}
-                    {% set short = node.equiv_iris[0].split('#')[-1].replace('_',' ') %}
-                    <span class="equiv-link" title="{{ node.equiv_iris[0] }}">{{ short }}</span>
-                  {% endif %}
-                </span>
-              {% endif %}
-            </li>
-          {%- endmacro %}
-          <ul class="tree-root">
-            {% for ch in exhibitor_tree.children %}{{ render_bridge_ex(ch) }}{% endfor %}
-          </ul>
-        {% else %}
-          <div class="empty-state">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="1.5">
-              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/>
-              <line x1="12" y1="16" x2="12.01" y2="16"/>
-            </svg>
-            <p>Exhibitor bridge ontology not found or empty.<br>
-               Place <code>user-bridge-imts-exhibitor.owl</code> in the <code>ontology/</code> folder.</p>
+    <!-- ── IM detailed diagram (Mermaid) sub-panel ── -->
+    <div id="sub-im-detail" class="sub-panel {% if im_sub == 'detail' %}active{% endif %}">
+      <div class="card card-im">
+        <div class="card-header">
+          <div class="card-header-text">
+            <h2 class="im-title">Information Model — Detailed Class Diagram</h2>
+            <p>Full UML-style class diagram: every entity, its datatype properties (with cardinality), and all object-property associations. Multiplicity on a target end reflects the corresponding <code>owl:Restriction</code> on the source class.</p>
           </div>
-        {% endif %}
+          <div class="stats-badge">
+            <button class="badge im-badge mermaid-copy-btn" id="im-mermaid-copy" type="button"
+                    title="Copy Mermaid source to clipboard">Copy source</button>
+          </div>
+        </div>
+
+        <div class="mermaid-container">
+          <pre class="mermaid" id="im-mermaid">{{ im_mermaid_source }}</pre>
+        </div>
       </div>
-      <div style="margin-top: 16px; border-top: 1px solid #eee; padding-top: 12px;">
+    </div>
+
+  </div><!-- /panel-im -->
+
+  <!-- ══════════ PRODUCT CATEGORIES PANEL (with sub-tabs) ══════════ -->
+  <div id="panel-pc" class="tab-panel panel-pc {% if outer_tab == 'pc' %}active{% endif %}">
+
+    <div class="sub-tab-bar" role="tablist">
+      <button class="sub-tab-btn {% if pc_sub == 'core' %}active{% endif %}"
+              role="tab" data-outer="pc" data-sub="core" data-target="sub-pc-core">
+        <span class="sub-dot sub-dot-pc-core"></span>Core
+      </button>
+      <button class="sub-tab-btn {% if pc_sub == 'exhibitor' %}active{% endif %}"
+              role="tab" data-outer="pc" data-sub="exhibitor" data-target="sub-pc-exhibitor">
+        <span class="sub-dot sub-dot-pc-exhibitor"></span>IMTS Exhibitor View
+      </button>
+      <button class="sub-tab-btn {% if pc_sub == 'visitor' %}active{% endif %}"
+              role="tab" data-outer="pc" data-sub="visitor" data-target="sub-pc-visitor">
+        <span class="sub-dot sub-dot-pc-visitor"></span>IMTS Visitor View
+      </button>
+    </div>
+
+    <!-- ── PC core sub-panel ── -->
+    <div id="sub-pc-core" class="sub-panel {% if pc_sub == 'core' %}active{% endif %}">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-text">
+            <h2>Product Categories</h2>
+            <p>Base ontology defining all manufacturing device, infrastructure, software, material, service, and process auxiliary category classes.</p>
+            <p>User views map their own category hierarchies to classes in this ontology via <code>amtmeta:groups</code>.</p>
+          </div>
+          <div class="stats-badge">
+            <span class="badge" id="pc-core-total-count">Loading…</span>
+          </div>
+        </div>
+
+        <div class="search-row">
+          <input class="search-box" type="search" placeholder="Filter categories…"
+                 id="search-pc-core" autocomplete="off">
+          <button class="expand-all-btn"   data-tree="pc-core-tree">Expand All</button>
+          <button class="collapse-all-btn" data-tree="pc-core-tree">Collapse All</button>
+        </div>
+
+        <div class="tree-container" id="pc-core-tree">
+          {% if class_tree %}
+            <ul class="tree-root">
+              {% for ch in class_tree.children %}{{ render_class_node(ch) }}{% endfor %}
+            </ul>
+          {% else %}
+            <div class="empty-state">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              <p>No classes found in the Product Categories ontology.<br>
+                 Place <code>pc.owl</code> in the <code>ontology/</code> folder.</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PC exhibitor sub-panel ── -->
+    <div id="sub-pc-exhibitor" class="sub-panel {% if pc_sub == 'exhibitor' %}active{% endif %}">
+      <div class="card card-exhibitor">
+        <div class="card-header">
+          <div class="card-header-text">
+            <h2 class="exhibitor-title">IMTS Exhibitor View</h2>
+            <p>User-facing category hierarchy for IMTS Exhibitor registration.</p>
+            <p>Each leaf links via <code>amtmeta:groups</code> to a class in the Product Categories ontology; the linked class name is shown inline as <code>≡&nbsp;ClassName</code>. Labels prefer <code>skos:prefLabel</code> from <code>pc.owl</code>, falling back to <code>rdfs:label</code>.</p>
+          </div>
+          <div class="stats-badge">
+            <span class="badge exhibitor-badge" id="pc-exhibitor-total-count">Loading…</span>
+          </div>
+        </div>
+
+        <div class="search-row">
+          <input class="search-box" type="search" placeholder="Filter categories…"
+                 id="search-pc-exhibitor" autocomplete="off">
+          <button class="expand-all-btn"   data-tree="pc-exhibitor-tree">Expand All</button>
+          <button class="collapse-all-btn" data-tree="pc-exhibitor-tree">Collapse All</button>
+        </div>
+
+        <div class="tree-container exhibitor" id="pc-exhibitor-tree">
+          {% if exhibitor_tree and exhibitor_tree.children %}
+            <ul class="tree-root">
+              {% for ch in exhibitor_tree.children %}{{ render_view_node(ch) }}{% endfor %}
+            </ul>
+          {% else %}
+            <div class="empty-state">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              <p>Exhibitor view ontology not found or empty.<br>
+                 Place <code>exhibitor_view.owl</code> in the <code>ontology/</code> folder.</p>
+            </div>
+          {% endif %}
+        </div>
+        <div style="margin-top: 16px; border-top: 1px solid #eee; padding-top: 12px;">
           <form method="POST" action="{{ url_for('index') }}">
             <input type="hidden" name="action" value="csv">
             <input type="hidden" name="result_source" value="exhibitor">
             <button type="submit" class="expand-all-btn">Download CSV</button>
           </form>
         </div>
+      </div>
     </div>
-  </div>
 
-  <!-- ══════════ VISITOR PANEL ══════════ -->
-  <div id="panel-visitor"
-       class="tab-panel {% if active_tab == 'visitor' %}active{% endif %}">
-    <div class="card card-visitor">
-      <div class="card-header">
-        <div class="card-header-text">
-          <h2 class="visitor-title">IMTS Visitor Product Categories</h2>
-          <p>User-facing category hierarchy for IMTS Visitor registration.</p>
-          <p> Each leaf class is linked via <code>owl:equivalentClass</code> to the corresponding class in the core product-category ontology.</p>
-        </div>
-        <div class="stats-badge">
-          <span class="badge visitor-badge" id="visitor-total-count">Loading…</span>
-        </div>
-      </div>
-
-      <div class="search-row">
-        <input class="search-box" type="search" placeholder="Filter categories…"
-               id="search-visitor" autocomplete="off">
-        <button class="expand-all-btn"   data-tree="visitor-tree">Expand All</button>
-        <button class="collapse-all-btn" data-tree="visitor-tree">Collapse All</button>
-        <div class="stats-badge">
-          <span class="badge visitor-badge" id="visitor-cat-count">Loading…</span>
-        </div>
-      </div>
-
-      <div class="tree-container visitor" id="visitor-tree">
-        {% if visitor_tree and visitor_tree.children %}
-          {% macro render_bridge_vis(node) -%}
-            <li class="tree-node" data-label="{{ node.label | lower }}" title="{{ node.iri }}">
-              {% if node.children %}
-                <span class="icon-box">
-                  <span class="caret-icon-parent" role="button" tabindex="0"
-                        aria-label="Toggle {{ node.label }}"></span>
-                </span>
-                <span class="node-row">
-                  <span class="label-parent">{{ node.label }}</span>
-                  {% if node.equiv_iris %}
-                    {% set short = node.equiv_iris[0].split('#')[-1].replace('_',' ') %}
-                    <span class="equiv-link" title="{{ node.equiv_iris[0] }}">{{ short }}</span>
-                  {% endif %}
-                </span>
-                <ul class="nested">
-                  {% for ch in node.children %}{{ render_bridge_vis(ch) }}{% endfor %}
-                </ul>
-              {% else %}
-                <span class="icon-box"><span class="caret-icon-leaf"></span></span>
-                <span class="node-row">
-                  <span class="label-leaf">{{ node.label }}</span>
-                  {% if node.equiv_iris %}
-                    {% set short = node.equiv_iris[0].split('#')[-1].replace('_',' ') %}
-                    <span class="equiv-link" title="{{ node.equiv_iris[0] }}">{{ short }}</span>
-                  {% endif %}
-                </span>
-              {% endif %}
-            </li>
-          {%- endmacro %}
-          <ul class="tree-root">
-            {% for ch in visitor_tree.children %}{{ render_bridge_vis(ch) }}{% endfor %}
-          </ul>
-        {% else %}
-          <div class="empty-state">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="1.5">
-              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/>
-              <line x1="12" y1="16" x2="12.01" y2="16"/>
-            </svg>
-            <p>Visitor bridge ontology not found or empty.<br>
-               Place <code>user-bridge-imts-visitor.owl</code> in the <code>ontology/</code> folder.</p>
+    <!-- ── PC visitor sub-panel ── -->
+    <div id="sub-pc-visitor" class="sub-panel {% if pc_sub == 'visitor' %}active{% endif %}">
+      <div class="card card-visitor">
+        <div class="card-header">
+          <div class="card-header-text">
+            <h2 class="visitor-title">IMTS Visitor View</h2>
+            <p>User-facing category hierarchy for IMTS Visitor registration.</p>
+            <p>Each leaf links via <code>amtmeta:groups</code> to a class in the Product Categories ontology; the linked class name is shown inline as <code>≡&nbsp;ClassName</code>. Labels prefer <code>skos:prefLabel</code> from <code>pc.owl</code>, falling back to <code>rdfs:label</code>.</p>
           </div>
-        {% endif %}
-      </div>
-      <div style="margin-top: 16px; border-top: 1px solid #eee; padding-top: 12px;">
-        <form method="POST" action="{{ url_for('index') }}">
-          <input type="hidden" name="action" value="csv">
-          <input type="hidden" name="result_source" value="visitor">
-          <button type="submit" class="expand-all-btn">Download CSV</button>
-        </form>
+          <div class="stats-badge">
+            <span class="badge visitor-badge" id="pc-visitor-total-count">Loading…</span>
+          </div>
+        </div>
+
+        <div class="search-row">
+          <input class="search-box" type="search" placeholder="Filter categories…"
+                 id="search-pc-visitor" autocomplete="off">
+          <button class="expand-all-btn"   data-tree="pc-visitor-tree">Expand All</button>
+          <button class="collapse-all-btn" data-tree="pc-visitor-tree">Collapse All</button>
+        </div>
+
+        <div class="tree-container visitor" id="pc-visitor-tree">
+          {% if visitor_tree and visitor_tree.children %}
+            <ul class="tree-root">
+              {% for ch in visitor_tree.children %}{{ render_view_node(ch) }}{% endfor %}
+            </ul>
+          {% else %}
+            <div class="empty-state">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              <p>Visitor view ontology not found or empty.<br>
+                 Place <code>visitor_view.owl</code> in the <code>ontology/</code> folder.</p>
+            </div>
+          {% endif %}
+        </div>
+        <div style="margin-top: 16px; border-top: 1px solid #eee; padding-top: 12px;">
+          <form method="POST" action="{{ url_for('index') }}">
+            <input type="hidden" name="action" value="csv">
+            <input type="hidden" name="result_source" value="visitor">
+            <button type="submit" class="expand-all-btn">Download CSV</button>
+          </form>
+        </div>
       </div>
     </div>
-  </div>
+  </div><!-- /panel-pc -->
+
+  <!-- ══════════ INDUSTRIES PANEL (with sub-tabs) ══════════ -->
+  <div id="panel-ind" class="tab-panel panel-ind {% if outer_tab == 'ind' %}active{% endif %}">
+
+    <div class="sub-tab-bar" role="tablist">
+      <button class="sub-tab-btn {% if ind_sub == 'core' %}active{% endif %}"
+              role="tab" data-outer="ind" data-sub="core" data-target="sub-ind-core">
+        <span class="sub-dot sub-dot-ind-core"></span>Core
+      </button>
+      <button class="sub-tab-btn {% if ind_sub == 'view' %}active{% endif %}"
+              role="tab" data-outer="ind" data-sub="view" data-target="sub-ind-view">
+        <span class="sub-dot sub-dot-ind-view"></span>Industries View
+      </button>
+    </div>
+
+    <!-- ── Industries core sub-panel ── -->
+    <div id="sub-ind-core" class="sub-panel {% if ind_sub == 'core' %}active{% endif %}">
+      <div class="card card-industries">
+        <div class="card-header">
+          <div class="card-header-text">
+            <h2 class="industries-title">Industries</h2>
+            <p>Flat taxonomy of industry verticals — defined as <code>owl:Class</code> instances under a single <code>Industry</code> root in <code>ind.owl</code>.</p>
+          </div>
+          <div class="stats-badge">
+            <span class="badge industries-badge" id="ind-core-total-count">Loading…</span>
+          </div>
+        </div>
+
+        <div class="search-row">
+          <input class="search-box" type="search" placeholder="Filter industries…"
+                 id="search-ind-core" autocomplete="off">
+          <button class="expand-all-btn"   data-tree="ind-core-tree">Expand All</button>
+          <button class="collapse-all-btn" data-tree="ind-core-tree">Collapse All</button>
+        </div>
+
+        <div class="tree-container industries" id="ind-core-tree">
+          {% if industry_tree %}
+            <ul class="tree-root">
+              {% for ch in industry_tree.children %}{{ render_class_node(ch) }}{% endfor %}
+            </ul>
+          {% else %}
+            <div class="empty-state">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              <p>No classes found in the Industries ontology.<br>
+                 Place <code>ind.owl</code> in the <code>ontology/</code> folder.</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Industries view sub-panel ── -->
+    <div id="sub-ind-view" class="sub-panel {% if ind_sub == 'view' %}active{% endif %}">
+      <div class="card card-ind-view">
+        <div class="card-header">
+          <div class="card-header-text">
+            <h2 class="ind-view-title">Industries View</h2>
+            <p>User-facing view of the Industries ontology. Each leaf links via <code>amtmeta:groups</code> to an industry class; labels prefer <code>skos:prefLabel</code> from <code>ind.owl</code>, falling back to <code>rdfs:label</code>.</p>
+          </div>
+          <div class="stats-badge">
+            <span class="badge ind-view-badge" id="ind-view-total-count">Loading…</span>
+          </div>
+        </div>
+
+        <div class="search-row">
+          <input class="search-box" type="search" placeholder="Filter industries…"
+                 id="search-ind-view" autocomplete="off">
+          <button class="expand-all-btn"   data-tree="ind-view-tree">Expand All</button>
+          <button class="collapse-all-btn" data-tree="ind-view-tree">Collapse All</button>
+        </div>
+
+        <div class="tree-container ind-view" id="ind-view-tree">
+          {% if ind_view_tree and ind_view_tree.children %}
+            <ul class="tree-root">
+              {% for ch in ind_view_tree.children %}{{ render_view_node(ch) }}{% endfor %}
+            </ul>
+          {% else %}
+            <div class="empty-state">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              <p>Industries view ontology not found or empty.<br>
+                 Place <code>ind_view.owl</code> in the <code>ontology/</code> folder.</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div><!-- /panel-ind -->
 
 </div><!-- .page -->
 
-<script>
-(function () {
-  "use strict";
+<!-- Server-rendered string read by the "Copy source" button. The
+     application/json type means browsers do NOT parse this as code,
+     and VSCode does NOT lint Jinja inside it as JavaScript. -->
+<script type="application/json" id="im-mermaid-src">{{ im_mermaid_source|tojson }}</script>
 
-  /* ── Tab switching ── */
-  const tabBtns   = document.querySelectorAll(".tab-btn");
-  const tabPanels = document.querySelectorAll(".tab-panel");
-
-  tabBtns.forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      tabBtns.forEach(function (b) { b.classList.remove("active"); });
-      tabPanels.forEach(function (p) { p.classList.remove("active"); });
-      btn.classList.add("active");
-      const target = document.getElementById("panel-" + btn.dataset.tab);
-      if (target) target.classList.add("active");
-      // Update URL without reload
-      const url = new URL(window.location);
-      url.searchParams.set("tab", btn.dataset.tab);
-      history.replaceState(null, "", url);
-    });
-  });
-
-  /* ── Tree expand/collapse ── */
-  function attachToggle(container) {
-    if (!container) return;
-    container.addEventListener("click", function (e) {
-      const caret = e.target.closest(".caret-icon-parent");
-      if (!caret) return;
-      const li = caret.closest("li.tree-node");
-      if (!li) return;
-      const nested = li.querySelector(":scope > ul.nested");
-      if (nested) {
-        nested.classList.toggle("active");
-        caret.classList.toggle("open");
-      }
-    });
-    // Keyboard support
-    container.addEventListener("keydown", function (e) {
-      if (e.key === "Enter" || e.key === " ") {
-        const caret = e.target.closest(".caret-icon-parent");
-        if (caret) {
-          e.preventDefault();
-          caret.click();
-        }
-      }
-    });
-  }
-
-  ["core-tree", "exhibitor-tree", "visitor-tree"].forEach(function (id) {
-    attachToggle(document.getElementById(id));
-  });
-
-  /* ── Expand / Collapse all ── */
-  document.querySelectorAll(".expand-all-btn").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      const tree = document.getElementById(btn.dataset.tree);
-      if (!tree) return;
-      tree.querySelectorAll(".nested").forEach(function (n) { n.classList.add("active"); });
-      tree.querySelectorAll(".caret-icon-parent").forEach(function (c) { c.classList.add("open"); });
-    });
-  });
-
-  document.querySelectorAll(".collapse-all-btn").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      const tree = document.getElementById(btn.dataset.tree);
-      if (!tree) return;
-      tree.querySelectorAll(".nested").forEach(function (n) { n.classList.remove("active"); });
-      tree.querySelectorAll(".caret-icon-parent").forEach(function (c) { c.classList.remove("open"); });
-    });
-  });
-
-  /* ── Search / filter ── */
-  function filterTree(treeId, query) {
-    const tree = document.getElementById(treeId);
-    if (!tree) return;
-    const q = query.trim().toLowerCase();
-
-    if (!q) {
-      // Restore all nodes
-      tree.querySelectorAll(".tree-node").forEach(function (n) {
-        n.classList.remove("hidden");
-      });
-      return;
-    }
-
-    // Collect all leaf/parent nodes
-    const allNodes = Array.from(tree.querySelectorAll("li.tree-node"));
-
-    // Mark each node hidden/visible based on label match or descendant match
-    function nodeMatches(li) {
-      const label = (li.dataset.label || "");
-      if (label.includes(q)) return true;
-      // Check descendants
-      const childLis = li.querySelectorAll("li.tree-node");
-      for (let i = 0; i < childLis.length; i++) {
-        if ((childLis[i].dataset.label || "").includes(q)) return true;
-      }
-      return false;
-    }
-
-    allNodes.forEach(function (li) {
-      if (nodeMatches(li)) {
-        li.classList.remove("hidden");
-        // Ensure ancestor nested lists are open
-        let parent = li.parentElement;
-        while (parent && parent !== tree) {
-          if (parent.classList.contains("nested")) {
-            parent.classList.add("active");
-            const sibling = parent.previousElementSibling;
-            if (sibling) {
-              const c = sibling.querySelector(".caret-icon-parent");
-              if (c) c.classList.add("open");
-            }
-          }
-          parent = parent.parentElement;
-        }
-      } else {
-        li.classList.add("hidden");
-      }
-    });
-  }
-
-  [
-    ["search-core",      "core-tree"],
-    ["search-exhibitor", "exhibitor-tree"],
-    ["search-visitor",   "visitor-tree"],
-  ].forEach(function (pair) {
-    const input = document.getElementById(pair[0]);
-    const treeId = pair[1];
-    if (!input) return;
-    input.addEventListener("input", function () {
-      filterTree(treeId, input.value);
-    });
-  });
-
-  /* ── Count badges ── */
-  function countNodes(treeId, onlyLeaf = false) {
-    const tree = document.getElementById(treeId);
-    if (!tree) return 0;
-    if (onlyLeaf) {
-      return tree.querySelectorAll(".label-leaf").length;
-    }
-    return tree.querySelectorAll("li.tree-node").length;
-  }
-
-  document.getElementById("core-total-count").textContent =
-    countNodes("core-tree") + " categories";
-  document.getElementById("core-cat-count").textContent =
-    countNodes("core-tree", true) + " leaf / product categories";
-  document.getElementById("exhibitor-total-count").textContent =
-    countNodes("exhibitor-tree") + " categories";
-  document.getElementById("exhibitor-cat-count").textContent =
-    countNodes("exhibitor-tree", true) + " leaf / product categories";
-  document.getElementById("visitor-total-count").textContent =
-    countNodes("visitor-tree") + " categories";
-  document.getElementById("visitor-cat-count").textContent =
-    countNodes("visitor-tree", true) + " leaf / product categories";
-
-})();
-</script>
 </body>
 </html>

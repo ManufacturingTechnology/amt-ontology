@@ -1,0 +1,17 @@
+# Treat generated dist/ artefacts as binary so git's autocrlf / line-ending
+# normalization never modifies them. Without this, on Windows checkouts the
+# CSVs round-trip through LF↔CRLF and `make dist; git diff --exit-code dist/`
+# reports a 100%-changed diff that's actually pure line-ending noise.
+dist/*.csv binary
+dist/*.owl binary
+
+# Ontology / shapes / templates / static assets — let git use platform LF
+# normally on these text files.
+*.ttl text eol=lf
+*.owl text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+
+# Python source: LF on all platforms.
+*.py text eol=lf

@@ -1,0 +1,406 @@
+@prefix im:      <http://ontology.amt.org/im#> .
+@prefix amtmeta: <http://ontology.amt.org/meta#> .
+@prefix pc:      <http://ontology.amt.org/product-categories#> .
+@prefix ind:     <http://ontology.amt.org/industries#> .
+@prefix gufo:    <http://purl.org/nemo/gufo#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<http://ontology.amt.org/im>
+    a owl:Ontology, amtmeta:InformationModel ;
+    owl:imports <http://ontology.amt.org/meta>,
+                <http://ontology.amt.org/product-categories>,
+                <http://ontology.amt.org/industries>,
+                <http://purl.org/nemo/gufo> ;
+
+    dcterms:title    "AMT/IMTS Information Model" ;
+    owl:versionInfo  "0.1.0" ;
+
+    amtmeta:status              amtmeta:Active ;
+    amtmeta:taxonomyOwner       "Chris Downs" ;
+    amtmeta:governedBy          "Allison", "Ryan", "Downs" ;
+    amtmeta:consumedBy          "Kristin", "Mark K", "Jess", "Allison",
+                                "Downs", "Alka", "Kalesh" ;
+    amtmeta:technicalSteward    "Shaurabh" ;
+
+    amtmeta:relatedProduct
+        "IMTS (visitor reg and exhibitor categories/showrooms)",
+        "Passport",
+        "Media Sponsorships (media kit)" ;
+
+    amtmeta:relatedSystem
+        "Maritz",
+        "Hubspot",
+        "Data warehouse",
+        "Passport",
+        "Exhibitor Space Application (linked at major category)" ;
+
+    amtmeta:nextReviewDate      "2026-06-01"^^xsd:date ;
+    amtmeta:nextReviewNote      "Need to discuss for Space Application." ;
+
+    rdfs:seeAlso                "Taxonomy Change Process.docx" ;
+
+    amtmeta:useCase
+        "Encodes registration data captured at IMTS shows",
+        "Backbone for visitor/exhibitor matching queries",
+        "Bridge between pc: and ind: taxonomies",
+        "Captures post-show leads data via Lead relator" .
+
+#-------------------------------------------------------------------------------
+# Kinds — substantial entities
+#-------------------------------------------------------------------------------
+
+im:Association a owl:Class, gufo:Kind ;
+    rdfs:subClassOf gufo:FunctionalComplex ;
+    rdfs:label "Association" .
+
+im:Person a owl:Class, gufo:Kind ;
+    rdfs:subClassOf gufo:FunctionalComplex ;
+    rdfs:label "Person" .
+
+im:Company a owl:Class, gufo:Kind ;
+    rdfs:subClassOf gufo:FunctionalComplex ;
+    rdfs:label "Company" .
+
+#-------------------------------------------------------------------------------
+# Event type — IMTS shows
+#-------------------------------------------------------------------------------
+
+im:IMTS a owl:Class, gufo:EventType ;
+    rdfs:subClassOf gufo:Event ;
+    rdfs:label "IMTS Show" .
+
+#-------------------------------------------------------------------------------
+# Roles — anti-rigid sortals played by Kinds
+#-------------------------------------------------------------------------------
+
+im:Visitor a owl:Class, gufo:Role ;
+    rdfs:subClassOf im:Person ;
+    rdfs:label "Visitor" .
+
+im:Exhibitor a owl:Class, gufo:Role ;
+    rdfs:subClassOf im:Company ;
+    rdfs:label "Exhibitor" .
+
+im:BoothStaff a owl:Class, gufo:Role ;
+    rdfs:subClassOf im:Visitor ;
+    rdfs:label "Booth Staff" .
+
+#-------------------------------------------------------------------------------
+# Role-mixins — anti-rigid non-sortals spanning multiple Kinds
+#-------------------------------------------------------------------------------
+# im:Interest, im:ProductCategory, and im:Industry classify external Kinds
+# (drawn from pc: and ind: taxonomies) under the relational contexts
+# hasInterest / hasProductCategory / belongsTo. Membership is anti-rigid:
+# pc:BinderJetting is a BinderJetting Kind always, but only an Interest while
+# some VisitorRecord asserts it; ind:Aerospace is an Aerospace Kind always,
+# but only an Industry-value while some Company asserts it via belongsTo.
+# Concrete extension is not defined here; runtime validity is determined by
+# the composition of view-side SHACL and amtmeta:CatalogValueShape — see
+# D3, D16, and D17.
+
+im:Interest a owl:Class, gufo:RoleMixin ;
+    rdfs:label       "Interest" ;
+    rdfs:comment     "Role-mixin played by pc: entities that a VisitorRecord asserts via hasInterest. Anti-rigid and relational; runtime membership defined by visitor_view SHACL plus amtmeta:CatalogValueShape." ;
+    amtmeta:scopedBy <http://ontology.amt.org/views/visitor> ;
+    rdfs:seeAlso     <http://ontology.amt.org/views/visitor#VisitorInterestShape>,
+                     <http://ontology.amt.org/meta#CatalogValueShape> .
+
+im:ProductCategory a owl:Class, gufo:RoleMixin ;
+    rdfs:label       "Product Category" ;
+    rdfs:comment     "Role-mixin played by pc: entities that an ExhibitorRecord asserts via hasProductCategory. Anti-rigid and relational; runtime membership defined by exhibitor_view SHACL plus amtmeta:CatalogValueShape." ;
+    amtmeta:scopedBy <http://ontology.amt.org/views/exhibitor> ;
+    rdfs:seeAlso     <http://ontology.amt.org/views/exhibitor#ExhibitorOfferingShape>,
+                     <http://ontology.amt.org/meta#CatalogValueShape> .
+
+im:Industry a owl:Class, gufo:RoleMixin ;
+    rdfs:label       "Industry" ;
+    rdfs:comment     "Role-mixin played by ind: entities that a Company asserts via belongsTo. Anti-rigid and relational: ind:Aerospace is rigidly an Aerospace Kind, but its 'being asserted as a company's industry' is contextual to the belongsTo relation. Runtime membership defined by the industries view SHACL plus amtmeta:CatalogValueShape." ;
+    amtmeta:scopedBy <http://ontology.amt.org/views/industries> ;
+    rdfs:seeAlso     <http://ontology.amt.org/views/industries#IndustryShape>,
+                     <http://ontology.amt.org/meta#CatalogValueShape> .
+
+#-------------------------------------------------------------------------------
+# Relator kinds — registrations and leads
+#-------------------------------------------------------------------------------
+
+im:Registration a owl:Class, gufo:Kind ;
+    rdfs:subClassOf gufo:Relator ;
+    rdfs:label "Registration" .
+
+im:VisitorRecord a owl:Class, gufo:Kind ;
+    rdfs:subClassOf im:Registration ;
+    rdfs:label "Visitor Record" .
+
+im:ExhibitorRecord a owl:Class, gufo:Kind ;
+    rdfs:subClassOf im:Registration ;
+    rdfs:label "Exhibitor Record" .
+
+im:Lead a owl:Class, gufo:Kind ;
+    rdfs:subClassOf gufo:Relator ;
+    rdfs:label "Lead" .
+
+#-------------------------------------------------------------------------------
+# Named individuals
+#-------------------------------------------------------------------------------
+
+im:AMT a owl:NamedIndividual, im:Association ;
+    rdfs:label "AMT — The Association For Manufacturing Technology" .
+
+#-------------------------------------------------------------------------------
+# Datatype properties
+#-------------------------------------------------------------------------------
+
+im:uuid a owl:DatatypeProperty ;
+    rdfs:domain im:Registration ;
+    rdfs:range  xsd:string ;
+    rdfs:label  "uuid" .
+
+im:registrationDate a owl:DatatypeProperty ;
+    rdfs:domain im:Registration ;
+    rdfs:range  xsd:date ;
+    rdfs:label  "registration date" .
+
+im:badge a owl:DatatypeProperty ;
+    rdfs:domain im:VisitorRecord ;
+    rdfs:range  xsd:integer ;
+    rdfs:label  "badge" .
+
+im:booth a owl:DatatypeProperty ;
+    rdfs:domain im:ExhibitorRecord ;
+    rdfs:range  xsd:integer ;
+    rdfs:label  "booth" .
+
+im:name a owl:DatatypeProperty ;
+    rdfs:domain [ a owl:Class ;
+                  owl:unionOf ( im:Person im:Company ) ] ;
+    rdfs:range  xsd:string ;
+    rdfs:label  "name" .
+
+#-------------------------------------------------------------------------------
+# Object properties — Mediation (sub-properties of gufo:mediates)
+#-------------------------------------------------------------------------------
+
+im:mediatesShow a owl:ObjectProperty ;
+    rdfs:subPropertyOf gufo:mediates ;
+    rdfs:domain im:Registration ;
+    rdfs:range  im:IMTS ;
+    rdfs:label  "mediates show" .
+
+im:mediatesVisitor a owl:ObjectProperty ;
+    rdfs:subPropertyOf gufo:mediates ;
+    rdfs:domain im:VisitorRecord ;
+    rdfs:range  im:Visitor ;
+    rdfs:label  "mediates visitor" .
+
+im:mediatesExhibitor a owl:ObjectProperty ;
+    rdfs:subPropertyOf gufo:mediates ;
+    rdfs:domain im:ExhibitorRecord ;
+    rdfs:range  im:Exhibitor ;
+    rdfs:label  "mediates exhibitor" .
+
+im:mediatesEmployer a owl:ObjectProperty ;
+    rdfs:subPropertyOf gufo:mediates ;
+    rdfs:domain im:VisitorRecord ;
+    rdfs:range  im:Company ;
+    rdfs:label  "mediates employer" .
+
+im:leadOfVisitor a owl:ObjectProperty ;
+    rdfs:subPropertyOf gufo:mediates ;
+    rdfs:domain im:Lead ;
+    rdfs:range  im:Visitor ;
+    rdfs:label  "lead of visitor" .
+
+im:leadOfExhibitor a owl:ObjectProperty ;
+    rdfs:subPropertyOf gufo:mediates ;
+    rdfs:domain im:Lead ;
+    rdfs:range  im:Exhibitor ;
+    rdfs:label  "lead of exhibitor" .
+
+im:leadCapturedBy a owl:ObjectProperty ;
+    rdfs:subPropertyOf gufo:mediates ;
+    rdfs:domain im:Lead ;
+    rdfs:range  im:BoothStaff ;
+    rdfs:label  "captured by" .
+
+#-------------------------------------------------------------------------------
+# Object properties — Cross-ontology
+#-------------------------------------------------------------------------------
+# Ranges point at IM-side role-mixin markers (im:Interest / im:ProductCategory /
+# im:Industry). These are typing endpoints, not membership constraints —
+# actual value validity is enforced at runtime by SHACL composition (view
+# shape AND amtmeta:CatalogValueShape). See D3, D16, D17.
+
+im:hasInterest a owl:ObjectProperty ;
+    rdfs:domain  im:VisitorRecord ;
+    rdfs:range   im:Interest ;
+    rdfs:label   "has interest" ;
+    rdfs:comment "Value space defined at runtime by visitor_view:VisitorInterestShape (bucket membership) and amtmeta:CatalogValueShape (prefLabel-as-catalog). The OWL range im:Interest is a role-mixin marker, not a membership enumeration." .
+
+im:hasProductCategory a owl:ObjectProperty ;
+    rdfs:domain  im:ExhibitorRecord ;
+    rdfs:range   im:ProductCategory ;
+    rdfs:label   "has product category" ;
+    rdfs:comment "Value space defined at runtime by exhibitor_view:ExhibitorOfferingShape (bucket membership) and amtmeta:CatalogValueShape (prefLabel-as-catalog). The OWL range im:ProductCategory is a role-mixin marker, not a membership enumeration." .
+
+im:belongsTo a owl:ObjectProperty ;
+    rdfs:domain  im:Company ;
+    rdfs:range   im:Industry ;
+    rdfs:label   "belongs to" ;
+    rdfs:comment "Value space defined at runtime by the industries view IndustryShape (collection membership) and amtmeta:CatalogValueShape (prefLabel-as-catalog). The OWL range im:Industry is a role-mixin marker, not a membership enumeration." .
+
+#-------------------------------------------------------------------------------
+# Object properties — Domain relations
+#-------------------------------------------------------------------------------
+
+im:organizes a owl:ObjectProperty ;
+    rdfs:domain im:Association ;
+    rdfs:range  im:IMTS ;
+    rdfs:label  "organizes" .
+
+im:staffsFor a owl:ObjectProperty ;
+    rdfs:domain im:BoothStaff ;
+    rdfs:range  im:Exhibitor ;
+    rdfs:label  "staffs for" .
+
+#-------------------------------------------------------------------------------
+# Cardinality restrictions
+#-------------------------------------------------------------------------------
+
+# Person identity
+im:Person rdfs:subClassOf
+    [ a owl:Restriction ; owl:onProperty im:name ; owl:cardinality "1"^^xsd:nonNegativeInteger ] .
+
+# Company identity
+im:Company rdfs:subClassOf
+    [ a owl:Restriction ; owl:onProperty im:name ; owl:cardinality "1"^^xsd:nonNegativeInteger ] .
+
+# BoothStaff sub-role anchors to a specific Exhibitor
+im:BoothStaff rdfs:subClassOf
+    [ a owl:Restriction ; owl:onProperty im:staffsFor ; owl:cardinality "1"^^xsd:nonNegativeInteger ] .
+
+# Registration identity (inherited by VisitorRecord and ExhibitorRecord)
+im:Registration rdfs:subClassOf
+    [ a owl:Restriction ; owl:onProperty im:uuid             ; owl:cardinality "1"^^xsd:nonNegativeInteger ] ,
+    [ a owl:Restriction ; owl:onProperty im:registrationDate ; owl:cardinality "1"^^xsd:nonNegativeInteger ] ,
+    [ a owl:Restriction ; owl:onProperty im:mediatesShow     ; owl:cardinality "1"^^xsd:nonNegativeInteger ] .
+
+# VisitorRecord constraints
+im:VisitorRecord rdfs:subClassOf
+    [ a owl:Restriction ; owl:onProperty im:badge            ; owl:cardinality "1"^^xsd:nonNegativeInteger ] ,
+    [ a owl:Restriction ; owl:onProperty im:mediatesVisitor  ; owl:cardinality "1"^^xsd:nonNegativeInteger ] ,
+    [ a owl:Restriction ; owl:onProperty im:mediatesEmployer ; owl:maxCardinality "1"^^xsd:nonNegativeInteger ] ,
+    [ a owl:Restriction ; owl:onProperty im:hasInterest      ; owl:minCardinality "1"^^xsd:nonNegativeInteger ] .
+
+# ExhibitorRecord constraints
+im:ExhibitorRecord rdfs:subClassOf
+    [ a owl:Restriction ; owl:onProperty im:booth              ; owl:cardinality "1"^^xsd:nonNegativeInteger ] ,
+    [ a owl:Restriction ; owl:onProperty im:mediatesExhibitor  ; owl:cardinality "1"^^xsd:nonNegativeInteger ] ,
+    [ a owl:Restriction ; owl:onProperty im:hasProductCategory ; owl:minCardinality "1"^^xsd:nonNegativeInteger ] .
+
+# Lead constraints
+im:Lead rdfs:subClassOf
+    [ a owl:Restriction ; owl:onProperty im:leadOfVisitor   ; owl:cardinality    "1"^^xsd:nonNegativeInteger ] ,
+    [ a owl:Restriction ; owl:onProperty im:leadOfExhibitor ; owl:cardinality    "1"^^xsd:nonNegativeInteger ] ,
+    [ a owl:Restriction ; owl:onProperty im:leadCapturedBy  ; owl:maxCardinality "1"^^xsd:nonNegativeInteger ] .
+
+################################################################################
+# RESOLVED DECISIONS
+################################################################################
+# D1  - IMTS modeled as a class (gufo:EventType, subClassOf gufo:Event); show-edition
+#       instances live in data files
+# D2  - Company.hasEmployee cardinality 0..* — superseded; persistent Person↔Company
+#       employment is out of scope. Registration-time employer captured via
+#       im:mediatesEmployer (0..1) on VisitorRecord.
+# D3  - Cross-ontology property ranges resolved via role-mixin marker classes
+#       (im:Interest, im:ProductCategory, im:Industry) — see D16 and D17. The
+#       marker classes are gufo:RoleMixin (anti-rigid, non-sortal, multi-Kind)
+#       and carry no OWL-side membership enumeration. Actual value validity is
+#       enforced at runtime by composition of two SHACL shapes:
+#         (i)  per-view membership — visitor_view:VisitorInterestShape /
+#              exhibitor_view:ExhibitorOfferingShape / industries view's
+#              IndustryShape (sh:sparql over amtmeta:groups+)
+#         (ii) catalog-grade values only — amtmeta:CatalogValueShape requires
+#              skos:prefLabel on the value; absence ⇒ abstract scaffolding,
+#              not assertable as data.
+#       Neither half is expressible as an OWL DL class expression (transitive
+#       closure / property-existence test, respectively), so SHACL is the sole
+#       authoritative validator. View-side sub-property channels retain
+#       tighter domain only — they serve as provenance/channel tags, not
+#       typing constraints.
+# D4  - Exhibitor.parentCategory attribute dropped (redundant with hasProductCategory)
+# D5  - im:represents and im:isExhibitor dropped — Exhibitor is now Company-as-Role,
+#       no representation needed
+# D6  - Visitor and Exhibitor reframed as gufo:Role (anti-rigid sortals); Visitor
+#       played by Person, Exhibitor played by Company. Registration records carry
+#       the rigid identity as gufo:Kind subclasses of gufo:Relator.
+# D7  - Attribute set extended beyond minimal SysML: im:name added on Person
+#       (parallel to Company); im:registrationDate promoted to xsd:date
+# D8  - AMT modeled as owl:NamedIndividual of im:Association (Kind), not as a class
+# D9  - Person introduced as Kind; Visitor/Exhibitor as Roles played by Person/Company
+# D10 - Registration introduced as Kind ⊑ gufo:Relator with VisitorRecord and
+#       ExhibitorRecord as subkinds; carries uuid, registrationDate, mediatesShow
+# D11 - Lead introduced as Kind ⊑ gufo:Relator binding Visitor and Exhibitor;
+#       leadCapturedBy (BoothStaff) is 0..1 to accommodate scan instruments that
+#       record exhibitor identity but not staff identity
+# D12 - BoothStaff modeled as sub-role of Visitor with im:staffsFor (cardinality 1)
+#       to a specific Exhibitor
+# D13 - im:hasVisitor and im:hasExhibitor (IMTS→Role) dropped as primitives;
+#       derivable via mediation chains. Re-introduce as owl:propertyChainAxiom if
+#       query convenience requires.
+# D14 - im:visitorScanned and im:exhibitorVisited dropped; subsumed by Lead mediation
+# D15 - im:registrationDate domain resolved cleanly via single domain on Registration
+#       (former F1 dissolved)
+# D16 - im:Interest and im:ProductCategory introduced as gufo:RoleMixin marker
+#       classes (v0.2.2). Three roles in one:
+#         (a) typing endpoint for OWL — gives hasInterest/hasProductCategory a
+#             concrete rdfs:range so diagram tools (Mermaid, etc.) render them;
+#         (b) ontological characterization — gufo:RoleMixin captures that
+#             values are anti-rigid, non-sortal, and span multiple pc: Kinds;
+#         (c) view binding — amtmeta:scopedBy points at the user view that
+#             defines runtime membership, without creating an import cycle.
+#       The marker classes do NOT enumerate or constrain membership; that is
+#       the SHACL composition's job (see D3). OWL 2 punning applies: pc: Kinds
+#       used as values will be inferred as instances of the marker class.
+# D17 - im:Industry introduced as gufo:RoleMixin marker class (v0.2.3),
+#       completing the uniform pattern across all three cross-ontology
+#       properties. im:belongsTo's range retargeted from ind:Industry (the
+#       taxonomy's rigid Category root) to im:Industry (an IM-side role-mixin),
+#       mirroring the treatment of im:hasInterest and im:hasProductCategory.
+#       ind:Industry remains the taxonomy root in ind.ttl; the IM layer adds
+#       a relational/role-mixin perspective on top, scopedBy the industries
+#       view <http://ontology.amt.org/views/industries>. Rationale: pc: is a
+#       heterogeneous collection without a clean ontological root (8 top-level
+#       Categories spanning four gUFO upper kinds), so a marker class is
+#       structurally necessary; ind: is a clean single-root taxonomy where a
+#       marker is not necessary but is adopted for symmetry. The asymmetric
+#       scopedBy targets honestly reflect that pc:'s views filter a
+#       heterogeneous catalog, while ind:'s view currently exposes the whole
+#       taxonomy as a single flat collection (subject to evolution).
+#
+################################################################################
+# OPEN FLAGS (for human review)
+################################################################################
+# F1  - im:Scan event class not modeled; Lead carries no scan-process metadata in
+#       v0.2. Promote to gufo:EventType if device/GPS/duration capture comes online.
+# F2  - im:mediatesEmployer cardinality 0..1 is provisional; revisit when persistent
+#       Person↔Company employment relation is added to the model.
+# F3  - im:leadCapturedBy cardinality 0..1 reflects current scan-instrument reality
+#       (exhibitor identified, staff not). Tighten to 1 when scanner-identity
+#       capture is supported.
+# F4  - Lead has no direct mediatesShow; show-scope is recoverable transitively via
+#       Visitor↔VisitorRecord↔IMTS or Exhibitor↔ExhibitorRecord↔IMTS. Add direct
+#       link if post-show analytics requires single-hop traversal.
+# F5  - Person, Visitor, Exhibitor, BoothStaff individuals not yet linked to a
+#       persistent Person Kind in data files; convention TBD for cross-show
+#       Person identity.
+# F6  - If multiple industry views emerge (e.g. visitor-flavored vs exhibitor-
+#       flavored industry groupings), decide between (a) keeping single
+#       im:Industry marker with multi-valued scopedBy and SHACL sh:or over
+#       per-view shapes, or (b) splitting into per-consumer markers
+#       (im:VisitorIndustry, im:ExhibitorIndustry). Choose when the second
+#       view appears and its semantics are concrete.
+################################################################################

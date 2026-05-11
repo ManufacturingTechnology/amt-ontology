@@ -1,0 +1,2905 @@
+@prefix pc:      <http://ontology.amt.org/product-categories#> .
+@prefix amtmeta: <http://ontology.amt.org/meta#> .
+@prefix gufo:    <http://purl.org/nemo/gufo#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<http://ontology.amt.org/product-categories>
+    a owl:Ontology, amtmeta:Taxonomy ;
+    owl:imports <http://ontology.amt.org/meta>,
+                <http://purl.org/nemo/gufo> ;
+
+    dcterms:title    "Manufacturing Product Categories Ontology" ;
+    owl:versionInfo  "0.1.0" ;
+
+    amtmeta:status              amtmeta:Active ;
+    amtmeta:taxonomyOwner       "Chris Downs" ;
+    amtmeta:governedBy          "Allison", "Ryan", "Downs" ;
+    amtmeta:consumedBy          "Kristin", "Mark K", "Jess", "Allison",
+                                "Downs", "Alka", "Kalesh" ;
+    amtmeta:technicalSteward    "Shaurabh" ;
+
+    amtmeta:relatedProduct
+        "IMTS (visitor reg and exhibitor categories/showrooms)",
+        "Passport",
+        "Media Sponsorships (media kit)" ;
+
+    amtmeta:relatedSystem
+        "Maritz",
+        "Hubspot",
+        "Data warehouse",
+        "Passport",
+        "Exhibitor Space Application (linked at major category)" ;
+
+    amtmeta:nextReviewDate      "2026-06-01"^^xsd:date ;
+    amtmeta:nextReviewNote      "Need to discuss for Space Application." ;
+
+    rdfs:seeAlso                "Taxonomy Change Process.docx" ;
+
+    amtmeta:useCase
+        "Marketing uses this for targeted marketing",
+        "Passport uses this as a filter to create lists",
+        "IMTS uses this as a demographic field for visitor registration",
+        "IMTS uses this in post-show reporting",
+        "IMTS uses this to create exhibitor product categories" .
+
+pc:ManufacturingDevice a owl:Class, gufo:Category ;
+    rdfs:subClassOf gufo:FunctionalComplex ;
+    rdfs:label "Manufacturing Device" .
+
+pc:InfrastructureDevice a owl:Class, gufo:Category ;
+    rdfs:subClassOf gufo:FunctionalComplex ;
+    rdfs:label "Infrastructure Device" .
+
+pc:ProductionCell a owl:Class, gufo:Category ;
+    rdfs:subClassOf gufo:Collective ;
+    rdfs:label "Production Cell" .
+
+pc:SoftwareArtifact a owl:Class, gufo:Category ;
+    rdfs:subClassOf gufo:FunctionalComplex ;
+    rdfs:label "Software Artifact" .
+
+pc:ProcessAuxiliary a owl:Class, gufo:Category ;
+    rdfs:subClassOf gufo:FunctionalComplex ;
+    rdfs:label "Process Auxiliary" .
+
+pc:ServiceOffering a owl:Class, gufo:Category ;
+    rdfs:subClassOf gufo:EventType ;
+    rdfs:label "Service Offering" .
+
+pc:Material a owl:Class, gufo:Category ;
+    rdfs:subClassOf gufo:Quantity ;
+    rdfs:label "Material" .
+
+pc:Organization a owl:Class, gufo:Category ;
+    rdfs:subClassOf gufo:FunctionalComplex ;
+    rdfs:label "Organization" .
+
+pc:PlasticAssemblyEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Plastic Assembly Equipment" ;
+    skos:prefLabel "Plastic Assembly Equipment" .
+
+pc:BearingProductionEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Bearing Production Equipment" ;
+    skos:prefLabel "Bearing Production and Machining Equipment" .
+
+pc:ElectroplatingUnit a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Electroplating Unit" ;
+    skos:prefLabel "Electroplating Units" .
+
+pc:MiniatureTrainingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Miniature Training Machine" ;
+    skos:prefLabel "Miniature Machines for Training" .
+
+pc:PlasticJoiningEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Plastic Joining Equipment" ;
+    skos:prefLabel "Plastic Joining Equipment" .
+
+pc:IndustrialPlasmaSurfaceSystem a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Industrial Plasma & Surface System" ;
+    skos:prefLabel "Systems for Industrial Plasma & Surface Technology" .
+
+pc:CompositeWorkingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Composite Working Machine" ;
+    skos:prefLabel "Composite Working Machines (Tape Laying, Filament Winding, etc.)" .
+
+pc:HeatTreatingEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Heat Treating Equipment" ;
+    skos:prefLabel "Heat Treating Equipment and Supplies, Including Ovens and Furnaces" .
+
+pc:PlasticCuttingSlittingEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Plastic Cutting & Slitting Equipment" ;
+    skos:prefLabel "Plastic Cutting and Slitting Equipment" .
+
+pc:PlasticInjectionMoldingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Plastic Injection Molding Machine" ;
+    skos:prefLabel "Plastic Injection Molding Machines" .
+
+pc:PlasticWorkingEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Plastic-Working Equipment" ;
+    skos:prefLabel "Plastic-Working Equipment" .
+
+pc:PlasticMoldingFormingEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Plastic Molding & Forming Equipment" ;
+    skos:prefLabel "Plastic Molding and Forming Equipment" .
+
+pc:StressReliefEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Stress Relief Equipment" ;
+    skos:prefLabel "Stress Relief Equipment" .
+
+pc:SurfaceTreatmentCoatingEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Surface Treatment & Coating Equipment" ;
+    skos:prefLabel "Surface Treatment and Coating Equipment" .
+
+pc:WoodworkingEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Woodworking Equipment" ;
+    skos:prefLabel "Woodworking Equipment" .
+
+pc:PlasticFilmSealingEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Plastic Film Sealing Equipment" ;
+    skos:prefLabel "Plastic Film Sealing Equipment" .
+
+pc:LacqueringSystem a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Lacquering System" .
+
+pc:EnamelingSystem a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Enameling System" .
+
+pc:PlasticCoatingSystem a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Plastic Coating System" .
+
+pc:CoatingSystemCollection a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label "Lacquering, Enameling & Plastic Coating Systems (catalog grouping)" ;
+    skos:prefLabel "Lacquering, Enameling & Plastic Coating Systems" ;
+    amtmeta:groups pc:LacqueringSystem, pc:EnamelingSystem, pc:PlasticCoatingSystem .
+
+pc:AutomationEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Automation Equipment" .
+
+pc:ElectricalSystemEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Electrical System Equipment" .
+
+pc:AutomationElectricalEquipmentCollection a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label "Manufacturing Equipment for Automation & Electrical Systems (catalog grouping)" ;
+    skos:prefLabel "Manufacturing Equipment for Automation & Electrical Systems" ;
+    amtmeta:groups pc:AutomationEquipment, pc:ElectricalSystemEquipment .
+
+pc:TransmissionSystemEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Transmission System Equipment" .
+
+pc:MotorEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Motor Equipment" .
+
+pc:SealEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Seal Equipment" .
+
+pc:MechanicalSubsystemEquipmentCollection a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label "Manufacturing Equipment for Mechanical Transmission Systems, Motors and Seals (catalog grouping)" ;
+    skos:prefLabel "Manufacturing Equipment for Mechanical Transmission Systems, Motors and Seals" ;
+    amtmeta:groups pc:TransmissionSystemEquipment, pc:MotorEquipment, pc:SealEquipment .
+
+pc:TurningCenter a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Turning Center" .
+
+pc:HorizontalCNCTurningCenter a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:TurningCenter ;
+    rdfs:label "Horizontal CNC Turning Center" ;
+    skos:prefLabel "Turning Centers, Horizontal, CNC" .
+
+pc:InvertedVerticalCNCTurningCenter a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:TurningCenter ;
+    rdfs:label "Inverted Vertical CNC Turning Center" ;
+    skos:prefLabel "Turning Centers, Inverted Vertical, CNC" .
+
+pc:TwinSpindleTurningCenter a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:TurningCenter ;
+    rdfs:label "Twin-Spindle/Twin-Turret Turning Center" ;
+    skos:prefLabel "Turning Centers, Twin-Spindle/Twin-Turret" .
+
+pc:VerticalCNCTurningCenter a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:TurningCenter ;
+    rdfs:label "Vertical CNC Turning Center" ;
+    skos:prefLabel "Turning Centers, Vertical, CNC" .
+
+pc:Lathe a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Lathe" .
+
+pc:HorizontalCNCLathe a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:Lathe ;
+    rdfs:label "Horizontal CNC Lathe" ;
+    skos:prefLabel "Lathes, Horizontal, CNC" .
+
+pc:SwissStyleLathe a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:HorizontalCNCLathe ;
+    rdfs:label "Swiss-Style CNC Lathe" ;
+    skos:prefLabel "Lathes, Horizontal, CNC-Swiss Style Lathes" .
+
+pc:MultiSpindleHorizontalCNCLathe a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:HorizontalCNCLathe ;
+    rdfs:label "Multi-Spindle Horizontal CNC Lathe" ;
+    skos:prefLabel "Lathes, Horizontal, CNC-Multi-Spindle" .
+
+pc:TwinSpindleHorizontalCNCLathe a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:HorizontalCNCLathe ;
+    rdfs:label "Twin-Spindle Horizontal CNC Lathe" ;
+    skos:prefLabel "Lathes, Horizontal, CNC-Twin Spindle Machines" .
+
+pc:VerticalCNCLathe a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:Lathe ;
+    rdfs:label "Vertical CNC Lathe" ;
+    skos:prefLabel "Lathes, Vertical, CNC" .
+
+pc:CutOffLathe a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:Lathe ;
+    rdfs:label "Cut-Off Lathe" ;
+    skos:prefLabel "Lathes, Cut-Off" .
+
+pc:ManualLathe a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:Lathe ;
+    rdfs:label "Manual Lathe" ;
+    skos:prefLabel "Lathes, Manual" .
+
+pc:MachiningCenter a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Machining Center" .
+
+pc:HorizontalMachiningCenter a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:MachiningCenter ;
+    rdfs:label "Horizontal Machining Center" ;
+    skos:prefLabel "Machining Centers, Horizontal" .
+
+pc:HorizontalSpindleMachiningCenter4Axis a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:HorizontalMachiningCenter ;
+    rdfs:label "Horizontal Spindle Machining Center (Up to Four-Axis)" ;
+    skos:prefLabel "Machining Centers, Horizontal Spindle (Up to Four-Axis)" .
+
+pc:HorizontalSpindleMachiningCenter5Axis a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:HorizontalMachiningCenter ;
+    rdfs:label "Horizontal Spindle Machining Center, Five-Axis" ;
+    skos:prefLabel "Machining Centers, Horizontal Spindle, Five-Axis" .
+
+pc:VerticalMachiningCenter a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:MachiningCenter ;
+    rdfs:label "Vertical Machining Center" .
+
+pc:VerticalColumnMachiningCenter a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:VerticalMachiningCenter ;
+    rdfs:label "Vertical Column Machining Center" ;
+    skos:prefLabel "Machining Centers, Vertical Column" .
+
+pc:VerticalBridgeGantryMachiningCenter a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:VerticalMachiningCenter ;
+    rdfs:label "Vertical Bridge & Gantry Machining Center" ;
+    skos:prefLabel "Machining Centers, Vertical Bridge & Gantry" .
+
+pc:VerticalSpindleMachiningCenter4Axis a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:VerticalMachiningCenter ;
+    rdfs:label "Vertical Spindle Machining Center (Up to Four-Axis)" ;
+    skos:prefLabel "Machining Centers, Vertical Spindle (Up to Four-Axis)" .
+
+pc:VerticalSpindleMachiningCenter5Axis a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:VerticalMachiningCenter ;
+    rdfs:label "Vertical Spindle Machining Center, Five-Axis" ;
+    skos:prefLabel "Machining Centers, Vertical Spindle, Five-Axis" .
+
+pc:UniversalMachiningCenter a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:MachiningCenter ;
+    rdfs:label "Universal Machining Center" ;
+    skos:prefLabel "Machining Centers, Universal" .
+
+pc:GrindingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Grinding Machine" .
+
+pc:SurfaceGrindingMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:GrindingMachine ;
+    rdfs:label "Surface Grinding Machine" ;
+    skos:prefLabel "Grinding Machines, Surface" .
+
+pc:ReciprocalTableSurfaceGrinder a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SurfaceGrindingMachine ;
+    rdfs:label "Reciprocal Table Surface Grinder" ;
+    skos:prefLabel "Grinding Machines, Surface, Reciprocal Table" .
+
+pc:RotaryTableSurfaceGrinder a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SurfaceGrindingMachine ;
+    rdfs:label "Rotary Table Surface Grinder" ;
+    skos:prefLabel "Grinding Machines, Surface, Rotary Table" .
+
+pc:AbrasiveBeltGrinder a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:GrindingMachine ;
+    rdfs:label "Abrasive Belt Grinder" ;
+    skos:prefLabel "Grinding Machines, Abrasive Belt" .
+
+pc:CenterlessGrinder a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:GrindingMachine ;
+    rdfs:label "Centerless Grinder" ;
+    skos:prefLabel "Grinding Machines, Centerless" .
+
+pc:CreepFeedGrinder a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:GrindingMachine ;
+    rdfs:label "Creep Feed Grinder" ;
+    skos:prefLabel "Grinding Machines, Creep Feed" .
+
+pc:CylindricalODGrinder a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:GrindingMachine ;
+    rdfs:label "Cylindrical OD Grinder" ;
+    skos:prefLabel "Grinding Machines, Cylindrical OD" .
+
+pc:DiscGrinder a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:GrindingMachine ;
+    rdfs:label "Disc Grinder" ;
+    skos:prefLabel "Grinding Machines, Disc, Single or Double" .
+
+pc:InternalCylindricalGrinder a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:GrindingMachine ;
+    rdfs:label "Internal Cylindrical Grinder" ;
+    skos:prefLabel "Grinding Machines, Internal Cylindrical" .
+
+pc:JigGrinder a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:GrindingMachine ;
+    rdfs:label "Jig Grinder" ;
+    skos:prefLabel "Grinding Machines, Jig" .
+
+pc:ProfileGrinder a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:GrindingMachine ;
+    rdfs:label "Profile Grinder" ;
+    skos:prefLabel "Grinding Machines, Profile" .
+
+pc:ThreadGrinder a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:GrindingMachine ;
+    rdfs:label "Thread Grinder" ;
+    skos:prefLabel "Grinding Machines, Thread" .
+
+pc:ToolCutterDrillPointGrinder a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:GrindingMachine ;
+    rdfs:label "Tool, Cutter and Drill Point Grinder" ;
+    skos:prefLabel "Grinding Machines, Tool, Cutter and Drill Point" .
+
+pc:UniversalGrinder a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:GrindingMachine ;
+    rdfs:label "Universal Grinder (ID/OD)" ;
+    skos:prefLabel "Grinding Machines, Universal (ID/OD)" .
+
+pc:WeldingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Welding Machine" ;
+    skos:prefLabel "Welding Machines and Equipment" .
+
+pc:ElectronBeamWeldingMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:WeldingMachine ;
+    rdfs:label "Electron-Beam Welding Machine" ;
+    skos:prefLabel "Welding Machines, Electron-Beam" .
+
+pc:FrictionWeldingMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:WeldingMachine ;
+    rdfs:label "Friction Welding Machine" ;
+    skos:prefLabel "Welding Machines, Friction" .
+
+pc:GasWeldingMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:WeldingMachine ;
+    rdfs:label "Gas Welding Machine" ;
+    skos:prefLabel "Welding Machines, Gas" .
+
+pc:ElectricWeldingMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:WeldingMachine ;
+    rdfs:label "Electric Welding Machine" ;
+    skos:prefLabel "Welding Machines, Electric" .
+
+pc:LaserWeldingMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:WeldingMachine ;
+    rdfs:label "Laser Welding Machine" ;
+    skos:prefLabel "Welding Machines, Laser" .
+
+pc:RoboticWeldingSystem a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:WeldingMachine ;
+    rdfs:label "Robotic Welding System" ;
+    skos:prefLabel "Welding Machines, Systems or Robotic" .
+
+pc:EDMMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "EDM Machine" .
+
+pc:SmallHoleEDM a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:EDMMachine ;
+    rdfs:label "Small Hole EDM" ;
+    skos:prefLabel "EDM, Small Hole" .
+
+pc:WireEDM a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:EDMMachine ;
+    rdfs:label "Wire EDM" ;
+    skos:prefLabel "EDM, Wire Type" .
+
+pc:RamEDM a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:EDMMachine ;
+    rdfs:label "Ram-Type EDM" ;
+    skos:prefLabel "EDM, Ram Type" .
+
+pc:CNCDieSinkingRamEDM a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:RamEDM ;
+    rdfs:label "CNC Die-Sinking Ram EDM" ;
+    skos:prefLabel "EDM, Ram Type (Die-Sinking) CNC" .
+
+pc:ManualDieSinkingRamEDM a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:RamEDM ;
+    rdfs:label "Manual Die-Sinking Ram EDM" ;
+    skos:prefLabel "EDM, Ram Type (Die-Sinking) Manual" .
+
+pc:HoningMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Honing Machine" ;
+    skos:prefLabel "Honing Machines" .
+
+pc:HorizontalSpindleHoningMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:HoningMachine ;
+    rdfs:label "Horizontal Spindle Honing Machine" ;
+    skos:prefLabel "Honing Machines, Horizontal Spindle" .
+
+pc:MultipleSpindleHoningMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:HoningMachine ;
+    rdfs:label "Multiple Spindle Honing Machine" ;
+    skos:prefLabel "Honing Machines, Multiple Spindle" .
+
+pc:VerticalSpindleHoningMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:HoningMachine ;
+    rdfs:label "Vertical Spindle Honing Machine" ;
+    skos:prefLabel "Honing Machines, Vertical Spindle" .
+
+pc:Press a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Press" .
+
+pc:HydraulicPress a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:Press ;
+    rdfs:label "Hydraulic Press" ;
+    skos:prefLabel "Presses, Hydraulic" .
+
+pc:GapFrameHydraulicPress a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:HydraulicPress ;
+    rdfs:label "Gap Frame Hydraulic Press" ;
+    skos:prefLabel "Presses, Hydraulic, Gap Frame" .
+
+pc:VerticalStraightSideHydraulicPress a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:HydraulicPress ;
+    rdfs:label "Vertical Straight Side Hydraulic Press" ;
+    skos:prefLabel "Presses, Hydraulic, Vertical Straight Side" .
+
+pc:PunchPress a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:Press ;
+    rdfs:label "Punch Press" ;
+    skos:prefLabel "Presses, Punch" .
+
+pc:CNCPunchLaserPlasmaPress a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:PunchPress ;
+    rdfs:label "CNC Punch/Laser/Plasma Combination Press" ;
+    skos:prefLabel "Punch Press/Laser (or Plasma), CNC Combination" .
+
+pc:CNCTurretPunchPress a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:PunchPress ;
+    rdfs:label "CNC Turret Punch Press" ;
+    skos:prefLabel "Punch Presses, CNC Turret" .
+
+pc:MechanicalPress a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:Press ;
+    rdfs:label "Mechanical Press" ;
+    skos:prefLabel "Presses, Mechanical" .
+
+pc:GapFrameMechanicalPress a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:MechanicalPress ;
+    rdfs:label "Gap Frame Mechanical Press" ;
+    skos:prefLabel "Presses, Mechanical, Gap Frame" .
+
+pc:VerticalStraightSideMechanicalPress a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:MechanicalPress ;
+    rdfs:label "Vertical Straight Side Mechanical Press" ;
+    skos:prefLabel "Presses, Mechanical, Vertical Straight Side" .
+
+pc:PneumaticPress a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:Press ;
+    rdfs:label "Pneumatic Press" ;
+    skos:prefLabel "Presses, Pneumatic" .
+
+pc:FineBlankingPress a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:Press ;
+    rdfs:label "Fine Blanking Press" ;
+    skos:prefLabel "Presses, Fine Blanking" .
+
+pc:AutomaticStampingPress a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:Press ;
+    rdfs:label "Automatic Stamping Press" ;
+    skos:prefLabel "Presses, Stamping, Automatic" .
+
+pc:StraighteningPress a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:Press ;
+    rdfs:label "Straightening Press" ;
+    skos:prefLabel "Presses, Straightening" .
+
+pc:AdditiveMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Additive Machine" .
+
+pc:SheetLamination a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:AdditiveMachine ;
+    rdfs:label "Sheet Lamination" ;
+    skos:prefLabel "Sheet Lamination" .
+
+pc:DirectedEnergyDeposition a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:AdditiveMachine ;
+    rdfs:label "Directed Energy Deposition" ;
+    skos:prefLabel "Directed Energy Deposition (DED)" .
+
+pc:HybridAdditiveManufacturing a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:AdditiveMachine ;
+    rdfs:label "Hybrid Additive Manufacturing" ;
+    skos:prefLabel "Hybrid - Additive Manufacturing" .
+
+pc:PowderBedFusion a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:AdditiveMachine ;
+    rdfs:label "Powder Bed Fusion" ;
+    skos:prefLabel "Powder Bed Fusion (PBF)" .
+
+pc:VatPhotopolymerization a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:AdditiveMachine ;
+    rdfs:label "Vat Photopolymerization" ;
+    skos:prefLabel "Vat Photopolymerization" .
+
+pc:MaterialJetting a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:AdditiveMachine ;
+    rdfs:label "Material Jetting" ;
+    skos:prefLabel "Material Jetting" .
+
+pc:BinderJetting a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:AdditiveMachine ;
+    rdfs:label "Binder Jetting" ;
+    skos:prefLabel "Binder Jetting" .
+
+pc:MaterialExtrusion a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:AdditiveMachine ;
+    rdfs:label "Material Extrusion" ;
+    skos:prefLabel "Material Extrusion" .
+
+pc:MoldEnabledAdditiveManufacturing a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:AdditiveMachine ;
+    rdfs:label "Mold-Enabled Additive Manufacturing" ;
+    skos:prefLabel "Mold - Enabled Additive Manufacturing" .
+
+pc:BroachingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Broaching Machine" .
+
+pc:ContinuousBroachingMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:BroachingMachine ;
+    rdfs:label "Continuous Broaching Machine" ;
+    skos:prefLabel "Broaching Machines, Continuous" .
+
+pc:HorizontalBroachingMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:BroachingMachine ;
+    rdfs:label "Horizontal Broaching Machine" ;
+    skos:prefLabel "Broaching Machines, Horizontal" .
+
+pc:InternalBroachingMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:BroachingMachine ;
+    rdfs:label "Internal Broaching Machine" ;
+    skos:prefLabel "Broaching Machines, Internal" .
+
+pc:VerticalBroachingMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:BroachingMachine ;
+    rdfs:label "Vertical Broaching Machine" ;
+    skos:prefLabel "Broaching Machines, Vertical" .
+
+pc:ShapingSlottingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Shaping & Slotting Machine" ;
+    skos:prefLabel "Shaping and Slotting Machines" .
+
+pc:MetalDisintegrator a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Metal Disintegrator" ;
+    skos:prefLabel "Metal Disintegrators" .
+
+pc:ElectroChemicalMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Electro-Chemical Machine" ;
+    skos:prefLabel "Electro-Chemical Machines (ECM)" .
+
+pc:LaserCuttingSystem a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Laser Cutting System" ;
+    skos:prefLabel "Laser Cutting Systems" .
+
+pc:LaserMarkingSystem a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Laser Marking System" ;
+    skos:prefLabel "Laser Marking Systems" .
+
+pc:LaserWeldingCladdingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Laser Welding & Cladding Machine" ;
+    skos:prefLabel "Laser Welding and Cladding Machines" .
+
+pc:CO2Laser a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "CO2 Laser" ;
+    skos:prefLabel "Lasers, CO2" .
+
+pc:ContinuousWaveNdYagLaser a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Continuous Wave Nd:YAG Laser" ;
+    skos:prefLabel "Lasers, Nd: YAG, Continuous Wave" .
+
+pc:PulsedNdYagLaser a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Pulsed Nd:YAG Laser" ;
+    skos:prefLabel "Lasers, Nd: YAG, Pulsed" .
+
+pc:MarkingEngravingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Marking & Engraving Machine" ;
+    skos:prefLabel "Marking and Engraving Machines" .
+
+pc:PlasmaArcCuttingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Plasma-Arc Cutting Machine" ;
+    skos:prefLabel "Plasma-Arc/Plasma Cutting Machines" .
+
+pc:WaterJetCuttingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Water Jet Cutting Machine" ;
+    skos:prefLabel "Water Jet Cutting Machines" .
+
+pc:GearManufacturingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Gear Manufacturing Machine" .
+
+pc:GearDeburringMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:GearManufacturingMachine ;
+    rdfs:label "Gear Deburring Machine" ;
+    skos:prefLabel "Gear Deburring Machines" .
+
+pc:BevelGearGenerationMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:GearManufacturingMachine ;
+    rdfs:label "Bevel Gear Generation Machine" ;
+    skos:prefLabel "Gear Generation (Bevel) Machines" .
+
+pc:GearGrindingMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:GearManufacturingMachine ;
+    rdfs:label "Gear Grinding Machine" ;
+    skos:prefLabel "Gear Grinding Machines" .
+
+pc:GearHobbingMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:GearManufacturingMachine ;
+    rdfs:label "Gear Hobbing Machine" ;
+    skos:prefLabel "Gear Hobbing Machines" .
+
+pc:GearHoningMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:GearManufacturingMachine ;
+    rdfs:label "Gear Honing Machine" ;
+    skos:prefLabel "Gear Honing Machines" .
+
+pc:GearInspectionMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:GearManufacturingMachine ;
+    rdfs:label "Gear Inspection Machine" ;
+    skos:prefLabel "Gear Inspection Machines" .
+
+pc:GearLappingMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:GearManufacturingMachine ;
+    rdfs:label "Gear Lapping Machine" ;
+    skos:prefLabel "Gear Lapping Machines" .
+
+pc:GearShapingMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:GearManufacturingMachine ;
+    rdfs:label "Gear Shaping Machine" ;
+    skos:prefLabel "Gear Shaping Machines" .
+
+pc:GearShavingMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:GearManufacturingMachine ;
+    rdfs:label "Gear Shaving Machine" ;
+    skos:prefLabel "Gear Shaving Machines" .
+
+pc:GearRollingMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:GearManufacturingMachine ;
+    rdfs:label "Gear Rolling Machine" ;
+    skos:prefLabel "Gear Rolling Machines" .
+
+pc:CoatingEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Coating Equipment" ;
+    skos:prefLabel "Coating Equipment" .
+
+pc:AbrasiveFlowFinishingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Abrasive Flow Finishing Machine" ;
+    skos:prefLabel "Abrasive Flow Finishing Machines" .
+
+pc:BuffingPolishingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Buffing & Polishing Machine" ;
+    skos:prefLabel "Buffing and Polishing Machines" .
+
+pc:CentrifugalBarrelDiscFinishingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Centrifugal Barrel & Disc Finishing Machine" ;
+    skos:prefLabel "Centrifugal Barrel and Disc Finishing Machines" .
+
+pc:DeburringEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Deburring Equipment" ;
+    skos:prefLabel "Deburring Equipment" .
+
+pc:LappingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Lapping Machine" ;
+    skos:prefLabel "Lapping Machines" .
+
+pc:RollFinishingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Roll Finishing Machine" ;
+    skos:prefLabel "Roll Finishing Machines" .
+
+pc:SuperFinishingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Super (Micro) Finishing Machine" ;
+    skos:prefLabel "Super (Micro) Finishing Machines" .
+
+pc:SuperabrasiveMachiningSystem a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Superabrasive Machining System" ;
+    skos:prefLabel "Superabrasive Machining Systems" .
+
+pc:VibratoryTumblingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Vibratory Tumbling Machine" ;
+    skos:prefLabel "Vibratory Tumbling Machines" .
+
+pc:BoringMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Boring Machine" ;
+    skos:prefLabel "Boring Machines" .
+
+pc:JigBoringMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:BoringMachine ;
+    rdfs:label "Jig Boring Machine" ;
+    skos:prefLabel "Boring Machines, Jig" .
+
+pc:DrillingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Drilling Machine" .
+
+pc:CNCDrillingTappingMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:DrillingMachine ;
+    rdfs:label "CNC Drilling & Tapping Machine" ;
+    skos:prefLabel "Drilling and Tapping Machines, CNC" .
+
+pc:FixturedDrillingTappingUnit a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:DrillingMachine ;
+    rdfs:label "Fixtured Drilling & Tapping Unit" ;
+    skos:prefLabel "Drilling and Tapping Units, Fixtured" .
+
+pc:BenchColumnDrillingMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:DrillingMachine ;
+    rdfs:label "Bench & Column Drilling Machine" ;
+    skos:prefLabel "Drilling Machines, Bench and Column" .
+
+pc:DeepHoleDrillingMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:DrillingMachine ;
+    rdfs:label "Deep Hole Drilling Machine (Gundrilling)" ;
+    skos:prefLabel "Drilling Machines, Deep Hole (Gundrilling)" .
+
+pc:MultiSpindleDrillingMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:DrillingMachine ;
+    rdfs:label "Multi-Spindle Drilling Machine" ;
+    skos:prefLabel "Drilling Machines, Multi-Spindle" .
+
+pc:RadialArmDrillingMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:DrillingMachine ;
+    rdfs:label "Radial Arm Drilling Machine" ;
+    skos:prefLabel "Drilling Machines, Radial Arm" .
+
+pc:MillingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Milling Machine" .
+
+pc:BedTypeMillingMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:MillingMachine ;
+    rdfs:label "Bed-Type Milling Machine" ;
+    skos:prefLabel "Milling Machines, Bed-Type" .
+
+pc:GraphiteMillingMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:MillingMachine ;
+    rdfs:label "Graphite Milling Machine" ;
+    skos:prefLabel "Milling Machines, Graphite" .
+
+pc:KneeColumnMillingMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:MillingMachine ;
+    rdfs:label "Knee & Column (Non-ATC) Milling Machine" ;
+    skos:prefLabel "Milling Machines, Knee and Column, Non-ATC" .
+
+pc:PlanerGantryBridgeMillingMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:MillingMachine ;
+    rdfs:label "Planer, Gantry & Bridge Milling Machine" ;
+    skos:prefLabel "Milling Machines, Planer, Gantry and Bridge Type" .
+
+pc:ProfileDuplicatingMillingMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:MillingMachine ;
+    rdfs:label "Profile & Duplicating Milling Machine" ;
+    skos:prefLabel "Milling Machines, Profile and Duplicating" .
+
+pc:UniversalMillingMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:MillingMachine ;
+    rdfs:label "Universal Milling Machine" ;
+    skos:prefLabel "Milling Machines, Universal" .
+
+pc:NanoMicroMachiningEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Nano & Micro Machining Equipment" ;
+    skos:prefLabel "Nano & Micro Machining Equipment" .
+
+pc:SlottingSaw a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Slotting Saw" ;
+    skos:prefLabel "Slotting Saws" .
+
+pc:AbrasiveCutOffMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Abrasive Cut-Off Machine" ;
+    skos:prefLabel "Abrasive Cut-Off Machines" .
+
+pc:Bandsaw a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Bandsaw" ;
+    skos:prefLabel "Bandsaws" .
+
+pc:VerticalTiltFrameBandsaw a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:Bandsaw ;
+    rdfs:label "Vertical Tilt Frame Bandsaw" ;
+    skos:prefLabel "Bandsaws, Vertical Tilt Frame" .
+
+pc:Hacksaw a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Hacksaw" ;
+    skos:prefLabel "Hacksaws" .
+
+pc:SawingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Sawing Machine" .
+
+pc:CircularCutOffSawingMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SawingMachine ;
+    rdfs:label "Circular Cut-Off Sawing Machine (Cold)" ;
+    skos:prefLabel "Sawing Machines, Circular Cut-Off Saws (Cold)" .
+
+pc:ContourSawingMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SawingMachine ;
+    rdfs:label "Contour Sawing Machine" ;
+    skos:prefLabel "Sawing Machines, Contour" .
+
+pc:SawingMachineOtherCollection a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label "Sawing Machines, Other (catalog residual)" ;
+    skos:prefLabel "Sawing Machines, Other" .
+
+pc:ScrewMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Screw Machine" .
+
+pc:MultiSpindleCamScrewMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:ScrewMachine ;
+    rdfs:label "Multi-Spindle Cam-Type Screw Machine" ;
+    skos:prefLabel "Screw Machines, Multi-Spindle, Cam-Type" .
+
+pc:SingleSpindleCamScrewMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:ScrewMachine ;
+    rdfs:label "Single-Spindle Cam-Type Screw Machine" ;
+    skos:prefLabel "Screw Machines, Single-Spindle, Cam-Type" .
+
+pc:MultiSpindleCNCScrewMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:ScrewMachine ;
+    rdfs:label "Multi-Spindle CNC Screw Machine" ;
+    skos:prefLabel "Screw Machines, Multi-Spindle, CNC" .
+
+pc:SingleSpindleCNCScrewMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:ScrewMachine ;
+    rdfs:label "Single-Spindle CNC Screw Machine" ;
+    skos:prefLabel "Screw Machines, Single-Spindle, CNC" .
+
+pc:SwissCNCScrewMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:ScrewMachine ;
+    rdfs:label "Swiss CNC Screw Machine" ;
+    skos:prefLabel "Screw Machines, Swiss, CNC" .
+
+pc:SwissCamScrewMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:ScrewMachine ;
+    rdfs:label "Swiss Cam-Type Screw Machine" ;
+    skos:prefLabel "Screw Machines, Swiss, Cam-Type" .
+
+pc:ScrewMachineAttachmentsAndCams a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Screw Machine Attachments & Cams" ;
+    skos:prefLabel "Screw Machine Attachments, Cams & Related Equipment" .
+
+pc:BarTubeEndFinishingEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Bar & Tube End Finishing Equipment" ;
+    skos:prefLabel "End Finishing Equipment, Bar and Tube" .
+
+pc:EndTurningMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "End Turning Machine" ;
+    skos:prefLabel "End Turning Machines" .
+
+pc:ThreadCuttingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Thread Cutting Machine" ;
+    skos:prefLabel "Thread Cutting Machines" .
+
+pc:ThreadRollingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Thread Rolling Machine" ;
+    skos:prefLabel "Thread Rolling Machines" .
+
+pc:PipeBarThreadingCutOffMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Pipe & Bar Threading & Cut-Off Machine" ;
+    skos:prefLabel "Threading and Cut-Off Machines, Pipe and Bar" .
+
+pc:CNCTurnMillMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "CNC Turn/Mill Machine" ;
+    skos:prefLabel "Turn/Mill Machines, CNC" .
+
+pc:UltrasonicMachiningEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Ultrasonic Machining Equipment" ;
+    skos:prefLabel "Ultrasonic Machining Equipment" .
+
+pc:CoilSlittingEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Coil Slitting Equipment" ;
+    skos:prefLabel "Coil Slitting Equipment" .
+
+pc:DiecuttingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Diecutting Machine" ;
+    skos:prefLabel "Diecutting Machines" .
+
+pc:StretchBender a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Stretch Bender" ;
+    skos:prefLabel "Stretch Benders" .
+
+pc:StripHandlingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Strip Handling Machine" ;
+    skos:prefLabel "Strip Handling Machines" .
+
+pc:CoilEquipmentSystem a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Coil Equipment System" ;
+    skos:prefLabel "Coil Equipment Systems" .
+
+pc:ColdHeadingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Cold Heading Machine" ;
+    skos:prefLabel "Cold Forming, Cold Heading Machines" .
+
+pc:ColdFormingWireFormingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Cold Forming Wire Forming Machine" ;
+    skos:prefLabel "Cold Forming, Wire Forming Machines" .
+
+pc:FastenerInsertionEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Fastener Insertion Equipment" ;
+    skos:prefLabel "Insertion Equipment - Fastener" .
+
+pc:VacuumFormingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Vacuum Forming Machine" ;
+    skos:prefLabel "Vacuum Forming Machines" .
+
+pc:CutToLengthMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Cut-to-Length Machine" ;
+    skos:prefLabel "Cut to Length Machines" .
+
+pc:DieHandlingEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Die Handling Equipment" ;
+    skos:prefLabel "Die Handling Equipment" .
+
+pc:FoundryEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Foundry Equipment" ;
+    skos:prefLabel "Foundry Equipment" .
+
+pc:HotForgingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Hot Forging Machine" ;
+    skos:prefLabel "Hot Forming, Forging Machines" .
+
+pc:IronWorker a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Iron Worker" ;
+    skos:prefLabel "Iron Workers" .
+
+pc:NotchingSlottingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Notching & Slotting Machine" ;
+    skos:prefLabel "Notching and Slotting Machines" .
+
+pc:PipeTubeBendingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Pipe & Tube Bending Machine" ;
+    skos:prefLabel "Pipe and Tube Bending Machines" .
+
+pc:PipeFabricatingFormingEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Pipe Fabricating & Forming Equipment" ;
+    skos:prefLabel "Pipe Fabricating and Forming Equipment" .
+
+pc:PressBrake a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Press Brake" ;
+    skos:prefLabel "Press Brakes" .
+
+pc:ProfileRollingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Profile Rolling Machine" ;
+    skos:prefLabel "Profile Rolling Machines" .
+
+pc:RollFormingBendingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Roll Forming & Bending Machine" ;
+    skos:prefLabel "Roll Forming and Bending Machines" .
+
+pc:BilletBarRodAngleShear a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Billet/Bar/Rod/Angle Shear" ;
+    skos:prefLabel "Shears, Billet, Bar, Rod and Angle" .
+
+pc:GuillotineShear a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Guillotine Shear" ;
+    skos:prefLabel "Shears, Guillotine (Squaring)" .
+
+pc:StraighteningMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Straightening Machine" ;
+    skos:prefLabel "Straightening Machines" .
+
+pc:WireFormingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Wire Forming Machine" ;
+    skos:prefLabel "Wire Forming Machines" .
+
+pc:CoilWindingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Coil Winding Machine" ;
+    skos:prefLabel "Coil Winding Machines" .
+
+pc:ColdFormingUpsetter a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Cold Forming Upsetter" ;
+    skos:prefLabel "Cold Forming, Upsetters" .
+
+pc:HydroFormingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Hydro-Forming Machine" ;
+    skos:prefLabel "Hydro-Forming Machines" .
+
+pc:SplineRollingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Spline Rolling Machine" ;
+    skos:prefLabel "Spline Rolling Machines" .
+
+pc:ColdFormingRivetingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Cold Forming Riveting Machine" ;
+    skos:prefLabel "Cold Forming, Riveting Machines" .
+
+pc:DiecastingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Diecasting Machine" ;
+    skos:prefLabel "Diecasting Machines" .
+
+pc:SpinFormingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Spin-Forming Machine" ;
+    skos:prefLabel "Spin-Forming Machines" .
+
+pc:SwagingMachine a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Swaging Machine" ;
+    skos:prefLabel "Swaging Machines" .
+
+pc:DeburringEtchingCleaningPeening a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Deburring/Etching/Cleaning/Peening" ;
+    skos:prefLabel "Deburring, Etching, Cleaning & Peening" .
+
+pc:Shearing a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Shearing" ;
+    skos:prefLabel "Shearing" .
+
+pc:CoilHandling a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Coil Handling" ;
+    skos:prefLabel "Coil Handling" .
+
+pc:MaterialHandlingSystem a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Material Handling System" .
+
+pc:TransferMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:MaterialHandlingSystem ;
+    rdfs:label "Transfer Machine" .
+
+pc:InLineTransferMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:TransferMachine ;
+    rdfs:label "In-Line Transfer Machine" ;
+    skos:prefLabel "Transfer Machines, In-line" .
+
+pc:DialIndexTransferMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:TransferMachine ;
+    rdfs:label "Dial Index Transfer Machine" ;
+    skos:prefLabel "Transfer Machines, Dial Index" .
+
+pc:RotaryTransferMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:TransferMachine ;
+    rdfs:label "Rotary Transfer Machine" ;
+    skos:prefLabel "Transfer Machines, Rotary" .
+
+pc:ShuttleTransferMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:TransferMachine ;
+    rdfs:label "Shuttle-Type Transfer Machine" ;
+    skos:prefLabel "Transfer Machines, Shuttle-type" .
+
+pc:TrunnionTransferMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:TransferMachine ;
+    rdfs:label "Trunnion Transfer Machine" ;
+    skos:prefLabel "Transfer Machines, Trunnion" .
+
+pc:AutomaticStorageRetrievalSystem a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:MaterialHandlingSystem ;
+    rdfs:label "Automatic Storage/Retrieval System" ;
+    skos:prefLabel "Automatic Storage/Retrieval Systems" .
+
+pc:BarFeedMechanism a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:MaterialHandlingSystem ;
+    rdfs:label "Bar Feed Mechanism" ;
+    skos:prefLabel "Bar Feed Mechanisms" .
+
+pc:ChipConveyorHandlingEquipment a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:MaterialHandlingSystem ;
+    rdfs:label "Chip Conveyor & Handling Equipment" ;
+    skos:prefLabel "Chip Conveyors and Handling Equipment" .
+
+pc:ConveyorPartHandlingAutomation a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:MaterialHandlingSystem ;
+    rdfs:label "Conveyor & Part Handling Automation" ;
+    skos:prefLabel "Conveyors & Other Part Handling Automation" .
+
+pc:GantryLoader a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:MaterialHandlingSystem ;
+    rdfs:label "Gantry Loader" ;
+    skos:prefLabel "Gantry Loaders" .
+
+pc:LiftingPositioningEquipment a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:MaterialHandlingSystem ;
+    rdfs:label "Lifting & Positioning Equipment" ;
+    skos:prefLabel "Lifting and Positioning Equipment" .
+
+pc:PalletChangerShuttleTransferDevice a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:MaterialHandlingSystem ;
+    rdfs:label "Pallet Changer/Shuttle & Programmable Transfer Device" ;
+    skos:prefLabel "Pallet Changers/Shuttles and Programmable Transfer Devices" .
+
+pc:PressAutomationDevice a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:MaterialHandlingSystem ;
+    rdfs:label "Press Automation Device" ;
+    skos:prefLabel "Press Automation Devices" .
+
+pc:PressFeedLoadingEquipment a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:MaterialHandlingSystem ;
+    rdfs:label "Press Feed & Loading Equipment" ;
+    skos:prefLabel "Press Feeds and Loading Equipment" .
+
+pc:WorkpieceHandlingLoadingFeedingEquipment a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:MaterialHandlingSystem ;
+    rdfs:label "Workpiece Handling, Loading & Feeding Equipment" ;
+    skos:prefLabel "Workpiece Handling, Loading and Feeding Equipment" .
+
+pc:ManualPalletChanger a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:MaterialHandlingSystem ;
+    rdfs:label "Manual Pallet Changer" ;
+    skos:prefLabel "Pallet Changers - Manual" .
+
+pc:BowlFeeder a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:MaterialHandlingSystem ;
+    rdfs:label "Bowl Feeder" ;
+    skos:prefLabel "Bowl Feeders" .
+
+pc:MobileRobot a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:MaterialHandlingSystem ;
+    rdfs:label "Mobile Robot" ;
+    skos:prefLabel "Mobile Robots - (AGV / UGV / AMR )" .
+
+pc:AutomatedGuidedVehicle a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:MobileRobot ;
+    rdfs:label "Automated Guided Vehicle" ;
+    skos:prefLabel "Automated Guided Vehicles" .
+
+pc:UnmannedGroundVehicle a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:MobileRobot ;
+    rdfs:label "Unmanned Ground Vehicle" .
+
+pc:AutonomousMobileRobot a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:MobileRobot ;
+    rdfs:label "Autonomous Mobile Robot" .
+
+pc:MultiMachineToolStorageSystem a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:MaterialHandlingSystem ;
+    rdfs:label "Multi-Machine Tool-Storage System" ;
+    skos:prefLabel "Multi-Machine Tool-Storage Systems" .
+
+pc:FormingEquipmentLoadingPositioning a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:MaterialHandlingSystem ;
+    rdfs:label "Forming Equipment Loading & Positioning" ;
+    skos:prefLabel "Forming Equipment-Loading & Positioning" .
+
+pc:LaserTechnologyCollection a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label "Laser Technology (catalog grouping)" ;
+    skos:prefLabel "Laser Technology" ;
+    amtmeta:groups pc:LaserCuttingSystem, pc:LaserMarkingSystem, pc:LaserWeldingCladdingMachine, pc:LaserWeldingMachine, pc:CO2Laser, pc:ContinuousWaveNdYagLaser, pc:PulsedNdYagLaser .
+
+pc:StationaryRobot a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Stationary Robot (Robot Arm)" ;
+    skos:prefLabel "Stationary Robots - (Robot Arm)" .
+
+pc:SensingInspectionSystem a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Sensing & Inspection System" .
+
+pc:MeasuringTestSystem a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SensingInspectionSystem ;
+    rdfs:label "Measuring & Test System" ;
+    skos:prefLabel "Measuring and Test Systems" .
+
+pc:IndustrialImageProcessingSystem a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SensingInspectionSystem ;
+    rdfs:label "Industrial Image Processing System" ;
+    skos:prefLabel "Industrial Image Processing Systems" .
+
+pc:IndustrialAutoIDSystem a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SensingInspectionSystem ;
+    rdfs:label "Industrial Automatic Data Capturing & Identification System" ;
+    skos:prefLabel "Industrial Automatic Data Capturing and Identification Systems" .
+
+pc:Sensor a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SensingInspectionSystem ;
+    rdfs:label "Sensor" .
+
+pc:Actuator a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SensingInspectionSystem ;
+    rdfs:label "Actuator" .
+
+pc:SensorActuatorCollection a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label "Sensors and Actuators (catalog grouping)" ;
+    skos:prefLabel "Sensors and Actuators" ;
+    amtmeta:groups pc:Sensor, pc:Actuator .
+
+pc:Autocollimator a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SensingInspectionSystem ;
+    rdfs:label "Autocollimator" ;
+    skos:prefLabel "Autocollimators" .
+
+pc:BalancingMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SensingInspectionSystem ;
+    rdfs:label "Balancing Machine" ;
+    skos:prefLabel "Balancing Machines" .
+
+pc:Borescope a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SensingInspectionSystem ;
+    rdfs:label "Borescope" ;
+    skos:prefLabel "Borescopes" .
+
+pc:CalibrationEquipment a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SensingInspectionSystem ;
+    rdfs:label "Calibration Equipment" ;
+    skos:prefLabel "Calibration Equipment" .
+
+pc:OpticalComparator a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SensingInspectionSystem ;
+    rdfs:label "Optical & Other Comparator" ;
+    skos:prefLabel "Comparators, Optical and Other" .
+
+pc:CoordinateMeasuringMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SensingInspectionSystem ;
+    rdfs:label "Coordinate Measuring Machine" ;
+    skos:prefLabel "Coordinate Measuring Machines" .
+
+pc:PortableCoordinateMeasuringMachine a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SensingInspectionSystem ;
+    rdfs:label "Portable Coordinate Measuring Machine" ;
+    skos:prefLabel "Coordinate Measuring Machines, Portable" .
+
+pc:GagingSPCDataCollectionDevice a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SensingInspectionSystem ;
+    rdfs:label "Gaging/SPC Data Collection Device" ;
+    skos:prefLabel "Data Collection Devices for Gaging, SPC, etc." .
+
+pc:FlatnessMeasuringEquipment a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SensingInspectionSystem ;
+    rdfs:label "Flatness Measuring Equipment" ;
+    skos:prefLabel "Flatness Measuring Equipment" .
+
+pc:FlawDetectionEquipment a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SensingInspectionSystem ;
+    rdfs:label "Flaw Detection Equipment" ;
+    skos:prefLabel "Flaw Detection Equipment" .
+
+pc:ElectronicGage a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SensingInspectionSystem ;
+    rdfs:label "Electronic/Digital Gage" ;
+    skos:prefLabel "Gages, Electronic/Digital" .
+
+pc:MechanicalGage a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SensingInspectionSystem ;
+    rdfs:label "Mechanical Gage" ;
+    skos:prefLabel "Gages, Mechanical" .
+
+pc:GearInspectionEquipment a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SensingInspectionSystem ;
+    rdfs:label "Gear Inspection Equipment" ;
+    skos:prefLabel "Gear Inspection Equipment" .
+
+pc:HardnessTestingEquipment a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SensingInspectionSystem ;
+    rdfs:label "Hardness Testing Equipment" ;
+    skos:prefLabel "Hardness Testing Equipment" .
+
+pc:Interferometer a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SensingInspectionSystem ;
+    rdfs:label "Interferometer" ;
+    skos:prefLabel "Interferometers" .
+
+pc:LaserMeasurementSystem a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SensingInspectionSystem ;
+    rdfs:label "Laser Measurement System" ;
+    skos:prefLabel "Laser Measurement Systems" .
+
+pc:LeakTestingEquipment a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SensingInspectionSystem ;
+    rdfs:label "Leak Testing Equipment" ;
+    skos:prefLabel "Leak Testing Equipment" .
+
+pc:MaterialTestingAnalysisEquipment a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SensingInspectionSystem ;
+    rdfs:label "Material Testing & Analysis Equipment" ;
+    skos:prefLabel "Material Testing & Analysis Equipment" .
+
+pc:ElectromechanicalProbe a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SensingInspectionSystem ;
+    rdfs:label "Electromechanical Probe" ;
+    skos:prefLabel "Probes, Electromechanical" .
+
+pc:Refractometer a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SensingInspectionSystem ;
+    rdfs:label "Refractometer" ;
+    skos:prefLabel "Refractometers" .
+
+pc:RoundnessMeasuringEquipment a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SensingInspectionSystem ;
+    rdfs:label "Roundness Measuring Equipment" ;
+    skos:prefLabel "Roundness Measuring Equipment" .
+
+pc:SurfaceFinishMeasuringEquipment a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SensingInspectionSystem ;
+    rdfs:label "Surface Finish Measuring Equipment" ;
+    skos:prefLabel "Surface Finish Measuring Equipment" .
+
+pc:SurfacePlate a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SensingInspectionSystem ;
+    rdfs:label "Surface Plate" ;
+    skos:prefLabel "Surface Plates" .
+
+pc:VisionSystem a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SensingInspectionSystem ;
+    rdfs:label "Vision System" ;
+    skos:prefLabel "Vision Systems" .
+
+pc:WeightScale a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:SensingInspectionSystem ;
+    rdfs:label "Weight Scale" ;
+    skos:prefLabel "Weight Scales" .
+
+pc:ControlSystem a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ManufacturingDevice ;
+    rdfs:label "Control System" .
+
+pc:IndustrialPC a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:ControlSystem ;
+    rdfs:label "Industrial PC" ;
+    skos:prefLabel "Industrial PCs" .
+
+pc:ProcessAutomationSystemService a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:ControlSystem ;
+    rdfs:label "Process Automation System & Service" ;
+    skos:prefLabel "Process Automation Systems & Services" .
+
+pc:PLC a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:ControlSystem ;
+    rdfs:label "Programmable Logic Control" ;
+    skos:prefLabel "Programmable Logic Controls (PLC)" .
+
+pc:PLCSCADAControlSystem a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:ControlSystem ;
+    rdfs:label "PLC/SCADA Control System" ;
+    skos:prefLabel "Control Systems, PLC, SCADA Systems" .
+
+pc:EmbeddedSystem a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:ControlSystem ;
+    rdfs:label "Embedded System" ;
+    skos:prefLabel "Embedded Systems" .
+
+pc:CNCUnit a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:ControlSystem ;
+    rdfs:label "CNC Unit" ;
+    skos:prefLabel "Computer Numerical Control (CNC) Units" .
+
+pc:DROUnit a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:ControlSystem ;
+    rdfs:label "Digital Readout Unit" ;
+    skos:prefLabel "Digital Readout (DRO) Units" .
+
+pc:DNCSystem a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:ControlSystem ;
+    rdfs:label "Direct/Distributive Numerical Control System" ;
+    skos:prefLabel "Direct or Distributive Numerical Control (DNC) Systems" .
+
+pc:RobotController a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:ControlSystem ;
+    rdfs:label "Robot Controller" ;
+    skos:prefLabel "Robot Controllers" .
+
+pc:AirCompressor a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:InfrastructureDevice ;
+    rdfs:label "Air Compressor" ;
+    skos:prefLabel "Air Compressors" .
+
+pc:CoolantDeliverySystem a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:InfrastructureDevice ;
+    rdfs:label "Coolant Delivery System" ;
+    skos:prefLabel "Coolant Delivery Systems" .
+
+pc:CoolantReclamationEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:InfrastructureDevice ;
+    rdfs:label "Coolant Reclamation Equipment" ;
+    skos:prefLabel "Coolant Reclamation Equipment" .
+
+pc:CoolantCuttingFluidOil a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:InfrastructureDevice ;
+    rdfs:label "Coolant/Cutting Fluid/Oil" ;
+    skos:prefLabel "Coolants, Cutting Fluids and Oils" .
+
+pc:DustCollectorAirFiltrationEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:InfrastructureDevice ;
+    rdfs:label "Dust Collector & Air Filtration Equipment" ;
+    skos:prefLabel "Dust Collectors, Air Filtration and Treatment Equipment" .
+
+pc:EnvironmentalPollutionControlEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:InfrastructureDevice ;
+    rdfs:label "Environmental & Pollution Control Equipment" ;
+    skos:prefLabel "Environmental and Pollution Control Equipment" .
+
+pc:OilFiltrationTreatmentEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:InfrastructureDevice ;
+    rdfs:label "Oil Filtration & Treatment Equipment" ;
+    skos:prefLabel "Oil Filtration and Treatment Equipment" .
+
+pc:NoiseAbatement a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:InfrastructureDevice ;
+    rdfs:label "Noise Abatement" ;
+    skos:prefLabel "Noise Abatement" .
+
+pc:VacuumPump a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:InfrastructureDevice ;
+    rdfs:label "Vacuum Pump" ;
+    skos:prefLabel "Vacuum Pumps" .
+
+pc:VacuumTechnology a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:InfrastructureDevice ;
+    rdfs:label "Vacuum Technology" ;
+    skos:prefLabel "Vacuum Technology" .
+
+pc:WaterFiltrationTreatmentEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:InfrastructureDevice ;
+    rdfs:label "Water Filtration & Treatment Equipment" ;
+    skos:prefLabel "Water Filtration and Treatment Equipment" .
+
+pc:ChipSludgeDragout a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:InfrastructureDevice ;
+    rdfs:label "Chip & Sludge Dragout" ;
+    skos:prefLabel "Chip and Sludge Dragouts" .
+
+pc:AqueousCleaningDegreasingEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:InfrastructureDevice ;
+    rdfs:label "Aqueous Cleaning & Degreasing Equipment" ;
+    skos:prefLabel "Cleaning & Degreasing Equipment, Aqueous" .
+
+pc:CleaningDegreasingEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:InfrastructureDevice ;
+    rdfs:label "Cleaning & Degreasing Equipment" ;
+    skos:prefLabel "Cleaning and Degreasing Equipment" .
+
+pc:VaporDegreasingEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:InfrastructureDevice ;
+    rdfs:label "Vapor Degreasing Equipment" ;
+    skos:prefLabel "Degreasing Equipment, Vapor" .
+
+pc:Furnishing a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:InfrastructureDevice ;
+    rdfs:label "Furnishing" ;
+    skos:prefLabel "Furnishings, Shop and Office (files, desks, benches, cabinets, tool chests, drawing boards & lighting)" .
+
+pc:FilingFurniture a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:Furnishing ;
+    rdfs:label "Filing Furniture" .
+
+pc:Desk a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:Furnishing ;
+    rdfs:label "Desk" .
+
+pc:WorkBench a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:Furnishing ;
+    rdfs:label "Work Bench" .
+
+pc:StorageCabinet a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:Furnishing ;
+    rdfs:label "Storage Cabinet" .
+
+pc:ToolChest a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:Furnishing ;
+    rdfs:label "Tool Chest" .
+
+pc:DrawingBoard a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:Furnishing ;
+    rdfs:label "Drawing Board" .
+
+pc:ShopLightingFixture a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:Furnishing ;
+    rdfs:label "Shop Lighting Fixture" .
+
+pc:SolventDegreasingAgent a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:InfrastructureDevice ;
+    rdfs:label "Solvent & Degreasing Agent" ;
+    skos:prefLabel "Solvents and Degreasing Agents" .
+
+pc:CompressedAirProcessingEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:InfrastructureDevice ;
+    rdfs:label "Compressed Air Processing Equipment" ;
+    skos:prefLabel "Compressed Air Processing Equipment, Dryers, Coolers, etc." .
+
+pc:CompressorAccessoryComponent a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:InfrastructureDevice ;
+    rdfs:label "Compressor Accessory & Component" ;
+    skos:prefLabel "Compressor Accessories & Components (Valves, Pressure Gauges & Reducers, Silencers, Heat Recovery & Cooling Systems)" .
+
+pc:CompressedAirOtherCollection a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label "Compressed Air Equipment; Other (catalog residual)" ;
+    skos:prefLabel "Compressed Air Equipment; Other" .
+
+pc:VacuumFittingSealValveAccessory a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:InfrastructureDevice ;
+    rdfs:label "Vacuum Fitting/Seal/Valve Accessory" ;
+    skos:prefLabel "Vacuum Fittings, Seals, Valves & Accessories" .
+
+pc:ConditionMonitoringVibrationReduction a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:InfrastructureDevice ;
+    rdfs:label "Condition Monitoring & Vibration Reduction" ;
+    skos:prefLabel "Condition Monitoring and Vibration Reduction" .
+
+pc:PlantMaintenanceRepairEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:InfrastructureDevice ;
+    rdfs:label "Plant Maintenance & Repair Equipment" ;
+    skos:prefLabel "Plant Maintenance and Repair Equipment" .
+
+pc:SafetyRelatedProduct a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:InfrastructureDevice ;
+    rdfs:label "Safety Related Product" ;
+    skos:prefLabel "Safety Related Products" .
+
+pc:IndustrialBuildingAutomationSystem a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:InfrastructureDevice ;
+    rdfs:label "Industrial Building Automation System" ;
+    skos:prefLabel "Industrial Building Automation Systems" .
+
+pc:SafetySecuritySystem a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:InfrastructureDevice ;
+    rdfs:label "Safety & Security System" ;
+    skos:prefLabel "Safety and Security Systems" .
+
+pc:CommunicationDataTransmissionEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:InfrastructureDevice ;
+    rdfs:label "Communication & Data Transmission Equipment" ;
+    skos:prefLabel "Communications Networks, and Data Transmission Equipment" .
+
+pc:CommunicationNetworkFieldBusSystem a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:InfrastructureDevice ;
+    rdfs:label "Communication, Network & Field Bus System" ;
+    skos:prefLabel "Communication, Networks and Field Bus Systems" .
+
+pc:AssemblyTestCell a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ProductionCell ;
+    rdfs:label "Assembly & Test Cell" ;
+    skos:prefLabel "Automated System & Cells for Assembly & Test" .
+
+pc:MaterialFormingCell a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ProductionCell ;
+    rdfs:label "Material Forming & Fabricating Cell" ;
+    skos:prefLabel "Automated System & Cells for Material Forming & Fabricating" .
+
+pc:MaterialJoiningCell a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ProductionCell ;
+    rdfs:label "Material Joining Cell" ;
+    skos:prefLabel "Automated System & Cells for Material Joining" .
+
+pc:MaterialRemovalCell a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ProductionCell ;
+    rdfs:label "Material Removal Cell" ;
+    skos:prefLabel "Automated System & Cells for Material Removal" .
+
+pc:AutomatedPalletSystem a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ProductionCell ;
+    rdfs:label "Automated Pallet System" ;
+    skos:prefLabel "Automated Pallet Systems" .
+
+pc:MachiningCell a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ProductionCell ;
+    rdfs:label "Machining Cell" .
+
+pc:FMS a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ProductionCell ;
+    rdfs:label "Flexible Manufacturing System" .
+
+pc:MachiningCellFMSCollection a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label "Machining Cells & FMS (catalog grouping)" ;
+    skos:prefLabel "Machining Cells & FMS" ;
+    amtmeta:groups pc:MachiningCell, pc:FMS .
+
+pc:DigitalArtifact a owl:Class, gufo:Category ;
+    rdfs:subClassOf pc:SoftwareArtifact ;
+    rdfs:label "Digital Artifact" .
+
+pc:CADCAM a owl:Class, gufo:Category ;
+    rdfs:subClassOf pc:DigitalArtifact ;
+    rdfs:label "CAD/CAM" .
+
+pc:CADCAMSoftware a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:CADCAM ;
+    rdfs:label "CAD/CAM Software" ;
+    skos:prefLabel "Software, CAD/CAM" .
+
+pc:PrintedCircuitBoardDesignManufacturing a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:CADCAM ;
+    rdfs:label "PCB Design & Manufacturing" ;
+    skos:prefLabel "Printed Circuit Board Design and Manufacturing" .
+
+pc:EngineeringAnalysisSimulationSoftware a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:CADCAM ;
+    rdfs:label "Engineering Analysis & Simulation Software" ;
+    skos:prefLabel "Software, Engineering Analysis and Simulation" .
+
+pc:NestingSoftware a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:CADCAM ;
+    rdfs:label "Nesting Software" ;
+    skos:prefLabel "Software, Nesting" .
+
+pc:StandAlonePostProcessorSoftware a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:CADCAM ;
+    rdfs:label "Stand-Alone Post Processor Software" ;
+    skos:prefLabel "Software, Post Processors, Stand-Alone (sold independent of CAM system)" .
+
+pc:AdditiveCADCAMSoftware a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:CADCAM ;
+    rdfs:label "Additive Manufacturing CAD/CAM Software" ;
+    skos:prefLabel "Software, CAD/CAM for Additive Manufacturing" .
+
+pc:DrivesGearsHydraulicsPneumaticsSoftware a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:DigitalArtifact ;
+    rdfs:label "Drives/Gears/Hydraulics/Pneumatics Software" ;
+    skos:prefLabel "Software  ( for Drives, Gears Hydraulics, Pneumatics)" .
+
+pc:AccountingPayrollSoftware a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:DigitalArtifact ;
+    rdfs:label "Accounting/Payroll Software" ;
+    skos:prefLabel "Software, Accounting/General Ledger/Payroll" .
+
+pc:CalibrationSoftware a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:DigitalArtifact ;
+    rdfs:label "Calibration Software" ;
+    skos:prefLabel "Software, Calibration" .
+
+pc:FacilityManagementSoftware a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:DigitalArtifact ;
+    rdfs:label "Facility Management Software" ;
+    skos:prefLabel "Software, Computer Aided Facility Management Systems" .
+
+pc:CRMSoftware a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:DigitalArtifact ;
+    rdfs:label "CRM Software" ;
+    skos:prefLabel "Software, Customer Relationship Management Software, CRM" .
+
+pc:DatabaseManagementSoftware a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:DigitalArtifact ;
+    rdfs:label "Database Management Software" ;
+    skos:prefLabel "Software, Database Management" .
+
+pc:HRSoftware a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:DigitalArtifact ;
+    rdfs:label "HR Software" ;
+    skos:prefLabel "Software, Human Resources" .
+
+pc:IndustrialITOtherSoftware a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:DigitalArtifact ;
+    rdfs:label "Industrial IT & Other Software" ;
+    skos:prefLabel "Software, Industrial IT & Others" .
+
+pc:JobCostingEstimatingQuotingSoftware a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:DigitalArtifact ;
+    rdfs:label "Job Costing/Estimating/Quoting Software" ;
+    skos:prefLabel "Software, Job Costing/Estimating/Quoting" .
+
+pc:MachinabilityDatabaseSoftware a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:DigitalArtifact ;
+    rdfs:label "Machinability Database Software" ;
+    skos:prefLabel "Software, Machinability Databases" .
+
+pc:PLMSoftware a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:DigitalArtifact ;
+    rdfs:label "PLM Software" ;
+    skos:prefLabel "Software, Product Life Cycle Management" .
+
+pc:QualityDocumentationSoftware a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:DigitalArtifact ;
+    rdfs:label "Quality Documentation Software" ;
+    skos:prefLabel "Software, Quality Documentation" .
+
+pc:StatisticalDataAnalysisSoftware a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:DigitalArtifact ;
+    rdfs:label "Statistical Data Collection & Analysis Software" ;
+    skos:prefLabel "Software, Statistical Data Collection & Analysis" .
+
+pc:ToolCribControlSoftware a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:DigitalArtifact ;
+    rdfs:label "Tool Crib Control Software" ;
+    skos:prefLabel "Software, Tool Crib Control" .
+
+pc:ToolDesignSoftware a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:DigitalArtifact ;
+    rdfs:label "Tool Design Software" ;
+    skos:prefLabel "Software, Tool Design" .
+
+pc:VirtualRealitySoftware a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:DigitalArtifact ;
+    rdfs:label "Virtual Reality Software" ;
+    skos:prefLabel "Software, Virtual Reality Systems" .
+
+pc:AdministrativeSoftware a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:DigitalArtifact ;
+    rdfs:label "Administrative Software" ;
+    skos:prefLabel "Software, Administrative" .
+
+pc:ComputationalObject a owl:Class, gufo:Category ;
+    rdfs:subClassOf pc:SoftwareArtifact ;
+    rdfs:label "Computational Object" .
+
+pc:DigitizingScanningSystem a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ComputationalObject ;
+    rdfs:label "Digitizing/Scanning System" ;
+    skos:prefLabel "Digitizing/Scanning Systems" .
+
+pc:SoftwareAgent a owl:Class, gufo:Category ;
+    rdfs:subClassOf pc:SoftwareArtifact ;
+    rdfs:label "Software Agent" .
+
+pc:IIoTTechnology a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:SoftwareAgent ;
+    rdfs:label "Industrial IoT Technology" ;
+    skos:prefLabel "Industrial Internet of Things (IIoT) Technology" .
+
+pc:MachineMonitoringSystem a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:SoftwareAgent ;
+    rdfs:label "Machine Monitoring System" ;
+    skos:prefLabel "Machine Monitoring Systems" .
+
+pc:AutomationSoftware a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:SoftwareAgent ;
+    rdfs:label "Automation Software" ;
+    skos:prefLabel "Software, Automation" .
+
+pc:MakeToOrderERPSoftware a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:SoftwareAgent ;
+    rdfs:label "Make-to-Order ERP Software" ;
+    skos:prefLabel "Software, ERP for Make-to-Order Manufacturing" .
+
+pc:StandardProductERPSoftware a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:SoftwareAgent ;
+    rdfs:label "Standard Products ERP Software" ;
+    skos:prefLabel "Software, ERP for Standard Products Manufacturing" .
+
+pc:MESSoftware a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:SoftwareAgent ;
+    rdfs:label "MES Software" ;
+    skos:prefLabel "Software, Manufacturing Execution Systems (MES)" .
+
+pc:EnergyManagementSoftwareSystemService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:SoftwareAgent ;
+    rdfs:label "Energy Management Software/System/Service" ;
+    skos:prefLabel "Energy Management Software, Systems & Services" .
+
+pc:ProductionFloorSoftware a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:SoftwareAgent ;
+    rdfs:label "Production Floor Software" ;
+    skos:prefLabel "Software, Production Floor" .
+
+pc:ArtificialIntelligence a owl:Class, gufo:Category ;
+    rdfs:subClassOf pc:SoftwareArtifact ;
+    rdfs:label "Artificial Intelligence" .
+
+pc:IndustrialAI a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ArtificialIntelligence ;
+    rdfs:label "Industrial Artificial Intelligence" ;
+    skos:prefLabel "Industrial Artificial Intelligence" .
+
+pc:AutonomousAI a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:IndustrialAI ;
+    rdfs:label "Autonomous AI" ;
+    skos:prefLabel "Autonomous AI" .
+
+pc:GenerativeAI a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:IndustrialAI ;
+    rdfs:label "Generative AI" ;
+    skos:prefLabel "Generative AI" .
+
+pc:PredictiveAI a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:IndustrialAI ;
+    rdfs:label "Predictive AI" ;
+    skos:prefLabel "Predictive AI" .
+
+pc:VisionAI a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:IndustrialAI ;
+    rdfs:label "Vision AI" ;
+    skos:prefLabel "Vision AI" .
+
+pc:CNCSoftware a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:SoftwareArtifact ;
+    rdfs:label "CNC Software" ;
+    skos:prefLabel "Computer Numerical Control (CNC) Software (sold independent of hardware)" .
+
+pc:MachineAccessory a owl:Class, gufo:Category ;
+    rdfs:subClassOf pc:ProcessAuxiliary ;
+    rdfs:label "Machine Accessory" .
+
+pc:EDMFiltrationEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "EDM Filtration Equipment & Supplies" ;
+    skos:prefLabel "EDM Filtration Equipment and Supplies" .
+
+pc:LaserAccessory a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Laser Accessory & Supplies" ;
+    skos:prefLabel "Laser Accessories and Supplies" .
+
+pc:BallLeadScrew a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Ball/Lead Screw & Repair Service" ;
+    skos:prefLabel "Ball/Lead Screws and Repair Services" .
+
+pc:BearingPulleyClutchGearVBelt a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Bearing/Pulley/Clutch/Gear/V-Belt" ;
+    skos:prefLabel "Bearings, Pulleys, Clutches, Gears and V-Belts" .
+
+pc:LiveCenter a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Live & Other Center" ;
+    skos:prefLabel "Centers, Live and Other" .
+
+pc:Chiller a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Chiller" ;
+    skos:prefLabel "Chillers" .
+
+pc:Compressor a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Compressor" ;
+    skos:prefLabel "Compressors" .
+
+pc:ConnectorFastener a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Connector & Fastener" ;
+    skos:prefLabel "Connectors & Fasteners" .
+
+pc:Coupling a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Coupling" ;
+    skos:prefLabel "Couplings" .
+
+pc:DividingIndexingHead a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Dividing & Indexing Head" ;
+    skos:prefLabel "Dividing and Indexing Heads" .
+
+pc:DrillingHeadAttachment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Drilling Head/Attachment" ;
+    skos:prefLabel "Drilling Heads/Attachments" .
+
+pc:ElectricalSwitchgearEnclosureComponent a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Electrical Switchgear/Enclosure/Component" ;
+    skos:prefLabel "Electrical Switchgear, Enclosures and Components" .
+
+pc:ElectronicOptoElectronicComponent a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Electronic & Opto-Electronic Component" ;
+    skos:prefLabel "Electronic and Opto-Electronic Components" .
+
+pc:FeedbackDevice a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Feedback Device" ;
+    skos:prefLabel "Feedback Devices (Encoders/Resolvers/Scales/Sensors)" .
+
+pc:Encoder a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:FeedbackDevice ;
+    rdfs:label "Encoder" .
+
+pc:Resolver a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:FeedbackDevice ;
+    rdfs:label "Resolver" .
+
+pc:LinearScale a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:FeedbackDevice ;
+    rdfs:label "Linear Scale" .
+
+pc:FeedbackSensor a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:FeedbackDevice ;
+    rdfs:label "Feedback Sensor" .
+
+pc:FormedPart a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Formed Part" ;
+    skos:prefLabel "Formed Parts (castings, sintered, etc.)" .
+
+pc:GrindingAttachmentAccessory a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Grinding Attachment & Accessory" ;
+    skos:prefLabel "Grinding Attachments and Accessories" .
+
+pc:GrindingWheelDressingUnit a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Grinding Wheel Dressing Unit" ;
+    skos:prefLabel "Grinding Wheel Dressing Units" .
+
+pc:GuideBushing a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Guide Bushing" ;
+    skos:prefLabel "Guide Bushings (for Swiss Lathes)" .
+
+pc:HandTool a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Hand Tool" ;
+    skos:prefLabel "Hand Tools Of All Types" .
+
+pc:HandwheelKnobCrank a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Handwheel/Knob/Crank" ;
+    skos:prefLabel "Handwheels, Knobs, Cranks, Etc." .
+
+pc:HeatExchangerAirConditioningEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Heat Exchanger & Air Conditioning Equipment" ;
+    skos:prefLabel "Heat Exchangers and Air Conditioning Equipment" .
+
+pc:HydraulicPneumaticEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Hydraulic & Pneumatic Equipment" ;
+    skos:prefLabel "Hydraulic and Pneumatic Equipment" .
+
+pc:IndexerRotaryTable a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Indexer & Rotary Table" ;
+    skos:prefLabel "Indexers and Rotary Tables" .
+
+pc:LightingEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Lighting Equipment" ;
+    skos:prefLabel "Lighting Equipment" .
+
+pc:IndicatorWarningLight a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Indicator & Warning Light" ;
+    skos:prefLabel "Lights, Indicator and Warning" .
+
+pc:LinearMotionSystem a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Linear Motion System" ;
+    skos:prefLabel "Linear Motion Systems" .
+
+pc:LubricantGrease a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Lubricant & Grease" ;
+    skos:prefLabel "Lubricants and Greases" .
+
+pc:Lubricator a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Lubricator" ;
+    skos:prefLabel "Lubricators" .
+
+pc:MachineCastingWeldment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Machine Casting & Weldment" ;
+    skos:prefLabel "Machine Castings and Weldments" .
+
+pc:MachineryMounting a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Machinery Mounting/Level/Anchor/Damper" ;
+    skos:prefLabel "Machinery Mountings, Levels, Anchors, Dampers" .
+
+pc:MagnetMagneticDevice a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Magnet & Magnetic Device" ;
+    skos:prefLabel "Magnets and Magnetic Devices of all Kinds" .
+
+pc:MillingHeadAttachment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Milling Head/Attachment" ;
+    skos:prefLabel "Milling Heads/Attachments" .
+
+pc:NonServoMotor a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Non-Servo Motor" ;
+    skos:prefLabel "Motors, Non-Servo (Including Spindles, Drive Units, & Power Feeds)" .
+
+pc:NameplateLabelSign a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Nameplate/Label/Sign" ;
+    skos:prefLabel "Nameplates, Labels and Signs" .
+
+pc:PressSafetyEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Press Safety Equipment" ;
+    skos:prefLabel "Press Safety Equipment" .
+
+pc:ProtectiveEnclosureCover a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Protective Enclosure & Cover" ;
+    skos:prefLabel "Protective Enclosures and Covers" .
+
+pc:CoolantPump a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Coolant Pump" ;
+    skos:prefLabel "Pumps, Coolant" .
+
+pc:ReplacementRepairPart a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Replacement & Repair Part" ;
+    skos:prefLabel "Replacement Parts/Repair Parts" .
+
+pc:Seal a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Seal" ;
+    skos:prefLabel "Seals" .
+
+pc:SlideWayLinearGuide a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Slide/Way/Linear Guide" ;
+    skos:prefLabel "Slides, Ways, and Linear Guides" .
+
+pc:SpeedReducerGearBox a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Speed Reducer & Gear Box" ;
+    skos:prefLabel "Speed Reducers and Gear Boxes" .
+
+pc:Spindle a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Spindle" ;
+    skos:prefLabel "Spindles" .
+
+pc:Spring a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Spring" ;
+    skos:prefLabel "Springs" .
+
+pc:SteadyRest a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Steady Rest" ;
+    skos:prefLabel "Steady Rests" .
+
+pc:ToolConditionMonitoringSystem a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Tool Condition Monitoring System" ;
+    skos:prefLabel "Tool Condition Monitoring Systems" .
+
+pc:ToolPresettingEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Tool Presetting Equipment" ;
+    skos:prefLabel "Tool Presetting Equipment" .
+
+pc:ToolStorageHandlingSystem a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Tool Storage & Handling System" ;
+    skos:prefLabel "Tool Storage and Handling Systems" .
+
+pc:ToolTurret a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Tool Turret" ;
+    skos:prefLabel "Tool Turrets" .
+
+pc:WayCoverProtectorSeal a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Way Cover/Protector/Seal" ;
+    skos:prefLabel "Way Covers, Way Protectors and Seals" .
+
+pc:PalletToteSeparator a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Pallet/Tote/Separator" ;
+    skos:prefLabel "Pallets, Tote Boxes and Separators" .
+
+pc:LinearServoMotor a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Linear Servo Motor" ;
+    skos:prefLabel "Servo Motors, Linear" .
+
+pc:RotaryServoMotor a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Rotary Servo Motor" ;
+    skos:prefLabel "Servo Motors, Rotary" .
+
+pc:VoltageRegulator a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Voltage/Current Regulator/Transformer/Phase Converter" ;
+    skos:prefLabel "Voltage/Current Regulators, Transformers and Phase Converters" .
+
+pc:MQLSystem a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Minimum Quantity Lubrication System" ;
+    skos:prefLabel "Minimum Quantity Lubrication (MQL) Systems" .
+
+pc:PaintSealantAdhesive a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Paint/Sealant/Adhesive" ;
+    skos:prefLabel "Paint/Sealants/Adhesives" .
+
+pc:Toolchanger a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:MachineAccessory ;
+    rdfs:label "Toolchanger" ;
+    skos:prefLabel "Toolchangers" .
+
+pc:Tooling a owl:Class, gufo:Category ;
+    rdfs:subClassOf pc:ProcessAuxiliary ;
+    rdfs:label "Tooling" .
+
+pc:AbrasiveCompoundSlurry a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Abrasive Compound & Slurry" ;
+    skos:prefLabel "Abrasive Compounds and Slurries" .
+
+pc:CutterArbor a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Cutter Arbor" ;
+    skos:prefLabel "Arbors (for Cutters)" .
+
+pc:MachiningCenterBoringTool a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Boring Tool & Head for Machining Center" ;
+    skos:prefLabel "Boring Tools & Heads for Machining Centers" .
+
+pc:TurningBoringTool a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Turning Boring Tool" ;
+    skos:prefLabel "Boring Tools for Turning Machines" .
+
+pc:BoringToolBarHead a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Boring Tool/Bar/Head" ;
+    skos:prefLabel "Boring Tools/Bars/Heads" .
+
+pc:BroachingTool a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Broaching Tool" ;
+    skos:prefLabel "Broaching Tools" .
+
+pc:BuffingPolishingSupply a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Buffing & Polishing Supply" ;
+    skos:prefLabel "Buffing and Polishing Supplies" .
+
+pc:RollerBurnishingTool a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Roller Burnishing Tool" ;
+    skos:prefLabel "Burnishing Tools (Roller)" .
+
+pc:BurnishingHoningLappingTool a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Burnishing/Honing/Lapping Tool" ;
+    skos:prefLabel "Burnishing, Honing and Lapping Tools" .
+
+pc:CarbideToolingCoating a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Carbide Tooling & Coating" ;
+    skos:prefLabel "Carbide Tooling & Coatings" .
+
+pc:ChamferingTool a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Chamfering Tool" ;
+    skos:prefLabel "Chamfering Tools" .
+
+pc:SolidMasterCollet a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Solid & Master Collet" ;
+    skos:prefLabel "Collets, Solid and Master" .
+
+pc:CounterboreCountersink a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Counterbore/Countersink" ;
+    skos:prefLabel "Counterbores/Countersinks" .
+
+pc:CutOffToolAttachment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Cut-Off Tool/Attachment" ;
+    skos:prefLabel "Cut-Off Tools/Attachments" .
+
+pc:DeburringTool a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Deburring Tool" ;
+    skos:prefLabel "Deburring Tools" .
+
+pc:DiamondTooling a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Diamond Tooling" ;
+    skos:prefLabel "Diamond Tooling, Coating, Abrasive, Single-point" .
+
+pc:DrillBushing a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Drill Bushing" ;
+    skos:prefLabel "Drill Bushings" .
+
+pc:DrillChuck a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Drill Chuck" ;
+    skos:prefLabel "Drill Chucks" .
+
+pc:Drill a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Drill" ;
+    skos:prefLabel "Drills" .
+
+pc:EndMill a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "End Mill" ;
+    skos:prefLabel "End Mills" .
+
+pc:FacingTool a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Facing Tool/Head" ;
+    skos:prefLabel "Facing Tools/Heads" .
+
+pc:FormTool a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Form Tool" ;
+    skos:prefLabel "Form Tools" .
+
+pc:GearCuttingTool a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Gear Cutting Tool" ;
+    skos:prefLabel "Gear Cutting Tools" .
+
+pc:GearRollingTool a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Gear Rolling Tool" ;
+    skos:prefLabel "Gear Rolling Tools" .
+
+pc:GrindingWheelAbrasiveBelt a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Grinding Wheel & Abrasive Belt" ;
+    skos:prefLabel "Grinding Wheels and Abrasive Belts" .
+
+pc:GroovingTool a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Grooving Tool" ;
+    skos:prefLabel "Grooving Tools" .
+
+pc:Gundrill a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Gundrill" ;
+    skos:prefLabel "Gundrills" .
+
+pc:IndexableInsert a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Indexable Insert" ;
+    skos:prefLabel "Inserts, Indexable (Carbide, etc.) and Tool Inserts" .
+
+pc:KeySeatingTool a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Key Seating Tool" ;
+    skos:prefLabel "Key Seating Tools" .
+
+pc:KnurlingTool a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Knurling Tool" ;
+    skos:prefLabel "Knurling Tools" .
+
+pc:MarkingTool a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Marking Tool" ;
+    skos:prefLabel "Marking Tools" .
+
+pc:MassFinishingMedia a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Mass Finishing Media & Compound" ;
+    skos:prefLabel "Mass Finishing Media and Compounds" .
+
+pc:MillingCutter a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Milling Cutter" ;
+    skos:prefLabel "Milling Cutters" .
+
+pc:ProtectiveSleeveCoating a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Protective Sleeve & Coating" ;
+    skos:prefLabel "Protective Sleeves and Coatings (for Cutting Tools)" .
+
+pc:PunchingToolDie a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Punching Tool/Die" ;
+    skos:prefLabel "Punching Tools/Dies" .
+
+pc:Reamer a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Reamer" ;
+    skos:prefLabel "Reamers" .
+
+pc:SawBlade a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Saw Blade" ;
+    skos:prefLabel "Saw Blades" .
+
+pc:SplineRollingTool a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Spline Rolling Tool" ;
+    skos:prefLabel "Spline Rolling Tools" .
+
+pc:TapDriverAttachment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Tap Driver & Attachment" ;
+    skos:prefLabel "Tap Drivers and Attachments" .
+
+pc:Tap a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Tap" ;
+    skos:prefLabel "Taps" .
+
+pc:CuttingThreadingTool a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Cutting Threading Tool" ;
+    skos:prefLabel "Threading Tools - Cutting" .
+
+pc:FormingThreadingTool a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Forming Threading Tool" ;
+    skos:prefLabel "Threading Tools - Forming" .
+
+pc:ToolBlank a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Tool Blank" ;
+    skos:prefLabel "Tool Blanks" .
+
+pc:ToolConditioningEquipment a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Tool Conditioning Equipment" ;
+    skos:prefLabel "Tool Conditioning Equipment" .
+
+pc:ToolHolderAdapter a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Tool Holder & Adapter" ;
+    skos:prefLabel "Tool Holders and Adapters" .
+
+pc:HydraulicToolHolderAdapter a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Hydraulic Tool Holder & Adapter" ;
+    skos:prefLabel "Tool Holders and Adapters - Hydraulic" .
+
+pc:ModularQuickChangeToolingSystem a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Modular/Quick-Change Tooling System" ;
+    skos:prefLabel "Tooling Systems, Modular and/or Quick-Change" .
+
+pc:ShearBlade a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Shear Blade" ;
+    skos:prefLabel "Shear Blades" .
+
+pc:UltrasonicTooling a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "Ultrasonic Tooling" ;
+    skos:prefLabel "Ultrasonic Tooling" .
+
+pc:EDMTooling a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Tooling ;
+    rdfs:label "EDM Tooling" ;
+    skos:prefLabel "EDM Tooling" .
+
+pc:Workholding a owl:Class, gufo:Category ;
+    rdfs:subClassOf pc:ProcessAuxiliary ;
+    rdfs:label "Workholding" .
+
+pc:RobotToolingGripper a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Workholding ;
+    rdfs:label "Robot Tooling/Gripper" ;
+    skos:prefLabel "Robot Tooling/Grippers" .
+
+pc:Chuck a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Workholding ;
+    rdfs:label "Chuck" .
+
+pc:ColletChuck a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:Chuck ;
+    rdfs:label "Collet-Type Chuck" ;
+    skos:prefLabel "Chucks, Collet Type" .
+
+pc:DiaphragmChuck a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:Chuck ;
+    rdfs:label "Diaphragm Chuck" ;
+    skos:prefLabel "Chucks, Diaphragm" .
+
+pc:GearChuck a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:Chuck ;
+    rdfs:label "Gear Chuck" ;
+    skos:prefLabel "Chucks, Gear" .
+
+pc:IndexChuck a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:Chuck ;
+    rdfs:label "Index Chuck" ;
+    skos:prefLabel "Chucks, Index" .
+
+pc:JawChuck a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:Chuck ;
+    rdfs:label "Jaw-Type Chuck" ;
+    skos:prefLabel "Chucks, Jaw Type" .
+
+pc:MagneticChuck a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:Chuck ;
+    rdfs:label "Magnetic Chuck" ;
+    skos:prefLabel "Chucks, Magnetic" .
+
+pc:PowerChuck a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:Chuck ;
+    rdfs:label "Power Chuck" ;
+    skos:prefLabel "Chucks, Power" .
+
+pc:PrecisionChuck a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:Chuck ;
+    rdfs:label "Precision Chuck" ;
+    skos:prefLabel "Chucks, Precision" .
+
+pc:SelfContainedChuck a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:Chuck ;
+    rdfs:label "Self-Contained Chuck" ;
+    skos:prefLabel "Chucks, Self-Contained" .
+
+pc:SpecialChuck a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:Chuck ;
+    rdfs:label "Special Chuck" ;
+    skos:prefLabel "Chucks, Special" .
+
+pc:VacuumChuck a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:Chuck ;
+    rdfs:label "Vacuum Chuck" ;
+    skos:prefLabel "Chucks, Vacuum" .
+
+pc:AutomaticPalletChanger a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Workholding ;
+    rdfs:label "Automatic Pallet Changer" ;
+    skos:prefLabel "Pallet Changers - Automatic" .
+
+pc:HydraulicPneumaticActuator a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Workholding ;
+    rdfs:label "Hydraulic & Pneumatic Actuator" ;
+    skos:prefLabel "Actuators, Hydraulic and Pneumatic" .
+
+pc:AngleSubPlate a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Workholding ;
+    rdfs:label "Angle & Sub Plate" ;
+    skos:prefLabel "Angle & Sub Plates" .
+
+pc:ExpandableWorkholdingArbor a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Workholding ;
+    rdfs:label "Expandable Workholding Arbor" ;
+    skos:prefLabel "Arbors, Expandable Workholding" .
+
+pc:ChuckJawCollet a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Workholding ;
+    rdfs:label "Chuck Jaw & Collet" ;
+    skos:prefLabel "Chuck Jaws and Collets" .
+
+pc:ClampFixturingDevice a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Workholding ;
+    rdfs:label "Clamp & Fixturing Device" ;
+    skos:prefLabel "Clamps and Fixturing Devices" .
+
+pc:FixturingSystem a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Workholding ;
+    rdfs:label "Fixturing System" ;
+    skos:prefLabel "Fixturing Systems" .
+
+pc:Mandrel a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Workholding ;
+    rdfs:label "Mandrel" ;
+    skos:prefLabel "Mandrels" .
+
+pc:PedestalFixtureTombstone a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Workholding ;
+    rdfs:label "Pedestal Fixture & Tombstone Block" ;
+    skos:prefLabel "Pedestal Type Fixtures and Tombstone Blocks" .
+
+pc:ViseViseJaw a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Workholding ;
+    rdfs:label "Vise & Vise Jaw" ;
+    skos:prefLabel "Vises and Vise Jaws" .
+
+pc:CustomWorkholding a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Workholding ;
+    rdfs:label "Custom Workholding" ;
+    skos:prefLabel "Workholding, Custom" .
+
+pc:CompressedAirVacuumService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Compressed Air & Vacuum Technology Service" ;
+    skos:prefLabel "Compressed Air & Vacuum Technology Services" .
+
+pc:MachineryRiggingErectionInstallationService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Machinery Rigging/Erection/Installation Service" ;
+    skos:prefLabel "Machinery Rigging, Erection and Installation Services" .
+
+pc:RecruitmentPlacementService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Recruitment & Placement Service" ;
+    skos:prefLabel "Recruitment and Placement Services" .
+
+pc:ShippingLogisticsService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Shipping & Logistics Service" ;
+    skos:prefLabel "Shipping & Logistics Services" .
+
+pc:DrivesGearsHydraulicsPneumaticsSupportService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Drives/Gears/Hydraulics/Pneumatics Support & Maintenance Service" ;
+    skos:prefLabel "Support and Maintenance Services ( for Drives, Gears Hydraulics, Pneumatics)" .
+
+pc:AutomationService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Automation Service" ;
+    skos:prefLabel "Automation Services" .
+
+pc:BookPublicationInformationService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Book/Publication/Information Service" ;
+    skos:prefLabel "Books, Publications and Information Services" .
+
+pc:ConsultingService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Consulting Service" ;
+    skos:prefLabel "Consulting Services" .
+
+pc:ContractManufacturingMachiningService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Contract Manufacturing & Machining Service" ;
+    skos:prefLabel "Contract Manufacturing and Machining Services" .
+
+pc:DeburringService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Deburring Service" ;
+    skos:prefLabel "Deburring Services" .
+
+pc:EngineeringService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Engineering Service" ;
+    skos:prefLabel "Engineering Services (for Drives, Gears, Hydraulics, Pneumatics)" .
+
+pc:FinishingService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Finishing Service" ;
+    skos:prefLabel "Finishing Services" .
+
+pc:IndustrialITServiceOutsourcing a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Industrial IT Service & Outsourcing" ;
+    skos:prefLabel "Industrial IT Services & Outsourcing" .
+
+pc:LeasingFinancingService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Leasing & Financing Service" ;
+    skos:prefLabel "Leasing and Financing Services" .
+
+pc:MachiningService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Machining Service" ;
+    skos:prefLabel "Machining Services" .
+
+pc:MaintenanceRepairService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Maintenance & Repair Service" ;
+    skos:prefLabel "Maintenance and Repair Services" .
+
+pc:MetalFormingService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Metal Forming Service" ;
+    skos:prefLabel "Metal Forming Services (solid forming, sheet metal forming & other formed metal parts)" .
+
+pc:MetalSalesService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Metal Sales & Service" ;
+    skos:prefLabel "Metal Sales & Services" .
+
+pc:QualityMeasurementService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Quality & Measurement Service" ;
+    skos:prefLabel "Quality & Measurement Services" .
+
+pc:ReclamationRecyclingService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Reclamation/Recycling Service" ;
+    skos:prefLabel "Reclamation/Recycling Services, Scrap Dealers" .
+
+pc:RetrofittingRebuildingService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Retrofitting/Rebuilding/Remanufacturing Service" ;
+    skos:prefLabel "Retrofitting, Rebuilding, Remanufacturing Services" .
+
+pc:GenericService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Service (generic)" ;
+    skos:prefLabel "Service" .
+
+pc:AssemblyMetalStructureService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Assembly & Metal Structure Service" ;
+    skos:prefLabel "Services, Assemblies & Metal Structures (springs, sheet metal & wire parts)" .
+
+pc:NonMetalPartService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Non-Metal Part Service" ;
+    skos:prefLabel "Services, Non-Metal Parts (plastic, rubber, ceramic)" .
+
+pc:SalesService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Sales Service" ;
+    skos:prefLabel "Services, Sales" .
+
+pc:SpindleRepairService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Spindle Repair & Maintenance Service" ;
+    skos:prefLabel "Spindle Repair and Maintenance Services" .
+
+pc:ToolRepairCoatingTreatmentService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Tool Repair/Coating/Treatment Service" ;
+    skos:prefLabel "Tool Repair, Coating, and Treatment Services" .
+
+pc:TrainingService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Training Service" ;
+    skos:prefLabel "Training of All Types, Including Audiovisual" .
+
+pc:AppraisalService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Appraisal Service" ;
+    skos:prefLabel "Appraisal Services" .
+
+pc:RFQService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Request for Quote Service (Internet-Only)" ;
+    skos:prefLabel "Request for Quote Services, Internet-Only" .
+
+pc:InsuranceFinancialHRService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Insurance/Financial/HR Service" ;
+    skos:prefLabel "Insurance/Financial/HR Services" .
+
+pc:PrototypingDesignService a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:ServiceOffering ;
+    rdfs:label "Prototyping & Design Service" ;
+    skos:prefLabel "Prototyping or Design Services" .
+
+pc:ElectrodeMaterial a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Material ;
+    rdfs:label "Electrode Material" .
+
+pc:EDMWire a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Material ;
+    rdfs:label "EDM Wire" .
+
+pc:EDMSupply a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Material ;
+    rdfs:label "EDM Supply" .
+
+pc:ElectrodeEDMSupplyCollection a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label "Electrode Materials, EDM Wire, and Supplies (catalog grouping)" ;
+    skos:prefLabel "Electrode Materials, EDM Wire, and Supplies" ;
+    amtmeta:groups pc:ElectrodeMaterial, pc:EDMWire, pc:EDMSupply .
+
+pc:ProofingMaterial a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Material ;
+    rdfs:label "Proofing Material" ;
+    skos:prefLabel "Proofing Materials  (Wax, etc.)" .
+
+pc:FerrousMaterial a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Material ;
+    rdfs:label "Ferrous Material" ;
+    skos:prefLabel "Ferrous Materials" .
+
+pc:NonFerrousMaterial a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Material ;
+    rdfs:label "Non-Ferrous Material" ;
+    skos:prefLabel "Non-Ferrous Materials" .
+
+pc:ToolingMaterialBlank a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Material ;
+    rdfs:label "Tooling Material Blank" ;
+    skos:prefLabel "Tooling Materials, Blanks and Pre-Machined Stock of All Types" .
+
+pc:CarbideToolingMaterial a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Material ;
+    rdfs:label "Carbide Tooling Material" ;
+    skos:prefLabel "Tooling Materials, Carbides" .
+
+pc:CeramicToolingMaterial a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Material ;
+    rdfs:label "Ceramic Tooling Material" ;
+    skos:prefLabel "Tooling Materials, Ceramics" .
+
+pc:ToolingMaterialOtherCollection a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label "Tooling Materials, Other (catalog residual)" ;
+    skos:prefLabel "Tooling Materials, Other" .
+
+pc:WorkpieceMaterial a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Material ;
+    rdfs:label "Workpiece Material" ;
+    skos:prefLabel "Workpiece Materials and Stock of All Kinds" .
+
+pc:SmartMaterial a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Material ;
+    rdfs:label "Smart Material" ;
+    skos:prefLabel "Intelligent Materials, Smart Materials" .
+
+pc:AcademicResearchOrganization a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Organization ;
+    rdfs:label "Academic & Research Organization" ;
+    skos:prefLabel "University, College or Research Center" .
+
+pc:University a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:AcademicResearchOrganization ;
+    rdfs:label "University" .
+
+pc:College a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:AcademicResearchOrganization ;
+    rdfs:label "College" .
+
+pc:ResearchCenter a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf pc:AcademicResearchOrganization ;
+    rdfs:label "Research Center" .
+
+pc:TradeAssociation a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Organization ;
+    rdfs:label "Trade Association" .
+
+pc:Society a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Organization ;
+    rdfs:label "Professional Society" .
+
+pc:GovernmentalAgency a owl:Class, gufo:Kind ;
+    rdfs:subClassOf pc:Organization ;
+    rdfs:label "Governmental Agency" .
+
+pc:TradeAssocSocietyGovAgencyCollection a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label "Trade Associations, Societies, Governmental Agencies (catalog grouping)" ;
+    skos:prefLabel "Trade Associations, Societies, Governmental Agencies" ;
+    amtmeta:groups pc:TradeAssociation, pc:Society, pc:GovernmentalAgency .
+
+
+################################################################################
+# RESOLVED DECISIONS
+################################################################################
+# F1  - Lacquering/Enameling/Plastic Coating split via pc:CoatingSystemCollection
+# F2  - Automation/Electrical split via pc:AutomationElectricalEquipmentCollection
+# F3  - Transmission/Motors/Seals split via pc:MechanicalSubsystemEquipmentCollection
+# F4  - Laser Technology modeled as pc:LaserTechnologyCollection (not a Kind)
+# F5  - Lathes Horizontal CNC self-collapse (R1)
+# F6  - Welding Machines and Equipment self-collapse (R1)
+# F7  - Mobile Robot Kind with AGV/UGV/AMR SubKinds; standalone "Automated Guided
+#       Vehicles" line merged into AGV SubKind (R3)
+# F8  - PressFeeds and WorkpieceHandling kept distinct
+# F9  - pc:SensingInspectionSystem name retained
+# F10 - MeasuringTestSystem and AutoIDSystem each kept as single Kind
+# F11 - SensorActuatorCollection with invented pc:Sensor and pc:Actuator constituents
+# F15 - Measurement instruments deduplicated under SensingInspectionSystem only
+#
+################################################################################
+# OPEN FLAGS (for human review)
+################################################################################
+# F12 - Coating overlap: pc:CoatingSystemCollection vs pc:SurfaceTreatmentCoatingEquipment
+#       vs pc:CoatingEquipment all coexist in this generation
+# F13 - pc:PlasticWorkingEquipment sibling of seven other Plastic-* kinds; possible
+#       parent restructure in a future revision
+# F14 - Four "Cold Forming, X" siblings (pc:ColdHeadingMachine,
+#       pc:ColdFormingWireFormingMachine, pc:ColdFormingUpsetter,
+#       pc:ColdFormingRivetingMachine); possible pc:ColdFormingMachine parent
+# F16 - pc:ShapingSlottingMachine relocated out of pc:BroachingMachine (source
+#       misclassification)
+# F17 - pc:ScrewMachineAttachmentsAndCams temporarily under pc:ManufacturingDevice;
+#       proper home is pc:MachineAccessory
+# F18 - pc:CNCSoftware moved from Control System to Software Artifact
+# F19 - "Process Automation Systems & Services" mixes equipment and services
+# F20 - "Control Systems, PLC, SCADA Systems" overlaps with pc:PLC
+# F21 - Conjunctive labels defaulted to single Kind: pc:MarkingEngravingMachine,
+#       pc:CentrifugalBarrelDiscFinishingMachine, pc:NanoMicroMachiningEquipment,
+#       pc:ConveyorPartHandlingAutomation, pc:PalletChangerShuttleTransferDevice,
+#       pc:PlanerGantryBridgeMillingMachine
+# F22 - "Sawing Machines, Other" modeled as empty pc:SawingMachineOtherCollection
+# F23 - Communications/Networks overlap in Infrastructure Device
+#       (pc:CommunicationDataTransmissionEquipment vs pc:CommunicationNetworkFieldBusSystem)
+# F24 - "Energy Management Software, Systems & Services" mixes software and services
+#       in one line (pc:EnergyManagementSoftwareSystemService)
+# F25 - "Books, Publications and Information Services" mixes physical objects with
+#       services (pc:BookPublicationInformationService)
+# F26 - pc:ProcessAuxiliary Role-hierarchy refinement deferred (R6); proper UFO
+#       RoleMixin + canPlayRole modeling is future work
+# F27 - Many Process Auxiliary conjunctive labels defaulted to single Kind under R2
+#       (e.g., pc:BearingPulleyClutchGearVBelt, pc:BallLeadScrew, pc:LiveCenter,
+#       pc:NameplateLabelSign, pc:VoltageRegulator, pc:HandwheelKnobCrank,
+#       pc:WayCoverProtectorSeal, pc:PalletToteSeparator, pc:SlideWayLinearGuide,
+#       pc:LubricantGrease, pc:HeatExchangerAirConditioningEquipment,
+#       pc:HydraulicPneumaticEquipment, pc:ElectricalSwitchgearEnclosureComponent,
+#       pc:ElectronicOptoElectronicComponent, pc:MachineryMounting, etc.)
+# F28 - "Feedback Devices (Encoders/Resolvers/Scales/Sensors)" expanded under R3
+#       with invented SubKinds (pc:Encoder, pc:Resolver, pc:LinearScale,
+#       pc:FeedbackSensor); revisit if these conflict with sensor modeling under
+#       SensingInspectionSystem
+# F29 - "Furnishings, Shop and Office (...)" expanded under R3 with invented
+#       SubKinds (pc:FilingFurniture, pc:Desk, pc:WorkBench, pc:StorageCabinet,
+#       pc:ToolChest, pc:DrawingBoard, pc:ShopLightingFixture)
+################################################################################

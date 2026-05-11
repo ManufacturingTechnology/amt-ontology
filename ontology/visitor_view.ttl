@@ -1,0 +1,274 @@
+@prefix visitor_view: <http://ontology.amt.org/views/visitor#> .
+@prefix pc:           <http://ontology.amt.org/product-categories#> .
+@prefix im:           <http://ontology.amt.org/im#> .
+@prefix amtmeta:      <http://ontology.amt.org/meta#> .
+@prefix sh:           <http://www.w3.org/ns/shacl#> .
+@prefix owl:          <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:          <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:         <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:          <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms:      <http://purl.org/dc/terms/> .
+
+<http://ontology.amt.org/views/visitor>
+    a owl:Ontology, amtmeta:UserView ;
+    owl:imports <http://ontology.amt.org/meta>,
+                <http://ontology.amt.org/product-categories>,
+                <http://ontology.amt.org/im>,
+                <http://www.w3.org/ns/shacl> ;
+
+    dcterms:title    "Visitor View of Product Categories" ;
+    owl:versionInfo  "0.1.0" ;
+    amtmeta:viewOf   <http://ontology.amt.org/product-categories> ;
+
+    amtmeta:status              amtmeta:Active ;
+    amtmeta:taxonomyOwner       "Chris Downs" ;
+    amtmeta:governedBy          "Allison", "Ryan", "Downs" ;
+    amtmeta:consumedBy          "Kristin", "Mark K", "Jess", "Allison",
+                                "Downs", "Alka", "Kalesh" ;
+    amtmeta:technicalSteward    "Shaurabh" ;
+
+    amtmeta:relatedProduct
+        "IMTS (visitor reg and exhibitor categories/showrooms)",
+        "Passport",
+        "Media Sponsorships (media kit)" ;
+
+    amtmeta:relatedSystem
+        "Maritz",
+        "Hubspot",
+        "Data warehouse",
+        "Passport",
+        "Exhibitor Space Application (linked at major category)" ;
+
+    amtmeta:nextReviewDate      "2026-06-01"^^xsd:date ;
+    amtmeta:nextReviewNote      "Need to discuss for Space Application." ;
+
+    rdfs:seeAlso                "Taxonomy Change Process.docx" ;
+
+    amtmeta:useCase
+        "Marketing uses this for targeted marketing",
+        "Passport uses this as a filter to create lists",
+        "IMTS uses this as a demographic field for visitor registration",
+        "IMTS uses this in post-show reporting",
+        "IMTS uses this to create exhibitor product categories" .
+
+
+################################################################################
+# View-defined sub-property
+################################################################################
+# Channel/provenance tag — declares that an assertion was made through the
+# visitor view. Not load-bearing for typing or validation (those live on
+# im:hasInterest's range and the SHACL shape below). Retain for downstream
+# tools that want to distinguish view-channel from raw IM-channel assertions.
+
+visitor_view:hasInterest a owl:ObjectProperty ;
+    rdfs:subPropertyOf im:hasInterest ;
+    rdfs:domain im:VisitorRecord ;
+    rdfs:label "has interest" ;
+    rdfs:comment "Provenance channel for assertions made via the visitor view. Typing and membership are inherited from im:hasInterest and enforced by visitor_view:VisitorInterestShape." .
+
+
+################################################################################
+# Bucket hierarchy
+################################################################################
+
+# --- Top-level buckets ---
+
+visitor_view:Additive a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label       "Additive" ;
+    rdfs:isDefinedBy <http://ontology.amt.org/views/visitor> ;
+    amtmeta:groups   pc:BinderJetting, pc:DirectedEnergyDeposition, pc:HybridAdditiveManufacturing, pc:MaterialExtrusion, pc:MaterialJetting, pc:MoldEnabledAdditiveManufacturing, pc:PowderBedFusion, pc:SheetLamination, pc:VatPhotopolymerization .
+
+visitor_view:AutomatedSystems a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label       "Automated Systems" ;
+    rdfs:isDefinedBy <http://ontology.amt.org/views/visitor> ;
+    amtmeta:groups   visitor_view:AutomatedSystemsCells, visitor_view:AutomationAndMaterialHandling .
+
+visitor_view:CADCAM a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label       "CAD / CAM" ;
+    rdfs:isDefinedBy <http://ontology.amt.org/views/visitor> ;
+    amtmeta:groups   pc:EngineeringAnalysisSimulationSoftware .
+
+visitor_view:Controls a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label       "Controls" ;
+    rdfs:isDefinedBy <http://ontology.amt.org/views/visitor> ;
+    amtmeta:groups   pc:CNCUnit, pc:CommunicationNetworkFieldBusSystem, pc:DNCSystem, pc:DROUnit, pc:EmbeddedSystem, pc:PLC, pc:PLCSCADAControlSystem, pc:RobotController .
+
+visitor_view:FinishingAndPostProcessing a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label       "Finishing and Post-processing" ;
+    rdfs:isDefinedBy <http://ontology.amt.org/views/visitor> ;
+    amtmeta:groups   pc:BuffingPolishingMachine, pc:CenterlessGrinder, pc:CylindricalODGrinder, pc:DeburringEtchingCleaningPeening, pc:HoningMachine, pc:InternalCylindricalGrinder, pc:LappingMachine, pc:SurfaceGrindingMachine, pc:ToolCutterDrillPointGrinder .
+
+visitor_view:GearManufacturing a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label       "Gear Manufacturing" ;
+    rdfs:isDefinedBy <http://ontology.amt.org/views/visitor> ;
+    amtmeta:groups   pc:BevelGearGenerationMachine, pc:GearHobbingMachine, pc:GearRollingMachine, pc:GearShapingMachine, pc:GearShavingMachine .
+
+visitor_view:IndustrialAI a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label       "Industrial AI" ;
+    rdfs:isDefinedBy <http://ontology.amt.org/views/visitor> ;
+    amtmeta:groups   pc:AutonomousAI, pc:GenerativeAI, pc:PredictiveAI, pc:VisionAI .
+
+visitor_view:JoiningAndForming a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label       "Joining and Forming" ;
+    rdfs:isDefinedBy <http://ontology.amt.org/views/visitor> ;
+    amtmeta:groups   visitor_view:Forming, visitor_view:Welding .
+
+visitor_view:MachineComponentsAndAccessories a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label       "Machine Components and Accessories" ;
+    rdfs:isDefinedBy <http://ontology.amt.org/views/visitor> ;
+    amtmeta:groups   pc:BallLeadScrew, pc:Compressor, pc:CoolantPump, pc:ElectricalSwitchgearEnclosureComponent, pc:FormedPart, pc:GrindingAttachmentAccessory, pc:IndexerRotaryTable, pc:SlideWayLinearGuide, pc:SpeedReducerGearBox, pc:Spindle .
+
+visitor_view:Materials a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label       "Materials" ;
+    rdfs:isDefinedBy <http://ontology.amt.org/views/visitor> ;
+    amtmeta:groups   pc:FerrousMaterial, pc:NonFerrousMaterial, pc:SmartMaterial .
+
+visitor_view:Metrology a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label       "Metrology" ;
+    rdfs:isDefinedBy <http://ontology.amt.org/views/visitor> ;
+    amtmeta:groups   pc:CoordinateMeasuringMachine, pc:FlatnessMeasuringEquipment, pc:FlawDetectionEquipment, pc:HardnessTestingEquipment, pc:OpticalComparator, pc:RoundnessMeasuringEquipment, pc:VisionSystem .
+
+visitor_view:PlantOperationsAndMaintenanceEquipment a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label       "Plant Operations and Maintenance Equipment" ;
+    rdfs:isDefinedBy <http://ontology.amt.org/views/visitor> ;
+    amtmeta:groups   pc:CleaningDegreasingEquipment, pc:CoolantCuttingFluidOil, pc:DustCollectorAirFiltrationEquipment, pc:PlantMaintenanceRepairEquipment, pc:SafetyRelatedProduct, pc:VacuumPump .
+
+visitor_view:Services a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label       "Services" ;
+    rdfs:isDefinedBy <http://ontology.amt.org/views/visitor> ;
+    amtmeta:groups   pc:AutomationService, pc:ContractManufacturingMachiningService, pc:InsuranceFinancialHRService, pc:PrototypingDesignService .
+
+visitor_view:SoftwareAndDigitalSolutions a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label       "Software and Digital Solutions" ;
+    rdfs:isDefinedBy <http://ontology.amt.org/views/visitor> ;
+    amtmeta:groups   pc:AdministrativeSoftware, pc:IndustrialITOtherSoftware, pc:ProductionFloorSoftware .
+
+visitor_view:Subtractive a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label       "Subtractive" ;
+    rdfs:isDefinedBy <http://ontology.amt.org/views/visitor> ;
+    amtmeta:groups   visitor_view:EDMECMLaserPlasmaAndWaterJetCutting, visitor_view:MillingBoringDrillingAndTapping, visitor_view:Sawing, visitor_view:TurningScrewMachiningAndThreadManufacturing .
+
+visitor_view:ToolingAndWorkholding a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label       "Tooling and Workholding" ;
+    rdfs:isDefinedBy <http://ontology.amt.org/views/visitor> ;
+    amtmeta:groups   visitor_view:Tooling, visitor_view:Workholding .
+
+# --- Sub-buckets ---
+
+visitor_view:AutomatedSystemsCells a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label       "Automated Systems & Cells" ;
+    rdfs:isDefinedBy <http://ontology.amt.org/views/visitor> ;
+    amtmeta:groups   pc:AssemblyTestCell, pc:MaterialFormingCell, pc:MaterialJoiningCell, pc:MaterialRemovalCell .
+
+visitor_view:AutomationAndMaterialHandling a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label       "Automation and Material Handling" ;
+    rdfs:isDefinedBy <http://ontology.amt.org/views/visitor> ;
+    amtmeta:groups   pc:AutomaticStorageRetrievalSystem, pc:BarFeedMechanism, pc:ConveyorPartHandlingAutomation, pc:FormingEquipmentLoadingPositioning, pc:GantryLoader, pc:IndustrialAutoIDSystem, pc:IndustrialBuildingAutomationSystem, pc:IndustrialImageProcessingSystem, pc:IndustrialPC, pc:LaserTechnologyCollection, pc:MeasuringTestSystem, pc:MobileRobot, pc:MultiMachineToolStorageSystem, pc:PalletChangerShuttleTransferDevice, pc:RobotToolingGripper, pc:SafetySecuritySystem, pc:SensorActuatorCollection, pc:StationaryRobot, pc:WorkpieceHandlingLoadingFeedingEquipment .
+
+visitor_view:EDMECMLaserPlasmaAndWaterJetCutting a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label       "EDM, ECM, Laser, Plasma and Water Jet Cutting" ;
+    rdfs:isDefinedBy <http://ontology.amt.org/views/visitor> ;
+    amtmeta:groups   pc:ElectroChemicalMachine, pc:LaserCuttingSystem, pc:LaserMarkingSystem, pc:RamEDM, pc:SmallHoleEDM, pc:WaterJetCuttingMachine, pc:WireEDM .
+
+visitor_view:Forming a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label       "Forming" ;
+    rdfs:isDefinedBy <http://ontology.amt.org/views/visitor> ;
+    amtmeta:groups   pc:CoilHandling, pc:HydraulicPress, pc:MechanicalPress, pc:PressBrake, pc:PunchPress, pc:RollFormingBendingMachine, pc:Shearing, pc:WireFormingMachine .
+
+visitor_view:MillingBoringDrillingAndTapping a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label       "Milling, Boring, Drilling and Tapping" ;
+    rdfs:isDefinedBy <http://ontology.amt.org/views/visitor> ;
+    amtmeta:groups   pc:BoringMachine, pc:CNCDrillingTappingMachine, pc:HorizontalMachiningCenter, pc:JigBoringMachine, pc:ProfileDuplicatingMillingMachine, pc:UniversalMachiningCenter, pc:VerticalBridgeGantryMachiningCenter, pc:VerticalColumnMachiningCenter .
+
+visitor_view:Sawing a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label       "Sawing" ;
+    rdfs:isDefinedBy <http://ontology.amt.org/views/visitor> ;
+    amtmeta:groups   pc:AbrasiveCutOffMachine, pc:Bandsaw, pc:CircularCutOffSawingMachine, pc:SawingMachineOtherCollection, pc:VerticalTiltFrameBandsaw .
+
+visitor_view:Tooling a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label       "Tooling" ;
+    rdfs:isDefinedBy <http://ontology.amt.org/views/visitor> ;
+    amtmeta:groups   pc:AbrasiveCompoundSlurry, pc:BoringToolBarHead, pc:CarbideToolingCoating, pc:CutterArbor, pc:DiamondTooling, pc:Drill, pc:EndMill, pc:FacingTool, pc:FormTool, pc:SawBlade, pc:SolidMasterCollet, pc:ToolHolderAdapter .
+
+visitor_view:TurningScrewMachiningAndThreadManufacturing a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label       "Turning, Screw Machining and Thread Manufacturing" ;
+    rdfs:isDefinedBy <http://ontology.amt.org/views/visitor> ;
+    amtmeta:groups   pc:CutOffLathe, pc:HorizontalCNCLathe, pc:HorizontalCNCTurningCenter, pc:InvertedVerticalCNCTurningCenter, pc:ManualLathe, pc:MultiSpindleHorizontalCNCLathe, pc:SwissStyleLathe, pc:TwinSpindleHorizontalCNCLathe, pc:TwinSpindleTurningCenter, pc:VerticalCNCLathe, pc:VerticalCNCTurningCenter .
+
+visitor_view:Welding a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label       "Welding" ;
+    rdfs:isDefinedBy <http://ontology.amt.org/views/visitor> ;
+    amtmeta:groups   pc:ElectricWeldingMachine, pc:FrictionWeldingMachine, pc:GasWeldingMachine, pc:LaserWeldingMachine, pc:RoboticWeldingSystem .
+
+visitor_view:Workholding a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label       "Workholding" ;
+    rdfs:isDefinedBy <http://ontology.amt.org/views/visitor> ;
+    amtmeta:groups   pc:ChuckJawCollet, pc:ClampFixturingDevice, pc:CustomWorkholding, pc:ExpandableWorkholdingArbor, pc:FixturingSystem, pc:HydraulicPneumaticActuator, pc:Mandrel, pc:ViseViseJaw .
+
+
+################################################################################
+# SHACL constraints
+################################################################################
+# Two-part composition (logical AND):
+#   (i)  bucket membership — value must be transitively reachable via
+#        amtmeta:groups+ from a visitor_view bucket;
+#   (ii) catalog-grade — value must satisfy amtmeta:CatalogValueShape, i.e.
+#        carry skos:prefLabel (entities without prefLabel are abstract
+#        scaffolding and not assertable as data values).
+
+visitor_view:VisitorInterestShape a sh:NodeShape ;
+    rdfs:label "Visitor Interest Constraint" ;
+    sh:targetClass im:VisitorRecord ;
+
+    # (i) View-scoped bucket membership
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:message "Interest '{?value}' is not in the visitor view's allowed set." ;
+        sh:select """
+            PREFIX im:      <http://ontology.amt.org/im#>
+            PREFIX amtmeta: <http://ontology.amt.org/meta#>
+            PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+            SELECT $this ?value WHERE {
+                $this im:hasInterest ?value .
+                FILTER NOT EXISTS {
+                    ?bucket amtmeta:groups+ ?value ;
+                            rdfs:isDefinedBy <http://ontology.amt.org/views/visitor> .
+                }
+            }
+        """ ;
+    ] ;
+
+    # (ii) Catalog-grade (delegated to amtmeta:CatalogValueShape)
+    sh:property [
+        sh:path im:hasInterest ;
+        sh:node amtmeta:CatalogValueShape ;
+    ] .
+
+
+################################################################################
+# RESOLVED DECISIONS
+################################################################################
+# D1 - View-side sub-property visitor_view:hasInterest declared as
+#      rdfs:subPropertyOf im:hasInterest with tighter domain
+#      (im:VisitorRecord). As of v0.2.2, retained purely as a provenance/
+#      channel tag — typing and membership are owned by im:hasInterest's
+#      range (im:Interest) and visitor_view:VisitorInterestShape respectively.
+# D2 - SHACL shape retargeted from im:Visitor to im:VisitorRecord
+#      (im:hasInterest/im:hasProductCategory moved off the role onto the
+#      registration record in im.ttl v0.2)
+# D3 - Catalog-value rule delegated to amtmeta:CatalogValueShape (v0.2.2).
+#      View shape now enforces (bucket membership) ∧ (catalog-grade) on
+#      values of im:hasInterest via composition: sh:sparql for the first,
+#      sh:property + sh:node for the second. Implication: view-side
+#      sub-buckets (e.g. visitor_view:AutomatedSystemsCells) that lack
+#      skos:prefLabel will no longer pass as data values — they are pure
+#      organizational scaffolding, queryable as groupers but not assertable.
+#      Per im.ttl D16, im:hasInterest's OWL range im:Interest is a
+#      role-mixin marker, not a membership enumeration.
+#
+################################################################################
+# OPEN FLAGS (for human review)
+################################################################################
+# F1 - If any view-side sub-bucket should be assertable as a data value, give
+#      it a skos:prefLabel. Current sub-buckets carry rdfs:label only.
+################################################################################

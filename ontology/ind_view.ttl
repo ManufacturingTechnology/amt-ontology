@@ -1,0 +1,128 @@
+@prefix ind_view: <http://ontology.amt.org/views/industries#> .
+@prefix ind:      <http://ontology.amt.org/industries#> .
+@prefix im:       <http://ontology.amt.org/im#> .
+@prefix amtmeta:  <http://ontology.amt.org/meta#> .
+@prefix sh:       <http://www.w3.org/ns/shacl#> .
+@prefix owl:      <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms:  <http://purl.org/dc/terms/> .
+
+<http://ontology.amt.org/views/industries>
+    a owl:Ontology, amtmeta:UserView ;
+    owl:imports <http://ontology.amt.org/meta>,
+                <http://ontology.amt.org/industries>,
+                <http://ontology.amt.org/im>,
+                <http://www.w3.org/ns/shacl> ;
+
+    dcterms:title    "View of Industries" ;
+    owl:versionInfo  "0.1.0" ;
+    amtmeta:viewOf   <http://ontology.amt.org/industries> ;
+
+    amtmeta:status   amtmeta:Active .
+
+
+################################################################################
+# Bucket hierarchy
+################################################################################
+# Current shape is a single flat Collection grouping all 17 industry Kinds.
+# The bucket abstraction is in place so that the structure can evolve to a
+# multi-level hierarchy (mirroring visitor_view / exhibitor_view) when
+# industry sub-groupings become useful, without changing the IM side.
+
+ind_view:Industries a owl:NamedIndividual, amtmeta:Collection ;
+    rdfs:label       "Industries" ;
+    rdfs:isDefinedBy <http://ontology.amt.org/views/industries> ;
+    amtmeta:groups   ind:AdditiveMachinery,
+                     ind:Aerospace,
+                     ind:AgricultureConstructionOffRoad,
+                     ind:AutomationEquipmentServices,
+                     ind:Automotive,
+                     ind:ComputersElectronicsControls,
+                     ind:ConsumerProducts,
+                     ind:Defense,
+                     ind:Distribution,
+                     ind:Education,
+                     ind:EnergyEquipment,
+                     ind:FinancialServices,
+                     ind:IndustrialMachinery,
+                     ind:MachineShops,
+                     ind:MedicalDental,
+                     ind:MetalworkingMachinery,
+                     ind:SoftwareIndustry .
+
+
+################################################################################
+# SHACL constraints
+################################################################################
+# Two-part composition (logical AND), mirroring visitor_view / exhibitor_view:
+#   (i)  view-scoped membership — value must be transitively reachable via
+#        amtmeta:groups+ from an ind_view bucket;
+#   (ii) catalog-grade — value must satisfy amtmeta:CatalogValueShape, i.e.
+#        carry skos:prefLabel.
+# The amtmeta:groups+ traversal handles depth-1 (current flat structure) and
+# any future deeper hierarchies without modification.
+
+ind_view:IndustryShape a sh:NodeShape ;
+    rdfs:label "Company Industry Constraint" ;
+    sh:targetClass im:Company ;
+
+    # (i) View-scoped membership
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:message "Industry '{?value}' is not in the industries view's allowed set." ;
+        sh:select """
+            PREFIX im:      <http://ontology.amt.org/im#>
+            PREFIX amtmeta: <http://ontology.amt.org/meta#>
+            PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+            SELECT $this ?value WHERE {
+                $this im:belongsTo ?value .
+                FILTER NOT EXISTS {
+                    ?bucket amtmeta:groups+ ?value ;
+                            rdfs:isDefinedBy <http://ontology.amt.org/views/industries> .
+                }
+            }
+        """ ;
+    ] ;
+
+    # (ii) Catalog-grade (delegated to amtmeta:CatalogValueShape)
+    sh:property [
+        sh:path im:belongsTo ;
+        sh:node amtmeta:CatalogValueShape ;
+    ] .
+
+
+################################################################################
+# RESOLVED DECISIONS
+################################################################################
+# D1 - View targets im:Company (im:belongsTo's domain). As of v0.2.0, the
+#      shape enforces (collection membership) ∧ (catalog-grade) on values of
+#      im:belongsTo via composition: sh:sparql for the first, sh:property +
+#      sh:node for the second. All 17 industry Kinds in ind: carry
+#      skos:prefLabel, so the catalog-grade check is currently always
+#      satisfied for in-collection values; the check is retained for
+#      uniformity with visitor_view / exhibitor_view and as a guard against
+#      future abstract ind: classes lacking prefLabel.
+# D2 - Single flat Collection (ind_view:Industries) chosen for current scope
+#      (17 industries with no sub-grouping). The amtmeta:groups+ traversal
+#      future-proofs the shape for hierarchical buckets — see F1.
+# D3 - im:belongsTo's range is im:Industry (the IM-side role-mixin marker),
+#      not ind:Industry (the taxonomy's rigid Category root). The IM layer
+#      adds a relational perspective on top; ind:Industry remains the
+#      taxonomy root in ind.ttl. See im.ttl D17.
+#
+################################################################################
+# OPEN FLAGS (for human review)
+################################################################################
+# F1 - When more industries are added or sub-groupings become useful, this
+#      view is expected to evolve into a hierarchical bucket structure
+#      (mirroring visitor_view / exhibitor_view). The current flat Collection
+#      is the baseline; the SHACL constraint is already written to handle
+#      arbitrary depth via amtmeta:groups+ and requires no change.
+# F2 - If multiple industry views emerge (e.g. visitor-flavored vs
+#      exhibitor-flavored groupings of the same ind: taxonomy), reconcile
+#      with im.ttl F6: either keep a single im:Industry marker with
+#      multi-valued scopedBy + sh:or composition across view shapes, or
+#      split into per-consumer markers and per-consumer view files.
+################################################################################

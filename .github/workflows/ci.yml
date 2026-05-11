@@ -1,0 +1,71 @@
+# .github/workflows/ci.yml
+# ─────────────────────────────────────────────────────────────────────────
+# Continuous integration for the AMT Ontology project.
+#
+# Three guarantees are enforced on every push and PR:
+#   1. ruff lint + format check pass
+#   2. the full test suite passes (structural + SHACL)
+#   3. dist/ matches what `make dist` produces from the current views
+#
+# Test runs cover the project's lower (3.10) and upper (3.12) supported
+# Python versions so a regression on either trips CI.
+
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: tests (python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: set up python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: install (editable + dev + reasoner extras)
+        run: python -m pip install -e ".[dev,reasoner]"
+
+      - name: ruff lint
+        run: ruff check .
+
+      - name: ruff format check
+        run: ruff format --check .
+
+      - name: unit tests
+        run: python -m unittest discover -s tests -v
+
+      - name: dist/ matches current ontology (CSVs + amt-ontology.owl)
+        # ``make dist`` regenerates both kinds of artefact:
+        #   * ``dist/imts_*.csv`` from the views (via app.view_csv)
+        #   * ``dist/amt-ontology.owl`` — the merged RDF/XML (via app.merge)
+        # Both targets are content-idempotent: if the TTL state hasn't
+        # changed semantically, the files are left untouched. So a
+        # non-empty ``git diff`` here means a real ontology change went
+        # into the PR without the matching dist/ refresh.
+        #
+        # The semantic check (graph isomorphism for the OWL file) is also
+        # asserted by ``tests/test_merge.py::TestMergeSnapshotAgreement``,
+        # which runs as part of the previous step.
+        run: |
+          make dist
+          if ! git diff --exit-code dist/; then
+            echo "::error::dist/ is stale — run 'make dist' locally and commit."
+            exit 1
+          fi

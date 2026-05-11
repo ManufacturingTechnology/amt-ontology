@@ -1,0 +1,149 @@
+@prefix amtmeta: <http://ontology.amt.org/meta#> .
+@prefix gufo:    <http://purl.org/nemo/gufo#> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<http://ontology.amt.org/meta>
+    a owl:Ontology ;
+    owl:imports <http://purl.org/nemo/gufo>,
+                <http://www.w3.org/ns/shacl> ;
+    rdfs:label "AMT Metadata Vocabulary" ;
+    owl:versionInfo "0.1.0" .
+
+#-------------------------------------------------------------------------------
+# Classes
+#-------------------------------------------------------------------------------
+
+amtmeta:Vocabulary
+    a owl:Class ;
+    rdfs:subClassOf owl:Ontology ;
+    rdfs:label "Vocabulary" .
+
+amtmeta:Taxonomy
+    a owl:Class ;
+    rdfs:subClassOf amtmeta:Vocabulary ;
+    rdfs:label "Taxonomy" .
+
+amtmeta:UserView
+    a owl:Class ;
+    rdfs:subClassOf amtmeta:Vocabulary ;
+    rdfs:label "User View" .
+
+amtmeta:InformationModel
+    a owl:Class ;
+    rdfs:subClassOf amtmeta:Vocabulary ;
+    rdfs:label "Information Model" .
+
+amtmeta:Collection
+    a owl:Class ;
+    rdfs:subClassOf gufo:Category ;
+    rdfs:label "Collection" .
+
+amtmeta:Status
+    a owl:Class ;
+    rdfs:label "Status" .
+
+#-------------------------------------------------------------------------------
+# Status individuals
+#-------------------------------------------------------------------------------
+
+amtmeta:Active      a amtmeta:Status ; rdfs:label "Active" .
+amtmeta:Draft       a amtmeta:Status ; rdfs:label "Draft" .
+amtmeta:UnderReview a amtmeta:Status ; rdfs:label "Under Review" .
+amtmeta:Deprecated  a amtmeta:Status ; rdfs:label "Deprecated" .
+
+#-------------------------------------------------------------------------------
+# Object property: amtmeta:groups
+#-------------------------------------------------------------------------------
+
+amtmeta:groups
+    a owl:ObjectProperty ;
+    rdfs:domain amtmeta:Collection ;
+    rdfs:label "groups" .
+
+#-------------------------------------------------------------------------------
+# Annotation property: amtmeta:viewOf
+#-------------------------------------------------------------------------------
+
+amtmeta:viewOf
+    a owl:AnnotationProperty ;
+    rdfs:label "view of" .
+
+#-------------------------------------------------------------------------------
+# Annotation property: amtmeta:scopedBy
+#-------------------------------------------------------------------------------
+# Ties an IM-level concept (typically a marker class such as im:Interest or
+# im:ProductCategory) to the user view that defines its runtime membership via
+# SHACL. Pure annotation: no logical force, no inference. Parallels viewOf at
+# the class level (viewOf links an ontology to its source taxonomy; scopedBy
+# links a class to its scoping view).
+
+amtmeta:scopedBy
+    a owl:AnnotationProperty ;
+    rdfs:label "scoped by" ;
+    rdfs:comment "Ties an IM concept to the user view that defines its runtime membership via SHACL." .
+
+#-------------------------------------------------------------------------------
+# Governance annotation properties
+#-------------------------------------------------------------------------------
+
+amtmeta:status              a owl:AnnotationProperty ; rdfs:label "status" .
+amtmeta:taxonomyOwner       a owl:AnnotationProperty ; rdfs:label "taxonomy owner" .
+amtmeta:governedBy          a owl:AnnotationProperty ; rdfs:label "governed by" .
+amtmeta:consumedBy          a owl:AnnotationProperty ; rdfs:label "consumed by" .
+amtmeta:technicalSteward    a owl:AnnotationProperty ; rdfs:label "technical steward" .
+amtmeta:relatedProduct      a owl:AnnotationProperty ; rdfs:label "related product" .
+amtmeta:relatedSystem       a owl:AnnotationProperty ; rdfs:label "related system" .
+amtmeta:nextReviewDate      a owl:AnnotationProperty ; rdfs:label "next review date" .
+amtmeta:nextReviewNote      a owl:AnnotationProperty ; rdfs:label "next review note" .
+amtmeta:useCase             a owl:AnnotationProperty ; rdfs:label "use case" .
+
+#-------------------------------------------------------------------------------
+# Reusable SHACL shape: catalog-facing value
+#-------------------------------------------------------------------------------
+# An entity qualifies as a catalog value iff it carries skos:prefLabel.
+# Entities without prefLabel are ABSTRACT (taxonomy scaffolding) and are not
+# valid as data values, regardless of their class or grouping membership.
+#
+# Applied by reference (sh:node) from view shapes; carries no sh:targetClass
+# so it only fires where explicitly invoked. Composes with view-specific
+# membership checks via logical AND.
+
+amtmeta:CatalogValueShape a sh:NodeShape ;
+    rdfs:label "Catalog Value Constraint" ;
+    rdfs:comment "A value qualifies as catalog-facing iff it has skos:prefLabel. Entities without prefLabel are treated as ABSTRACT (taxonomy scaffolding) and are not valid data values." ;
+    sh:property [
+        sh:path skos:prefLabel ;
+        sh:minCount 1 ;
+        sh:message "Value is abstract (lacks skos:prefLabel) and cannot be used as a catalog value."
+    ] .
+
+################################################################################
+# RESOLVED DECISIONS
+################################################################################
+# D1 - amtmeta:scopedBy annotation property added (v0.2.0). Symmetric with
+#      amtmeta:viewOf: viewOf links a vocabulary to its source taxonomy at the
+#      ontology level; scopedBy links an IM class to its scoping user view at
+#      the class level. Pure documentation/tooling hint; no logical force.
+# D2 - amtmeta:CatalogValueShape added (v0.2.0). Encodes the
+#      "prefLabel ⇒ catalog, no prefLabel ⇒ abstract" rule as a reusable
+#      SHACL NodeShape with no sh:targetClass, invoked by views via sh:node.
+#      Factored here (rather than duplicated in each view) because the rule
+#      is meta-level: it defines what counts as a catalog value across all
+#      views, not just one.
+# D3 - SHACL imported (owl:imports <http://www.w3.org/ns/shacl>) now that
+#      amtmeta.ttl carries SHACL content.
+#
+################################################################################
+# OPEN FLAGS (for human review)
+################################################################################
+# F1 - The "catalog vs abstract" predicate currently keys on skos:prefLabel
+#      alone. If future modeling needs more nuance (e.g., distinguishing
+#      "internal-use catalog terms" from "public-use catalog terms"), this
+#      shape may need to split or take a parameter.
+################################################################################

@@ -1,0 +1,92 @@
+# pyproject.toml
+# ─────────────────────────────────────────────────────────────────────────────
+# Single source of truth for the project's metadata, dependencies, and tool
+# configuration. Replaces requirements.txt; the latter is kept as a thin
+# alias for users who prefer the historical install command.
+#
+# Common invocations:
+#   pip install -e .                  # runtime install
+#   pip install -e ".[dev]"           # adds pytest + ruff
+#   pip install -e ".[reasoner]"      # adds owlready2 (HermiT reasoner pass)
+#   pip install -e ".[dev,reasoner]"  # everything
+#
+# After install the console-script ``amt-browser`` is on $PATH (it just calls
+# ``ontology_ui.main``).
+
+[build-system]
+requires      = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+# ─── Project metadata ───────────────────────────────────────────────────────
+
+[project]
+name            = "amt-ontology"
+version         = "0.2.0"
+description     = "AMT product-category ontology suite + Flask browser"
+readme          = "README.md"
+requires-python = ">=3.10"
+license         = { text = "Proprietary" }
+authors         = [{ name = "AMT" }]
+
+# Runtime dependencies. pandas/numpy from the old scripts/ pipeline are
+# intentionally dropped — nothing in app/, tests/, or ontology_ui.py imports
+# them. Re-add to the [dev] extra if you bring back a CSV-munging script.
+dependencies = [
+    "Flask>=3.1,<4",
+    "rdflib>=7.4,<8",
+    "pyshacl>=0.30,<0.31",
+]
+
+[project.optional-dependencies]
+# Pulls in HermiT via owlready2 so TestOwlreadyConsistency stops skipping.
+reasoner = ["owlready2>=0.48,<0.49"]
+
+# Developer tools — formatting, linting, faster test runner.
+dev = [
+    "pytest>=8",
+    "pytest-cov",
+    "ruff>=0.5",
+]
+
+[project.scripts]
+# `amt-browser` after install runs ontology_ui:main (same as `python ontology_ui.py`).
+amt-browser = "ontology_ui:main"
+
+# ─── Package discovery ──────────────────────────────────────────────────────
+#
+# The `app/` package is what setuptools needs to ship. `ontology_ui.py` is a
+# top-level CLI shim and is picked up via py-modules so the `amt-browser`
+# entry point can resolve it without rearranging the tree.
+
+[tool.setuptools]
+py-modules = ["ontology_ui"]
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+# ─── pytest ────────────────────────────────────────────────────────────────
+
+[tool.pytest.ini_options]
+testpaths       = ["tests"]
+addopts         = "-ra --strict-markers"
+python_files    = ["test_*.py"]
+python_classes  = ["Test*"]
+python_functions = ["test_*"]
+
+# ─── ruff (formatter + linter) ─────────────────────────────────────────────
+
+[tool.ruff]
+line-length    = 100
+target-version = "py310"
+extend-exclude = ["dist", "resources"]
+
+[tool.ruff.lint]
+# Sensible default set: pyflakes/pycodestyle + import order + bugbear +
+# pyupgrade + simplify. ``E501`` (line length) is off because the formatter
+# already manages it; ``B008`` (no mutables in defaults) trips on Flask
+# decorator patterns and is more noise than signal here.
+extend-select = ["I", "B", "UP", "SIM"]
+ignore        = ["E501", "B008"]
+
+[tool.ruff.format]
+quote-style = "double"

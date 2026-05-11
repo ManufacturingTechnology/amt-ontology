@@ -1,0 +1,66 @@
+# ─── Python ──────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Build / packaging artefacts
+build/
+develop-eggs/
+eggs/
+.eggs/
+sdist/
+wheels/
+*.egg
+*.egg-info/
+MANIFEST
+
+# Installer logs / setup
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ─── Virtual environments ───────────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+
+# ─── Testing & coverage caches ──────────────────────────────────────────
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+nosetests.xml
+*.cover
+
+# ─── Linters / formatters ───────────────────────────────────────────────
+.ruff_cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# ─── IDEs / editors ─────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ─── Jupyter ────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# ─── OS / local-only ────────────────────────────────────────────────────
+*.bak
+*.tmp
+*.log
+*.local
+
+# ─── Owlready2 reasoner sqlite cache (created at runtime) ───────────────
+*.sqlite3
+*.sqlite3-journal
