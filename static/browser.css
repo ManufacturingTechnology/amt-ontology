@@ -131,6 +131,7 @@ header a { color: #fffbcc; text-decoration: underline; font-weight: 600; }
 .sub-dot-ind-view     { background: var(--industry-view-color); }
 .sub-dot-im-core      { background: var(--im-color); }
 .sub-dot-im-detail    { background: #06596e; }
+.sub-dot-im-interactive { background: #d97706; }
 /* When the parent panel is "ind", colour the active sub-tab to match */
 .panel-ind .sub-tab-btn.active { color: var(--industry-color); border-bottom-color: var(--industry-color); }
 .panel-im  .sub-tab-btn.active { color: var(--im-color);       border-bottom-color: var(--im-color); }
@@ -404,7 +405,7 @@ header a { color: #fffbcc; text-decoration: underline; font-weight: 600; }
 }
 .mermaid-container .mermaid {
   font-family: "Menlo", "Consolas", monospace;
-  font-size: 0.78rem;
+  font-size: 0.95rem;
   color: #6b7280;
   margin: 0;
   white-space: pre;
@@ -412,10 +413,26 @@ header a { color: #fffbcc; text-decoration: underline; font-weight: 600; }
   display: inline-block;
 }
 /* Once Mermaid renders, it replaces the <pre> contents with an SVG.
-   Centre the SVG and ensure it scales down on narrow screens. */
+   We deliberately do NOT set max-width:100% here -- the parent container's
+   overflow-x:auto handles wide diagrams, and clamping width forces Mermaid
+   to downscale the text below readability. */
 .mermaid-container .mermaid svg {
-  max-width: 100%;
   height: auto;
+  font-size: 16px;
+}
+/* Belt-and-braces: Mermaid emits inline font-size on its <text> elements,
+   so we boost label and stereotype text directly. The selectors mirror the
+   classes Mermaid's classDiagram renderer applies. */
+.mermaid-container .mermaid svg .nodeLabel,
+.mermaid-container .mermaid svg .edgeLabel,
+.mermaid-container .mermaid svg text.classTitle,
+.mermaid-container .mermaid svg text.classText,
+.mermaid-container .mermaid svg .label foreignObject div {
+  font-size: 16px !important;
+}
+.mermaid-container .mermaid svg text.classTitle {
+  font-size: 18px !important;
+  font-weight: 600;
 }
 .mermaid-copy-btn {
   cursor: pointer;
@@ -424,3 +441,29 @@ header a { color: #fffbcc; text-decoration: underline; font-weight: 600; }
   transition: filter 0.15s;
 }
 .mermaid-copy-btn:hover { filter: brightness(0.92); }
+
+/* -- IM Interactive (Cytoscape.js) -- */
+.cy-container {
+  margin-top: 10px;
+  background: #fafbfc;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  overflow: hidden;
+}
+#im-cy {
+  width: 100%;
+  height: 640px;
+  background: #fafbfc;
+  cursor: grab;
+}
+#im-cy:active { cursor: grabbing; }
+select.badge.im-badge {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid rgba(14,122,145,0.20);
+  cursor: pointer;
+  padding-right: 20px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Cpath fill='%230e7a91' d='M0 2l4 4 4-4z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+}
