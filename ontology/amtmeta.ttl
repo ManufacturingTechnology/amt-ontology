@@ -10,8 +10,7 @@
 
 <http://ontology.amt.org/meta>
     a owl:Ontology ;
-    owl:imports <http://purl.org/nemo/gufo>,
-                <http://www.w3.org/ns/shacl> ;
+    owl:imports <http://purl.org/nemo/gufo> ;
     rdfs:label "AMT Metadata Vocabulary" ;
     owl:versionInfo "0.1.0" .
 
@@ -136,8 +135,14 @@ amtmeta:CatalogValueShape a sh:NodeShape ;
 #      Factored here (rather than duplicated in each view) because the rule
 #      is meta-level: it defines what counts as a catalog value across all
 #      views, not just one.
-# D3 - SHACL imported (owl:imports <http://www.w3.org/ns/shacl>) now that
-#      amtmeta.ttl carries SHACL content.
+# D3 - SHACL import removed. amtmeta.ttl still defines a SHACL NodeShape
+#      (CatalogValueShape), but pyshacl operates on the triples directly and
+#      does not require the SHACL vocabulary in the OWL imports closure.
+#      Removing the import resolves Hermit/Protégé OWL-DL reasoning errors
+#      caused by SHACL's non-DL constructs (e.g., sh:namespace's range of
+#      xsd:anyURI; anonymous SHACL shape nodes). Earlier note that "SHACL
+#      imported now that amtmeta.ttl carries SHACL content" was incorrect —
+#      the import was unnecessary for either OWL parsing or SHACL validation.
 #
 ################################################################################
 # OPEN FLAGS (for human review)
