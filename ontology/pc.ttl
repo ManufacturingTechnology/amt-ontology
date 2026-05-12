@@ -56,7 +56,7 @@ pc:InfrastructureDevice a owl:Class, gufo:Category ;
     rdfs:label "Infrastructure Device" .
 
 pc:ProductionCell a owl:Class, gufo:Category ;
-    rdfs:subClassOf gufo:Collective ;
+    rdfs:subClassOf gufo:FunctionalComplex ;
     rdfs:label "Production Cell" .
 
 pc:SoftwareArtifact a owl:Class, gufo:Category ;
