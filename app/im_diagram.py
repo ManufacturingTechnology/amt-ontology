@@ -214,9 +214,7 @@ def generate_im_mermaid(graph: rdflib.Graph) -> str:
     # Header + IM-internal classes.
     lines: list[str] = ["classDiagram", "  direction LR"]
 
-    im_classes = {
-        c for c in graph.subjects(RDF.type, OWL.Class) if in_im_namespace(c)
-    }
+    im_classes = {c for c in graph.subjects(RDF.type, OWL.Class) if in_im_namespace(c)}
     im_class_by_local: dict = {local_name(c): c for c in im_classes}
     # Track which local names exist as boxes so we don't emit relationship
     # edges that reference an undeclared box.
@@ -239,11 +237,7 @@ def generate_im_mermaid(graph: rdflib.Graph) -> str:
 
     # Named individuals declared in the IM namespace.
     im_individuals = sorted(
-        {
-            i
-            for i in graph.subjects(RDF.type, OWL.NamedIndividual)
-            if in_im_namespace(i)
-        },
+        {i for i in graph.subjects(RDF.type, OWL.NamedIndividual) if in_im_namespace(i)},
         key=local_name,
     )
     for ind in im_individuals:

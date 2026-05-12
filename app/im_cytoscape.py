@@ -79,9 +79,7 @@ def generate_im_cytoscape(graph: rdflib.Graph) -> dict:
                 continue
             d_l = local_name(d)
             card = cards.get((d_l, local_name(p)), "")
-            dtprops.setdefault(d_l, []).append(
-                {"name": local_name(p), "range": rng, "card": card}
-            )
+            dtprops.setdefault(d_l, []).append({"name": local_name(p), "range": rng, "card": card})
 
     for c_l, prop_uris in rest_props.items():
         for prop in prop_uris:
