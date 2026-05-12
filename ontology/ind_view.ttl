@@ -13,8 +13,7 @@
     a owl:Ontology, amtmeta:UserView ;
     owl:imports <http://ontology.amt.org/meta>,
                 <http://ontology.amt.org/industries>,
-                <http://ontology.amt.org/im>,
-                <http://www.w3.org/ns/shacl> ;
+                <http://ontology.amt.org/im> ;
 
     dcterms:title    "View of Industries" ;
     owl:versionInfo  "0.1.0" ;
