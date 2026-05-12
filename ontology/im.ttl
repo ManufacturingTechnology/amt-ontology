@@ -18,6 +18,7 @@
 
     dcterms:title    "AMT/IMTS Information Model" ;
     owl:versionInfo  "0.1.0" ;
+    owl:versionIRI   <http://ontology.amt.org/im/0.1.0> ;
 
     amtmeta:status              amtmeta:Active ;
     amtmeta:taxonomyOwner       "Chris Downs" ;
@@ -89,45 +90,61 @@ im:BoothStaff a owl:Class, gufo:Role ;
     rdfs:subClassOf im:Visitor ;
     rdfs:label "Booth Staff" .
 
-#-------------------------------------------------------------------------------
-# Role-mixins — anti-rigid non-sortals spanning multiple Kinds
-#-------------------------------------------------------------------------------
-# im:Interest, im:ProductCategory, and im:Industry classify external Kinds
-# (drawn from pc: and ind: taxonomies) under the relational contexts
-# hasInterest / hasProductCategory / belongsTo. Membership is anti-rigid:
-# pc:BinderJetting is a BinderJetting Kind always, but only an Interest while
-# some VisitorRecord asserts it; ind:Aerospace is an Aerospace Kind always,
-# but only an Industry-value while some Company asserts it via belongsTo.
-# Concrete extension is not defined here; runtime validity is determined by
-# the composition of view-side SHACL and amtmeta:CatalogValueShape — see
-# D3, D16, and D17.
+im:EventOrganizer a owl:Class, gufo:Role ;
+    rdfs:subClassOf im:Association ;
+    rdfs:label "Event Organizer" .
 
-im:Interest a owl:Class, gufo:RoleMixin ;
+#-------------------------------------------------------------------------------
+# Cross-ontology classifiers — Aspect Kinds and Category
+#-------------------------------------------------------------------------------
+# im:Interest and im:ProductCategory are gufo:Kind ⊑ gufo:ExtrinsicMode — their
+# instances are concrete extrinsic-mode aspects (a Person's interest in a
+# topic; a Company's offering of a category). Each aspect inheres in one
+# bearer (Person / Company) and externally depends on one pc: topic, with
+# cardinality enforced at the class level.
+#
+# im:Industry is gufo:Category — a rigid non-sortal categorial classification
+# of Company instances. Not an aspect: industry-membership is stable rather
+# than anti-rigid, so the inheresIn / externallyDependsOn cardinalities do
+# not apply. Industry uses OWL 2 punning at the data layer (ind: Kinds serve
+# as direct values of im:belongsTo).
+#
+# Runtime value-space validity (for all three) is enforced by the composition
+# of view-side SHACL and amtmeta:CatalogValueShape — see D24 (supersedes D3,
+# D16, D17).
+
+im:Interest a owl:Class, gufo:Kind ;
+    rdfs:subClassOf  gufo:ExtrinsicMode ;
     rdfs:label       "Interest" ;
-    rdfs:comment     "Role-mixin played by pc: entities that a VisitorRecord asserts via hasInterest. Anti-rigid and relational; runtime membership defined by visitor_view SHACL plus amtmeta:CatalogValueShape." ;
+    rdfs:comment     "Kind ⊑ gufo:ExtrinsicMode. Instances are concrete interest-aspects: each Interest inheres in one Person (its bearer, via gufo:inheresIn) and externally depends on one pc: topic (via gufo:externallyDependsOn). Anti-rigid — a Person acquires and loses Interest-aspects over time without losing Person-identity. Runtime topic value-space defined by visitor_view:VisitorInterestShape (bucket membership) plus amtmeta:CatalogValueShape (prefLabel-as-catalog)." ;
     amtmeta:scopedBy <http://ontology.amt.org/views/visitor> ;
     rdfs:seeAlso     <http://ontology.amt.org/views/visitor#VisitorInterestShape>,
                      <http://ontology.amt.org/meta#CatalogValueShape> .
 
-im:ProductCategory a owl:Class, gufo:RoleMixin ;
+im:ProductCategory a owl:Class, gufo:Kind ;
+    rdfs:subClassOf  gufo:ExtrinsicMode ;
     rdfs:label       "Product Category" ;
-    rdfs:comment     "Role-mixin played by pc: entities that an ExhibitorRecord asserts via hasProductCategory. Anti-rigid and relational; runtime membership defined by exhibitor_view SHACL plus amtmeta:CatalogValueShape." ;
+    rdfs:comment     "Kind ⊑ gufo:ExtrinsicMode. Instances are concrete offering-aspects: each ProductCategory inheres in one Company (its bearer, via gufo:inheresIn) and externally depends on one pc: topic (via gufo:externallyDependsOn). Anti-rigid — a Company's offerings shift over time without losing Company-identity. Despite the class name, an instance represents 'this Company's offering of this pc: topic', not the topic itself. Runtime topic value-space defined by exhibitor_view:ExhibitorOfferingShape plus amtmeta:CatalogValueShape." ;
     amtmeta:scopedBy <http://ontology.amt.org/views/exhibitor> ;
     rdfs:seeAlso     <http://ontology.amt.org/views/exhibitor#ExhibitorOfferingShape>,
                      <http://ontology.amt.org/meta#CatalogValueShape> .
 
-im:Industry a owl:Class, gufo:RoleMixin ;
+im:Industry a owl:Class, gufo:Category ;
     rdfs:label       "Industry" ;
-    rdfs:comment     "Role-mixin played by ind: entities that a Company asserts via belongsTo. Anti-rigid and relational: ind:Aerospace is rigidly an Aerospace Kind, but its 'being asserted as a company's industry' is contextual to the belongsTo relation. Runtime membership defined by the industries view SHACL plus amtmeta:CatalogValueShape." ;
+    rdfs:comment     "Category (gufo:Category) classifying Company instances by industry. Rigid non-sortal: a Company's industry is a stable categorial identity rather than an aspect that comes and goes (contrast with im:Interest / im:ProductCategory, which are ExtrinsicModes). In this model, Industry instances are NOT materialized as distinct individuals — ind: Kinds serve as direct values of im:belongsTo, treated via OWL 2 punning as proxies for the categorial classification. Runtime value-space defined by ind_view:IndustryShape (collection membership) plus amtmeta:CatalogValueShape." ;
     amtmeta:scopedBy <http://ontology.amt.org/views/industries> ;
     rdfs:seeAlso     <http://ontology.amt.org/views/industries#IndustryShape>,
                      <http://ontology.amt.org/meta#CatalogValueShape> .
 
 #-------------------------------------------------------------------------------
-# Relator kinds — registrations and leads
+# Relational aspect Kinds — registrations, leads, organizing
 #-------------------------------------------------------------------------------
+# All three sit under gufo:RelationalAspect. Registration is a Relator
+# (symmetric mediation across registrant + organizing Association). Lead and
+# Organizing are ExtrinsicModes (asymmetric — one privileged bearer,
+# one external relatum).
 
-im:Registration a owl:Class, gufo:Kind ;
+im:Registration a owl:Class, gufo:Category ;
     rdfs:subClassOf gufo:Relator ;
     rdfs:label "Registration" .
 
@@ -140,14 +157,18 @@ im:ExhibitorRecord a owl:Class, gufo:Kind ;
     rdfs:label "Exhibitor Record" .
 
 im:Lead a owl:Class, gufo:Kind ;
-    rdfs:subClassOf gufo:Relator ;
+    rdfs:subClassOf gufo:ExtrinsicMode ;
     rdfs:label "Lead" .
+
+im:Organizing a owl:Class, gufo:Kind ;
+    rdfs:subClassOf gufo:ExtrinsicMode ;
+    rdfs:label "Organizing" .
 
 #-------------------------------------------------------------------------------
 # Named individuals
 #-------------------------------------------------------------------------------
 
-im:AMT a owl:NamedIndividual, im:Association ;
+im:AMT a owl:NamedIndividual, im:Association, im:EventOrganizer ;
     rdfs:label "AMT — The Association For Manufacturing Technology" .
 
 #-------------------------------------------------------------------------------
@@ -183,12 +204,10 @@ im:name a owl:DatatypeProperty ;
 #-------------------------------------------------------------------------------
 # Object properties — Mediation (sub-properties of gufo:mediates)
 #-------------------------------------------------------------------------------
-
-im:mediatesShow a owl:ObjectProperty ;
-    rdfs:subPropertyOf gufo:mediates ;
-    rdfs:domain im:Registration ;
-    rdfs:range  im:IMTS ;
-    rdfs:label  "mediates show" .
+# gufo:mediates has rdfs:range gufo:Endurant, so every mediates target must be
+# an Endurant (Aspect or Object). All four properties below satisfy this — the
+# Visitor, Exhibitor, Employer, and Association are all Endurants. The show
+# (an Event) is connected separately via im:manifestedInShow (not mediation).
 
 im:mediatesVisitor a owl:ObjectProperty ;
     rdfs:subPropertyOf gufo:mediates ;
@@ -208,63 +227,139 @@ im:mediatesEmployer a owl:ObjectProperty ;
     rdfs:range  im:Company ;
     rdfs:label  "mediates employer" .
 
-im:leadOfVisitor a owl:ObjectProperty ;
+im:mediatesAssociation a owl:ObjectProperty ;
     rdfs:subPropertyOf gufo:mediates ;
-    rdfs:domain im:Lead ;
-    rdfs:range  im:Visitor ;
-    rdfs:label  "lead of visitor" .
+    rdfs:domain im:Registration ;
+    rdfs:range  im:Association ;
+    rdfs:label  "mediates association" ;
+    rdfs:comment "Connects a Registration to the organizing Association that accepts it. Cardinality 1 on Registration. This is the second mandatory Endurant participant required by gufo:Relator (the registrant is the first; the show is an Event and is connected separately via im:manifestedInShow). Combined with im:organizes' singleton domain { im:AMT } (D23), this value is constrained to im:AMT in practice." .
+
+#-------------------------------------------------------------------------------
+# Object properties — Show manifestation (sub-property of gufo:manifestedIn)
+#-------------------------------------------------------------------------------
+# gufo:manifestedIn has rdfs:domain gufo:Aspect, rdfs:range gufo:Event — the
+# right gUFO property for "this Aspect is manifested in this Event". A
+# Registration (a Relator, hence an Aspect) is manifested in the IMTS show
+# where its participants come together. Using gufo:mediates here would fail
+# the OWL DL check, since gufo:mediates' range is gufo:Endurant and Event /
+# Endurant are disjoint under gufo:ConcreteIndividual. See D26.
+
+im:manifestedInShow a owl:ObjectProperty ;
+    rdfs:subPropertyOf gufo:manifestedIn ;
+    rdfs:domain im:Registration ;
+    rdfs:range  im:IMTS ;
+    rdfs:label  "manifested in show" .
+
+#-------------------------------------------------------------------------------
+# Object properties — Lead (gufo:ExtrinsicMode anchoring)
+#-------------------------------------------------------------------------------
+# A Lead is an ExtrinsicMode: it inheres in the Exhibitor (its bearer) and
+# externally depends on the Visitor (the relatum it is "about"). The Lead's
+# existence is one-sided — the Exhibitor's scan creates it; the Visitor does
+# not co-generate it. The BoothStaff who operated the scanner is captured as
+# audit metadata only (NOT a UFO relatum): a Lead can exist without an
+# identified BoothStaff (current scanners often capture exhibitor-only), and
+# the Lead carries no information about the BoothStaff themselves.
 
 im:leadOfExhibitor a owl:ObjectProperty ;
-    rdfs:subPropertyOf gufo:mediates ;
+    rdfs:subPropertyOf gufo:inheresIn ;
     rdfs:domain im:Lead ;
     rdfs:range  im:Exhibitor ;
     rdfs:label  "lead of exhibitor" .
 
+im:leadOfVisitor a owl:ObjectProperty ;
+    rdfs:subPropertyOf gufo:externallyDependsOn ;
+    rdfs:domain im:Lead ;
+    rdfs:range  im:Visitor ;
+    rdfs:label  "lead of visitor" .
+
 im:leadCapturedBy a owl:ObjectProperty ;
-    rdfs:subPropertyOf gufo:mediates ;
     rdfs:domain im:Lead ;
     rdfs:range  im:BoothStaff ;
-    rdfs:label  "captured by" .
+    rdfs:label  "captured by" ;
+    rdfs:comment "Audit/provenance metadata only — NOT a UFO relator participant or external dependence. Identifies the BoothStaff who operated the scanner when known. The Lead's existence does not require BoothStaff to be identified (cardinality 0..1), and the Lead carries no information about the BoothStaff beyond identity reference." .
+
+#-------------------------------------------------------------------------------
+# Object properties — Organizing (gufo:ExtrinsicMode anchoring)
+#-------------------------------------------------------------------------------
+# An Organizing is an ExtrinsicMode: it inheres in the EventOrganizer (its
+# bearer — AMT-as-organizer) and is manifested in the IMTS edition it brings
+# about. The organizing is asymmetric — the EventOrganizer performs it; IMTS
+# is the result, not a co-author. Parallels the Lead pattern exactly: one
+# privileged Endurant bearer, one Event-side relatum, no symmetric mediation.
+# Replaces the older im:organizes direct-property mechanism — see D27
+# (supersedes D23, D25).
+
+im:organizedBy a owl:ObjectProperty ;
+    rdfs:subPropertyOf gufo:inheresIn ;
+    rdfs:domain im:Organizing ;
+    rdfs:range  im:EventOrganizer ;
+    rdfs:label  "organized by" .
+
+im:organizesEvent a owl:ObjectProperty ;
+    rdfs:subPropertyOf gufo:manifestedIn ;
+    rdfs:domain im:Organizing ;
+    rdfs:range  im:IMTS ;
+    rdfs:label  "organizes event" .
 
 #-------------------------------------------------------------------------------
 # Object properties — Cross-ontology
 #-------------------------------------------------------------------------------
-# Ranges point at IM-side role-mixin markers (im:Interest / im:ProductCategory /
-# im:Industry). These are typing endpoints, not membership constraints —
-# actual value validity is enforced at runtime by SHACL composition (view
-# shape AND amtmeta:CatalogValueShape). See D3, D16, D17.
+# Ranges point at IM-side classifier classes:
+#   - im:hasInterest / im:hasProductCategory → ExtrinsicMode-Kinds whose
+#     instances are materialized aspect individuals (inhering in Person /
+#     Company, externally depending on a pc: topic).
+#   - im:belongsTo → im:Industry (a gufo:Category); values are ind: Kinds
+#     directly via OWL 2 punning.
+# Actual value-space validity is enforced at runtime by SHACL composition
+# (view shape AND amtmeta:CatalogValueShape). View SHACL dereferences
+# materialized aspects via gufo:externallyDependsOn one hop further. See D24.
 
 im:hasInterest a owl:ObjectProperty ;
     rdfs:domain  im:VisitorRecord ;
     rdfs:range   im:Interest ;
     rdfs:label   "has interest" ;
-    rdfs:comment "Value space defined at runtime by visitor_view:VisitorInterestShape (bucket membership) and amtmeta:CatalogValueShape (prefLabel-as-catalog). The OWL range im:Interest is a role-mixin marker, not a membership enumeration." .
+    rdfs:comment "Connects a VisitorRecord to a materialized im:Interest instance (an ExtrinsicMode of the registrant Person, externally depending on a pc: topic). Value space and catalog-grade check defined by visitor_view:VisitorInterestShape composed with amtmeta:CatalogValueShape, applied to the Interest's gufo:externallyDependsOn topic." .
 
 im:hasProductCategory a owl:ObjectProperty ;
     rdfs:domain  im:ExhibitorRecord ;
     rdfs:range   im:ProductCategory ;
     rdfs:label   "has product category" ;
-    rdfs:comment "Value space defined at runtime by exhibitor_view:ExhibitorOfferingShape (bucket membership) and amtmeta:CatalogValueShape (prefLabel-as-catalog). The OWL range im:ProductCategory is a role-mixin marker, not a membership enumeration." .
+    rdfs:comment "Connects an ExhibitorRecord to a materialized im:ProductCategory instance (an ExtrinsicMode of the exhibiting Company, externally depending on a pc: topic). Value space and catalog-grade check defined by exhibitor_view:ExhibitorOfferingShape composed with amtmeta:CatalogValueShape, applied to the ProductCategory's gufo:externallyDependsOn topic." .
 
 im:belongsTo a owl:ObjectProperty ;
     rdfs:domain  im:Company ;
     rdfs:range   im:Industry ;
     rdfs:label   "belongs to" ;
-    rdfs:comment "Value space defined at runtime by the industries view IndustryShape (collection membership) and amtmeta:CatalogValueShape (prefLabel-as-catalog). The OWL range im:Industry is a role-mixin marker, not a membership enumeration." .
+    rdfs:comment "Connects a Company to its industry classification. Values are ind: Kinds, treated via OWL 2 punning as instances of im:Industry (a gufo:Category). The categorial classification is not materialized as a distinct individual — the ind: Kind stands in as a proxy. Value space and catalog-grade check defined by ind_view:IndustryShape composed with amtmeta:CatalogValueShape." .
 
 #-------------------------------------------------------------------------------
 # Object properties — Domain relations
 #-------------------------------------------------------------------------------
 
-im:organizes a owl:ObjectProperty ;
-    rdfs:domain im:Association ;
-    rdfs:range  im:IMTS ;
-    rdfs:label  "organizes" .
-
 im:staffsFor a owl:ObjectProperty ;
     rdfs:domain im:BoothStaff ;
     rdfs:range  im:Exhibitor ;
     rdfs:label  "staffs for" .
+
+#-------------------------------------------------------------------------------
+# Disjointness axioms — gUFO Kind partition
+#-------------------------------------------------------------------------------
+# UFO requires every individual to instantiate exactly one Kind. OWL does not
+# enforce this on its own; the axioms below make the partition explicit so OWL
+# reasoners (and SHACL via sh:not / sh:disjoint) can flag violations.
+#
+# Role-level disjointness follows from Kind-level disjointness and need not be
+# asserted separately:
+#   im:Visitor ⊑ im:Person  and  im:Exhibitor ⊑ im:Company
+#   im:Person  ⟂ im:Company  ⇒  im:Visitor ⟂ im:Exhibitor
+# (Note: im:BoothStaff ⊑ im:Visitor by design, so they are NOT disjoint.)
+
+[] a owl:AllDisjointClasses ;
+   owl:members ( im:Person im:Company im:Association ) .
+
+im:VisitorRecord owl:disjointWith im:ExhibitorRecord .
+im:Registration  owl:disjointWith im:Lead .
 
 #-------------------------------------------------------------------------------
 # Cardinality restrictions
@@ -284,9 +379,10 @@ im:BoothStaff rdfs:subClassOf
 
 # Registration identity (inherited by VisitorRecord and ExhibitorRecord)
 im:Registration rdfs:subClassOf
-    [ a owl:Restriction ; owl:onProperty im:uuid             ; owl:cardinality "1"^^xsd:nonNegativeInteger ] ,
-    [ a owl:Restriction ; owl:onProperty im:registrationDate ; owl:cardinality "1"^^xsd:nonNegativeInteger ] ,
-    [ a owl:Restriction ; owl:onProperty im:mediatesShow     ; owl:cardinality "1"^^xsd:nonNegativeInteger ] .
+    [ a owl:Restriction ; owl:onProperty im:uuid                ; owl:cardinality "1"^^xsd:nonNegativeInteger ] ,
+    [ a owl:Restriction ; owl:onProperty im:registrationDate    ; owl:cardinality "1"^^xsd:nonNegativeInteger ] ,
+    [ a owl:Restriction ; owl:onProperty im:manifestedInShow    ; owl:cardinality "1"^^xsd:nonNegativeInteger ] ,
+    [ a owl:Restriction ; owl:onProperty im:mediatesAssociation ; owl:cardinality "1"^^xsd:nonNegativeInteger ] .
 
 # VisitorRecord constraints
 im:VisitorRecord rdfs:subClassOf
@@ -306,6 +402,27 @@ im:Lead rdfs:subClassOf
     [ a owl:Restriction ; owl:onProperty im:leadOfVisitor   ; owl:cardinality    "1"^^xsd:nonNegativeInteger ] ,
     [ a owl:Restriction ; owl:onProperty im:leadOfExhibitor ; owl:cardinality    "1"^^xsd:nonNegativeInteger ] ,
     [ a owl:Restriction ; owl:onProperty im:leadCapturedBy  ; owl:maxCardinality "1"^^xsd:nonNegativeInteger ] .
+
+# Interest aspect: every Interest instance has exactly one bearer (Person, via
+# gufo:inheresIn) and at least one external relatum (pc: topic, via
+# gufo:externallyDependsOn) — see D24.
+im:Interest rdfs:subClassOf
+    [ a owl:Restriction ; owl:onProperty gufo:inheresIn           ; owl:cardinality    "1"^^xsd:nonNegativeInteger ] ,
+    [ a owl:Restriction ; owl:onProperty gufo:externallyDependsOn ; owl:minCardinality "1"^^xsd:nonNegativeInteger ] .
+
+# ProductCategory aspect: same cardinality pattern as Interest — every offering
+# inheres in exactly one Company and externally depends on at least one pc:
+# topic.
+im:ProductCategory rdfs:subClassOf
+    [ a owl:Restriction ; owl:onProperty gufo:inheresIn           ; owl:cardinality    "1"^^xsd:nonNegativeInteger ] ,
+    [ a owl:Restriction ; owl:onProperty gufo:externallyDependsOn ; owl:minCardinality "1"^^xsd:nonNegativeInteger ] .
+
+# Organizing: every Organizing instance inheres in exactly one
+# EventOrganizer (its bearer) and is manifested in exactly one IMTS edition
+# — see D27.
+im:Organizing rdfs:subClassOf
+    [ a owl:Restriction ; owl:onProperty im:organizedBy        ; owl:cardinality "1"^^xsd:nonNegativeInteger ] ,
+    [ a owl:Restriction ; owl:onProperty im:organizesEvent ; owl:cardinality "1"^^xsd:nonNegativeInteger ] .
 
 ################################################################################
 # RESOLVED DECISIONS
@@ -342,7 +459,9 @@ im:Lead rdfs:subClassOf
 # D8  - AMT modeled as owl:NamedIndividual of im:Association (Kind), not as a class
 # D9  - Person introduced as Kind; Visitor/Exhibitor as Roles played by Person/Company
 # D10 - Registration introduced as Kind ⊑ gufo:Relator with VisitorRecord and
-#       ExhibitorRecord as subkinds; carries uuid, registrationDate, mediatesShow
+#       ExhibitorRecord as subkinds; carries uuid, registrationDate, mediatesShow.
+#       Superseded by D21 — Registration reclassified as gufo:Category to
+#       resolve UFO uniqueness-of-Kind violation in the Kind-over-Kind hierarchy.
 # D11 - Lead introduced as Kind ⊑ gufo:Relator binding Visitor and Exhibitor;
 #       leadCapturedBy (BoothStaff) is 0..1 to accommodate scan instruments that
 #       record exhibitor identity but not staff identity
@@ -365,6 +484,10 @@ im:Lead rdfs:subClassOf
 #       The marker classes do NOT enumerate or constrain membership; that is
 #       the SHACL composition's job (see D3). OWL 2 punning applies: pc: Kinds
 #       used as values will be inferred as instances of the marker class.
+#       Superseded by D24 — reclassified as gufo:Kind ⊑ gufo:ExtrinsicMode
+#       with materialized instances; the RoleMixin meta-classification was
+#       ontologically imprecise (Interest/ProductCategory have privileged
+#       bearers, which RoleMixin doesn't capture).
 # D17 - im:Industry introduced as gufo:RoleMixin marker class (v0.2.3),
 #       completing the uniform pattern across all three cross-ontology
 #       properties. im:belongsTo's range retargeted from ind:Industry (the
@@ -380,6 +503,170 @@ im:Lead rdfs:subClassOf
 #       scopedBy targets honestly reflect that pc:'s views filter a
 #       heterogeneous catalog, while ind:'s view currently exposes the whole
 #       taxonomy as a single flat collection (subject to evolution).
+#       Superseded by D24 — reclassified as gufo:Category, reflecting that
+#       industry-membership is a rigid categorial classification rather than
+#       an anti-rigid role-mixin.
+# D18 - gUFO Kind partition asserted explicitly via owl:AllDisjointClasses on
+#       (Person, Company, Association) and pairwise disjointness on
+#       (VisitorRecord, ExhibitorRecord) and (Registration, Lead). OWL does
+#       not enforce UFO's uniqueness-of-Kind on its own; these axioms make the
+#       commitment legible to OWL reasoners and SHACL validators. Role
+#       disjointness (Visitor ⟂ Exhibitor) follows by inheritance from
+#       Person ⟂ Company and is not asserted separately. BoothStaff ⊑ Visitor
+#       is intentional (sub-role) and is NOT disjoint from Visitor.
+# D19 - owl:versionIRI added (<.../im/0.1.0>) alongside owl:versionInfo so past
+#       versions remain individually addressable. The base IRI
+#       <http://ontology.amt.org/im> stays as the latest-version handle.
+# D20 - (reserved — rdfs:comment annotations on Kinds/Roles/EventType to be
+#       added later)
+# D21 - Registration reclassified from gufo:Kind to gufo:Category (still
+#       subClassOf gufo:Relator) to resolve the UFO uniqueness-of-Kind
+#       violation in the original Kind-over-Kind hierarchy (D10). Categories
+#       are rigid non-sortals: a Registration is rigidly a Registration, but
+#       the Category does not supply identity. Identity is supplied at the
+#       subkind level (VisitorRecord, ExhibitorRecord as gufo:Kinds). The
+#       owl:equivalentClass covering axiom and SHACL strict-instantiation
+#       shape were considered but deferred — pairwise disjointness (D18) is
+#       sufficient for current validation needs; the covering axiom can be
+#       added later if exhaustiveness becomes a query/inference concern.
+# D22 - im:Lead reclassified as gufo:Kind ⊑ gufo:ExtrinsicMode (was: ⊑
+#       gufo:Relator) to honor the scan-asymmetry: only the Exhibitor side
+#       generates the Lead, only the Exhibitor's data system stores it, and
+#       the Visitor has no parallel record-of-being-scanned. A Lead has a
+#       privileged bearer (the Exhibitor) and an external relatum (the
+#       Visitor) — it is not a symmetric relator. Property sub-classification
+#       updates:
+#         - im:leadOfExhibitor: gufo:mediates → gufo:inheresIn
+#           (the bearer relation; Exhibitor is the privileged side)
+#         - im:leadOfVisitor:   gufo:mediates → gufo:externallyDependsOn
+#           (the external relatum; the Lead exists about the Visitor)
+#         - im:leadCapturedBy:  gufo:mediates → (dropped; no UFO super-property)
+#           BoothStaff is operational/audit metadata, not a UFO relatum.
+#           The Lead's existence does not require BoothStaff identification
+#           (cardinality 0..1), and the Lead carries no information about
+#           the BoothStaff beyond identity reference.
+#       Note: im:Registration retains its gufo:Relator classification (D10/
+#       D21) — the asymmetry argument does not apply equally; Registration
+#       is a two-sided contract with the show organizer (both registrant
+#       and show participate in its existence), whereas Lead is purely
+#       one-sided exhibitor bookkeeping. F3 revised accordingly.
+# D23 - im:organizes domain expressed as a singleton class { im:AMT } via
+#       owl:oneOf, not as the generic im:Association class. Rationale: while
+#       im:Association is the rigid Kind that *could* in principle organize
+#       events, AMT is the unique organizer of IMTS as a matter of domain
+#       truth (not just current data state). Using im:Association as domain
+#       would be ontologically vague in a way that contradicts the stated
+#       reality — the IM exists to encode IMTS-specific facts, and "any
+#       Association organizes any IMTS edition" is not one of them. The
+#       singleton wrapper { im:AMT } keeps this OWL-DL legal: rdfs:domain
+#       must point at a Class, never directly at an Individual, so the
+#       Individual is enclosed in an owl:oneOf class expression. If a sibling
+#       Association ever co-organizes an IMTS edition, extend the oneOf
+#       list — or, if multi-organizer becomes the norm, revert the domain
+#       to im:Association and capture AMT's primacy elsewhere.
+#       Superseded by D27 — im:organizes retired entirely; AMT↔IMTS now
+#       modeled via the Role (EventOrganizer) + ExtrinsicMode (Organizing)
+#       pattern.
+# D24 - Cross-ontology classifier classes reclassified from gufo:RoleMixin to
+#       their ontologically honest gUFO meta-classes (supersedes D3, D16, D17):
+#         - im:Interest        → gufo:Kind ⊑ gufo:ExtrinsicMode
+#         - im:ProductCategory → gufo:Kind ⊑ gufo:ExtrinsicMode
+#         - im:Industry        → gufo:Category
+#       An Interest (resp. ProductCategory) is an extrinsic mode with a
+#       privileged bearer (Person / Company) and an external relatum (pc:
+#       topic). Class-level cardinality enforces that every instance has
+#       exactly one gufo:inheresIn target and at least one
+#       gufo:externallyDependsOn target. Instances are materialized in data
+#       files — visitor / exhibitor records reference Interest / ProductCategory
+#       individuals via hasInterest / hasProductCategory, not pc: topics
+#       directly. Industry, by contrast, is a rigid non-sortal categorial
+#       classification (gufo:Category) — a Company's industry is stable rather
+#       than anti-rigid, so inheresIn / externallyDependsOn cardinalities do
+#       not apply. Industry instances are NOT materialized; ind: Kinds serve
+#       as direct values of im:belongsTo via OWL 2 punning. The asymmetric
+#       treatment between the three reflects each marker's true ontological
+#       nature, not a modeling inconsistency.
+#       Justified by the downstream artifact-generation pipeline being
+#       ontology-driven — increasing ontological purity is acceptable cost
+#       given that consumer-facing artifact formats can be re-generated from
+#       the new internal structure. Visitor / exhibitor view SHACL updated to
+#       dereference the materialized Interest / ProductCategory aspects via
+#       gufo:externallyDependsOn one hop further (industries view unchanged
+#       since Industry is not materialized).
+# D25 - Association ↔ IMTS structural relationship encoded via class-level
+#       cardinality on im:IMTS: every IMTS edition has exactly one organizer
+#       (inverse of im:organizes, cardinality 1). Combined with im:organizes'
+#       singleton domain { im:AMT } (D23), this commits to "every IMTS edition
+#       is organized by AMT and only AMT". The restriction lives on im:IMTS
+#       rather than im:Association to preserve D23's framing — Association
+#       remains the generic Kind; only AMT is committed to organizing.
+#       Superseded by D27 — IMTS organizer cardinality restriction removed
+#       in favor of the EventOrganizer Role + Organizing ExtrinsicMode
+#       pattern; the AMT↔IMTS link is now relator-mediated rather than
+#       direct-property-mediated.
+# D26 - Registration ↔ IMTS link reclassified, and Relator's min-2-Endurant
+#       requirement satisfied via a new mediation to the organizing Association.
+#       Two related OWL-DL contradictions were discovered when classifying
+#       im.ttl in Protégé with HermiT (Registration came up red, equivalent to
+#       owl:Nothing; mediatesShow likewise):
+#         (a) im:mediatesShow was declared rdfs:subPropertyOf gufo:mediates
+#             with range im:IMTS. gufo:mediates has rdfs:range gufo:Endurant.
+#             gufo:Event and gufo:Endurant are disjoint under gufo:ConcreteIndividual
+#             (owl:disjointUnionOf). So values of mediatesShow had to be in
+#             im:IMTS ∩ gufo:Endurant = ∅, making mediatesShow's extension
+#             empty and Registration (which mandates exactly one mediatesShow
+#             value) unsatisfiable.
+#         (b) Even fixing (a), gufo:Relator imposes minQualifiedCardinality 2
+#             onClass gufo:Endurant via gufo:mediates. VisitorRecord guaranteed
+#             only one Endurant mediation (mediatesVisitor; mediatesEmployer
+#             is optional). ExhibitorRecord likewise. Both would fail Relator's
+#             cardinality even with (a) fixed.
+#       Resolution:
+#         (a) im:mediatesShow renamed to im:manifestedInShow, with super-property
+#             changed from gufo:mediates to gufo:manifestedIn (which has
+#             rdfs:domain gufo:Aspect, rdfs:range gufo:Event — the ontologically
+#             honest gUFO property for "this Aspect is manifested in this Event").
+#             The Registration relator manifests in the IMTS show; this is no
+#             longer a mediation. Property kept in its own section ("Show
+#             manifestation") to make the distinction visible.
+#         (b) New property im:mediatesAssociation introduced as
+#             rdfs:subPropertyOf gufo:mediates, range im:Association, cardinality 1
+#             on Registration. Captures that every Registration mediates the
+#             organizing Association (AMT). With this, every Registration subkind
+#             has at least 2 mandatory Endurant mediations (registrant +
+#             association), satisfying gufo:Relator.
+#       Data-shape consequence: registration data files must rename
+#       mediatesShow → manifestedInShow and add a mediatesAssociation triple
+#       (which, given D23/D25, will always point at im:AMT). Downstream
+#       artifact generators must map accordingly.
+# D27 - Association ↔ IMTS modeling redesigned around UFO Role + Aspect
+#       grammar (supersedes D23, D25). The previous direct property
+#       im:organizes (with singleton domain { im:AMT } and inverse-cardinality
+#       1 on im:IMTS) is retired entirely. New pattern:
+#         - im:EventOrganizer a gufo:Role ⊑ im:Association — anti-rigid
+#           role played by an Association while organizing a show. AMT is
+#           now typed as (im:Association, im:EventOrganizer).
+#         - im:Organizing a gufo:Kind ⊑ gufo:ExtrinsicMode — the
+#           organizing aspect itself. ExtrinsicMode (not Relator) because
+#           the organizing is asymmetric: the EventOrganizer performs it;
+#           IMTS is the result, not a co-author. Parallels Lead's structure
+#           exactly (D22) — one privileged Endurant bearer, one Event-side
+#           relatum.
+#         - im:organizedBy        ⊑ gufo:inheresIn     (Organizing → EventOrganizer)
+#         - im:organizesEvent ⊑ gufo:manifestedIn  (Organizing → IMTS)
+#         - Cardinality 1 on both directions for Organizing.
+#       Why ExtrinsicMode and not Relator: gufo:Relator requires ≥2 Endurant
+#       mediates (the same constraint that broke the original mediatesShow
+#       design — see D26). Natural Organizing participants are
+#       EventOrganizer (Endurant Aspect) and IMTS (Event — not Endurant).
+#       No second Endurant party exists; D23's commitment to AMT-as-sole-
+#       organizer rules out a co-organizer. Forcing Relator would either
+#       require introducing a synthetic second mediated party or fail HermiT
+#       satisfiability.
+#       Justified by im.ttl being in initial-build phase — nothing downstream
+#       consumes im: yet, so the API break of retiring im:organizes is free.
+#       Cleanest UFO and exactly parallel to how the Lead asymmetry was
+#       resolved.
 #
 ################################################################################
 # OPEN FLAGS (for human review)
@@ -389,8 +676,11 @@ im:Lead rdfs:subClassOf
 # F2  - im:mediatesEmployer cardinality 0..1 is provisional; revisit when persistent
 #       Person↔Company employment relation is added to the model.
 # F3  - im:leadCapturedBy cardinality 0..1 reflects current scan-instrument reality
-#       (exhibitor identified, staff not). Tighten to 1 when scanner-identity
-#       capture is supported.
+#       (exhibitor identified, staff not). If/when scanner-identity capture
+#       becomes mandatory, tighten cardinality to 1 — but retain im:leadCapturedBy's
+#       non-gUFO classification: BoothStaff remains operational/audit metadata,
+#       not a UFO relatum. The Lead is *about* the Visitor for the Exhibitor's
+#       benefit, regardless of who operated the scanner. See D22.
 # F4  - Lead has no direct mediatesShow; show-scope is recoverable transitively via
 #       Visitor↔VisitorRecord↔IMTS or Exhibitor↔ExhibitorRecord↔IMTS. Add direct
 #       link if post-show analytics requires single-hop traversal.
