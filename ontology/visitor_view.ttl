@@ -2,6 +2,7 @@
 @prefix pc:           <http://ontology.amt.org/product-categories#> .
 @prefix im:           <http://ontology.amt.org/im#> .
 @prefix amtmeta:      <http://ontology.amt.org/meta#> .
+@prefix gufo:         <http://purl.org/nemo/gufo#> .
 @prefix sh:           <http://www.w3.org/ns/shacl#> .
 @prefix owl:          <http://www.w3.org/2002/07/owl#> .
 @prefix rdf:          <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -13,8 +14,7 @@
     a owl:Ontology, amtmeta:UserView ;
     owl:imports <http://ontology.amt.org/meta>,
                 <http://ontology.amt.org/product-categories>,
-                <http://ontology.amt.org/im>,
-                <http://www.w3.org/ns/shacl> ;
+                <http://ontology.amt.org/im> ;
 
     dcterms:title    "Visitor View of Product Categories" ;
     owl:versionInfo  "0.1.0" ;
@@ -209,10 +209,13 @@ visitor_view:Workholding a owl:NamedIndividual, amtmeta:Collection ;
 ################################################################################
 # SHACL constraints
 ################################################################################
-# Two-part composition (logical AND):
-#   (i)  bucket membership — value must be transitively reachable via
+# Two-part composition (logical AND), applied to the topic the Interest aspect
+# externally depends on (im.ttl D24: Interest is gufo:Kind ⊑ gufo:ExtrinsicMode
+# with materialized instances; the topic is reached via
+# gufo:externallyDependsOn one hop further than hasInterest):
+#   (i)  bucket membership — topic must be transitively reachable via
 #        amtmeta:groups+ from a visitor_view bucket;
-#   (ii) catalog-grade — value must satisfy amtmeta:CatalogValueShape, i.e.
+#   (ii) catalog-grade — topic must satisfy amtmeta:CatalogValueShape, i.e.
 #        carry skos:prefLabel (entities without prefLabel are abstract
 #        scaffolding and not assertable as data values).
 
@@ -220,16 +223,19 @@ visitor_view:VisitorInterestShape a sh:NodeShape ;
     rdfs:label "Visitor Interest Constraint" ;
     sh:targetClass im:VisitorRecord ;
 
-    # (i) View-scoped bucket membership
+    # (i) View-scoped bucket membership — dereferenced through the materialized
+    # Interest aspect to its externallyDependsOn topic.
     sh:sparql [
         a sh:SPARQLConstraint ;
-        sh:message "Interest '{?value}' is not in the visitor view's allowed set." ;
+        sh:message "Interest topic '{?value}' is not in the visitor view's allowed set." ;
         sh:select """
             PREFIX im:      <http://ontology.amt.org/im#>
+            PREFIX gufo:    <http://purl.org/nemo/gufo#>
             PREFIX amtmeta: <http://ontology.amt.org/meta#>
             PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
             SELECT $this ?value WHERE {
-                $this im:hasInterest ?value .
+                $this    im:hasInterest            ?interest .
+                ?interest gufo:externallyDependsOn ?value .
                 FILTER NOT EXISTS {
                     ?bucket amtmeta:groups+ ?value ;
                             rdfs:isDefinedBy <http://ontology.amt.org/views/visitor> .
@@ -238,9 +244,10 @@ visitor_view:VisitorInterestShape a sh:NodeShape ;
         """ ;
     ] ;
 
-    # (ii) Catalog-grade (delegated to amtmeta:CatalogValueShape)
+    # (ii) Catalog-grade — CatalogValueShape applied to the topic reached via
+    # the property path (hasInterest, then externallyDependsOn).
     sh:property [
-        sh:path im:hasInterest ;
+        sh:path ( im:hasInterest gufo:externallyDependsOn ) ;
         sh:node amtmeta:CatalogValueShape ;
     ] .
 
@@ -264,7 +271,21 @@ visitor_view:VisitorInterestShape a sh:NodeShape ;
 #      skos:prefLabel will no longer pass as data values — they are pure
 #      organizational scaffolding, queryable as groupers but not assertable.
 #      Per im.ttl D16, im:hasInterest's OWL range im:Interest is a
-#      role-mixin marker, not a membership enumeration.
+#      role-mixin marker, not a membership enumeration. (Superseded in part
+#      by D4 — Interest is no longer a role-mixin marker.)
+# D4 - SHACL rewritten to dereference Interest one hop further (im.ttl D24).
+#      im:hasInterest now points at materialized im:Interest instances
+#      (gufo:Kind ⊑ gufo:ExtrinsicMode), and the validated topic sits on
+#      gufo:externallyDependsOn. Both halves of the shape were updated:
+#        - sh:sparql adds the ?interest gufo:externallyDependsOn ?value hop
+#          before checking bucket membership;
+#        - sh:property uses a property-path sh:path ( im:hasInterest
+#          gufo:externallyDependsOn ) so CatalogValueShape validates the
+#          topic rather than the Interest aspect.
+#      Data shape change: VisitorRecord rows now reference Interest IRIs,
+#      not pc: topic IRIs directly. Pipelines must materialize Interest
+#      instances with gufo:inheresIn (Person) and gufo:externallyDependsOn
+#      (pc: topic) at registration time.
 #
 ################################################################################
 # OPEN FLAGS (for human review)
