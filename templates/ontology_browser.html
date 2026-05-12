@@ -19,7 +19,7 @@
 <div class="page">
 
   {% if error %}
-    <div class="error-banner">⚠️ {{ error }}</div>
+    <div class="error-banner">WARNING {{ error }}</div>
   {% endif %}
 
   {#
@@ -33,9 +33,10 @@
                   else ('visitor' if active_tab == 'pc-visitor'
                   else 'core') %}
   {% set ind_sub = 'view' if active_tab == 'ind-view' else 'core' %}
-  {% set im_sub  = 'detail' if active_tab == 'im-detail' else 'core' %}
+  {% set im_sub  = 'detail' if active_tab == 'im-detail'
+                   else ('interactive' if active_tab == 'im-interactive' else 'core') %}
 
-  <!-- ══════════ OUTER TAB BAR ══════════ -->
+  <!-- ========== OUTER TAB BAR ========== -->
   <div class="tab-bar" role="tablist">
     <button class="tab-btn {% if outer_tab == 'im' %}active{% endif %}"
             role="tab" aria-controls="panel-im" data-tab="im">
@@ -50,12 +51,6 @@
       <span class="tab-dot dot-ind"></span>Industries
     </button>
   </div>
-
-  {#
-     -------------------------------------------------------------------------
-     Reusable Jinja macros
-     -------------------------------------------------------------------------
-  #}
 
   {# Plain class tree: used for Product Categories (core) and Industries (core). #}
   {% macro render_class_node(node) -%}
@@ -78,8 +73,7 @@
     </li>
   {%- endmacro %}
 
-  {# IM class tree: like render_class_node but renders an inline           #}
-  {# property table beneath each class node.                               #}
+  {# IM class tree: like render_class_node but renders an inline property table. #}
   {% macro render_im_node(node) -%}
     <li class="tree-node" data-label="{{ node.label | lower }}" title="{{ node.iri }}">
       {% if node.children %}
@@ -113,8 +107,7 @@
     </li>
   {%- endmacro %}
 
-  {# View tree: Collections + nested groups; leaves get the inline           #}
-  {# "≡ <local-name>" hint via equiv_iris.                                  #}
+  {# View tree: leaves get an inline equivalence hint. #}
   {% macro render_view_node(node) -%}
     <li class="tree-node" data-label="{{ node.label | lower }}" title="{{ node.iri }}">
       {% if node.children %}
@@ -145,7 +138,7 @@
     </li>
   {%- endmacro %}
 
-  <!-- ══════════ INFORMATION MODEL PANEL (with sub-tabs) ══════════ -->
+  <!-- ========== INFORMATION MODEL PANEL (with sub-tabs) ========== -->
   <div id="panel-im"
        class="tab-panel panel-im {% if outer_tab == 'im' %}active{% endif %}">
 
@@ -158,23 +151,27 @@
               role="tab" data-outer="im" data-sub="detail" data-target="sub-im-detail">
         <span class="sub-dot sub-dot-im-detail"></span>Detailed Diagram
       </button>
+      <button class="sub-tab-btn {% if im_sub == 'interactive' %}active{% endif %}"
+              role="tab" data-outer="im" data-sub="interactive" data-target="sub-im-interactive">
+        <span class="sub-dot sub-dot-im-interactive"></span>Interactive
+      </button>
     </div>
 
-    <!-- ── IM core (containment tree) sub-panel ── -->
+    <!-- IM core (containment tree) sub-panel -->
     <div id="sub-im-core" class="sub-panel {% if im_sub == 'core' %}active{% endif %}">
       <div class="card card-im">
         <div class="card-header">
           <div class="card-header-text">
-            <h2 class="im-title">Information Model — Containment Tree</h2>
+            <h2 class="im-title">Information Model -- Containment Tree</h2>
             <p>Core entities (Visitor, Exhibitor, Company, IMTS, AMT) with their object and datatype property restrictions, expressed as <code>owl:Restriction</code> nodes on each class.</p>
           </div>
           <div class="stats-badge">
-            <span class="badge im-badge" id="im-core-total-count">Loading…</span>
+            <span class="badge im-badge" id="im-core-total-count">Loading...</span>
           </div>
         </div>
 
         <div class="search-row">
-          <input class="search-box" type="search" placeholder="Filter classes…"
+          <input class="search-box" type="search" placeholder="Filter classes..."
                  id="search-im-core" autocomplete="off">
           <button class="expand-all-btn"   data-tree="im-core-tree">Expand All</button>
           <button class="collapse-all-btn" data-tree="im-core-tree">Collapse All</button>
@@ -187,26 +184,19 @@
             </ul>
           {% else %}
             <div class="empty-state">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="1.5">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="8" x2="12" y2="12"></line>
-                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-              </svg>
-              <p>No classes found in the Information Model ontology.<br>
-                 Place <code>im.owl</code> in the <code>ontology/</code> folder.</p>
+              <p>No classes found in the Information Model ontology.</p>
             </div>
           {% endif %}
         </div>
       </div>
     </div>
 
-    <!-- ── IM detailed diagram (Mermaid) sub-panel ── -->
+    <!-- IM detailed diagram (Mermaid) sub-panel -->
     <div id="sub-im-detail" class="sub-panel {% if im_sub == 'detail' %}active{% endif %}">
       <div class="card card-im">
         <div class="card-header">
           <div class="card-header-text">
-            <h2 class="im-title">Information Model — Detailed Class Diagram</h2>
+            <h2 class="im-title">Information Model -- Detailed Class Diagram</h2>
             <p>Full UML-style class diagram: every entity, its datatype properties (with cardinality), and all object-property associations. Multiplicity on a target end reflects the corresponding <code>owl:Restriction</code> on the source class.</p>
           </div>
           <div class="stats-badge">
@@ -221,9 +211,36 @@
       </div>
     </div>
 
+    <!-- IM interactive (Cytoscape.js) sub-panel -->
+    <div id="sub-im-interactive" class="sub-panel {% if im_sub == 'interactive' %}active{% endif %}">
+      <div class="card card-im">
+        <div class="card-header">
+          <div class="card-header-text">
+            <h2 class="im-title">Information Model -- Interactive Graph</h2>
+            <p>Drag any node to rearrange the diagram; scroll to zoom; drag the background to pan. Layout choices and per-node positions persist across reloads via <code>localStorage</code>.</p>
+          </div>
+          <div class="stats-badge">
+            <button class="badge im-badge mermaid-copy-btn" id="im-cy-relayout" type="button"
+                    title="Re-run the auto-layout, discarding manual positions">Reset layout</button>
+            <select class="badge im-badge" id="im-cy-layout" title="Layout algorithm">
+              <option value="dagre">Hierarchical (Dagre)</option>
+              <option value="breadthfirst">Breadth-first</option>
+              <option value="cose">Force-directed (CoSE)</option>
+              <option value="circle">Circle</option>
+              <option value="concentric">Concentric</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="cy-container">
+          <div id="im-cy"></div>
+        </div>
+      </div>
+    </div>
+
   </div><!-- /panel-im -->
 
-  <!-- ══════════ PRODUCT CATEGORIES PANEL (with sub-tabs) ══════════ -->
+  <!-- ========== PRODUCT CATEGORIES PANEL ========== -->
   <div id="panel-pc" class="tab-panel panel-pc {% if outer_tab == 'pc' %}active{% endif %}">
 
     <div class="sub-tab-bar" role="tablist">
@@ -241,83 +258,59 @@
       </button>
     </div>
 
-    <!-- ── PC core sub-panel ── -->
     <div id="sub-pc-core" class="sub-panel {% if pc_sub == 'core' %}active{% endif %}">
       <div class="card">
         <div class="card-header">
           <div class="card-header-text">
             <h2>Product Categories</h2>
             <p>Base ontology defining all manufacturing device, infrastructure, software, material, service, and process auxiliary category classes.</p>
-            <p>User views map their own category hierarchies to classes in this ontology via <code>amtmeta:groups</code>.</p>
           </div>
           <div class="stats-badge">
-            <span class="badge" id="pc-core-total-count">Loading…</span>
+            <span class="badge" id="pc-core-total-count">Loading...</span>
           </div>
         </div>
-
         <div class="search-row">
-          <input class="search-box" type="search" placeholder="Filter categories…"
+          <input class="search-box" type="search" placeholder="Filter categories..."
                  id="search-pc-core" autocomplete="off">
           <button class="expand-all-btn"   data-tree="pc-core-tree">Expand All</button>
           <button class="collapse-all-btn" data-tree="pc-core-tree">Collapse All</button>
         </div>
-
         <div class="tree-container" id="pc-core-tree">
           {% if class_tree %}
             <ul class="tree-root">
               {% for ch in class_tree.children %}{{ render_class_node(ch) }}{% endfor %}
             </ul>
           {% else %}
-            <div class="empty-state">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="1.5">
-                <circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line>
-                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-              </svg>
-              <p>No classes found in the Product Categories ontology.<br>
-                 Place <code>pc.owl</code> in the <code>ontology/</code> folder.</p>
-            </div>
+            <div class="empty-state"><p>No classes found.</p></div>
           {% endif %}
         </div>
       </div>
     </div>
 
-    <!-- ── PC exhibitor sub-panel ── -->
     <div id="sub-pc-exhibitor" class="sub-panel {% if pc_sub == 'exhibitor' %}active{% endif %}">
       <div class="card card-exhibitor">
         <div class="card-header">
           <div class="card-header-text">
             <h2 class="exhibitor-title">IMTS Exhibitor View</h2>
             <p>User-facing category hierarchy for IMTS Exhibitor registration.</p>
-            <p>Each leaf links via <code>amtmeta:groups</code> to a class in the Product Categories ontology; the linked class name is shown inline as <code>≡&nbsp;ClassName</code>. Labels prefer <code>skos:prefLabel</code> from <code>pc.owl</code>, falling back to <code>rdfs:label</code>.</p>
           </div>
           <div class="stats-badge">
-            <span class="badge exhibitor-badge" id="pc-exhibitor-total-count">Loading…</span>
+            <span class="badge exhibitor-badge" id="pc-exhibitor-total-count">Loading...</span>
           </div>
         </div>
-
         <div class="search-row">
-          <input class="search-box" type="search" placeholder="Filter categories…"
+          <input class="search-box" type="search" placeholder="Filter categories..."
                  id="search-pc-exhibitor" autocomplete="off">
           <button class="expand-all-btn"   data-tree="pc-exhibitor-tree">Expand All</button>
           <button class="collapse-all-btn" data-tree="pc-exhibitor-tree">Collapse All</button>
         </div>
-
         <div class="tree-container exhibitor" id="pc-exhibitor-tree">
           {% if exhibitor_tree and exhibitor_tree.children %}
             <ul class="tree-root">
               {% for ch in exhibitor_tree.children %}{{ render_view_node(ch) }}{% endfor %}
             </ul>
           {% else %}
-            <div class="empty-state">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="1.5">
-                <circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line>
-                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-              </svg>
-              <p>Exhibitor view ontology not found or empty.<br>
-                 Place <code>exhibitor_view.owl</code> in the <code>ontology/</code> folder.</p>
-            </div>
+            <div class="empty-state"><p>Exhibitor view not found.</p></div>
           {% endif %}
         </div>
         <div style="margin-top: 16px; border-top: 1px solid #eee; padding-top: 12px;">
@@ -330,42 +323,30 @@
       </div>
     </div>
 
-    <!-- ── PC visitor sub-panel ── -->
     <div id="sub-pc-visitor" class="sub-panel {% if pc_sub == 'visitor' %}active{% endif %}">
       <div class="card card-visitor">
         <div class="card-header">
           <div class="card-header-text">
             <h2 class="visitor-title">IMTS Visitor View</h2>
             <p>User-facing category hierarchy for IMTS Visitor registration.</p>
-            <p>Each leaf links via <code>amtmeta:groups</code> to a class in the Product Categories ontology; the linked class name is shown inline as <code>≡&nbsp;ClassName</code>. Labels prefer <code>skos:prefLabel</code> from <code>pc.owl</code>, falling back to <code>rdfs:label</code>.</p>
           </div>
           <div class="stats-badge">
-            <span class="badge visitor-badge" id="pc-visitor-total-count">Loading…</span>
+            <span class="badge visitor-badge" id="pc-visitor-total-count">Loading...</span>
           </div>
         </div>
-
         <div class="search-row">
-          <input class="search-box" type="search" placeholder="Filter categories…"
+          <input class="search-box" type="search" placeholder="Filter categories..."
                  id="search-pc-visitor" autocomplete="off">
           <button class="expand-all-btn"   data-tree="pc-visitor-tree">Expand All</button>
           <button class="collapse-all-btn" data-tree="pc-visitor-tree">Collapse All</button>
         </div>
-
         <div class="tree-container visitor" id="pc-visitor-tree">
           {% if visitor_tree and visitor_tree.children %}
             <ul class="tree-root">
               {% for ch in visitor_tree.children %}{{ render_view_node(ch) }}{% endfor %}
             </ul>
           {% else %}
-            <div class="empty-state">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="1.5">
-                <circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line>
-                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-              </svg>
-              <p>Visitor view ontology not found or empty.<br>
-                 Place <code>visitor_view.owl</code> in the <code>ontology/</code> folder.</p>
-            </div>
+            <div class="empty-state"><p>Visitor view not found.</p></div>
           {% endif %}
         </div>
         <div style="margin-top: 16px; border-top: 1px solid #eee; padding-top: 12px;">
@@ -379,7 +360,7 @@
     </div>
   </div><!-- /panel-pc -->
 
-  <!-- ══════════ INDUSTRIES PANEL (with sub-tabs) ══════════ -->
+  <!-- ========== INDUSTRIES PANEL ========== -->
   <div id="panel-ind" class="tab-panel panel-ind {% if outer_tab == 'ind' %}active{% endif %}">
 
     <div class="sub-tab-bar" role="tablist">
@@ -393,81 +374,59 @@
       </button>
     </div>
 
-    <!-- ── Industries core sub-panel ── -->
     <div id="sub-ind-core" class="sub-panel {% if ind_sub == 'core' %}active{% endif %}">
       <div class="card card-industries">
         <div class="card-header">
           <div class="card-header-text">
             <h2 class="industries-title">Industries</h2>
-            <p>Flat taxonomy of industry verticals — defined as <code>owl:Class</code> instances under a single <code>Industry</code> root in <code>ind.owl</code>.</p>
+            <p>Flat taxonomy of industry verticals -- defined as <code>owl:Class</code> instances under a single <code>Industry</code> root in <code>ind.owl</code>.</p>
           </div>
           <div class="stats-badge">
-            <span class="badge industries-badge" id="ind-core-total-count">Loading…</span>
+            <span class="badge industries-badge" id="ind-core-total-count">Loading...</span>
           </div>
         </div>
-
         <div class="search-row">
-          <input class="search-box" type="search" placeholder="Filter industries…"
+          <input class="search-box" type="search" placeholder="Filter industries..."
                  id="search-ind-core" autocomplete="off">
           <button class="expand-all-btn"   data-tree="ind-core-tree">Expand All</button>
           <button class="collapse-all-btn" data-tree="ind-core-tree">Collapse All</button>
         </div>
-
         <div class="tree-container industries" id="ind-core-tree">
           {% if industry_tree %}
             <ul class="tree-root">
               {% for ch in industry_tree.children %}{{ render_class_node(ch) }}{% endfor %}
             </ul>
           {% else %}
-            <div class="empty-state">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="1.5">
-                <circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line>
-                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-              </svg>
-              <p>No classes found in the Industries ontology.<br>
-                 Place <code>ind.owl</code> in the <code>ontology/</code> folder.</p>
-            </div>
+            <div class="empty-state"><p>No industries found.</p></div>
           {% endif %}
         </div>
       </div>
     </div>
 
-    <!-- ── Industries view sub-panel ── -->
     <div id="sub-ind-view" class="sub-panel {% if ind_sub == 'view' %}active{% endif %}">
       <div class="card card-ind-view">
         <div class="card-header">
           <div class="card-header-text">
             <h2 class="ind-view-title">Industries View</h2>
-            <p>User-facing view of the Industries ontology. Each leaf links via <code>amtmeta:groups</code> to an industry class; labels prefer <code>skos:prefLabel</code> from <code>ind.owl</code>, falling back to <code>rdfs:label</code>.</p>
+            <p>User-facing view of the Industries ontology.</p>
           </div>
           <div class="stats-badge">
-            <span class="badge ind-view-badge" id="ind-view-total-count">Loading…</span>
+            <span class="badge ind-view-badge" id="ind-view-total-count">Loading...</span>
           </div>
         </div>
-
         <div class="search-row">
-          <input class="search-box" type="search" placeholder="Filter industries…"
+          <input class="search-box" type="search" placeholder="Filter industries..."
                  id="search-ind-view" autocomplete="off">
           <button class="expand-all-btn"   data-tree="ind-view-tree">Expand All</button>
           <button class="collapse-all-btn" data-tree="ind-view-tree">Collapse All</button>
         </div>
-
         <div class="tree-container ind-view" id="ind-view-tree">
           {% if ind_view_tree and ind_view_tree.children %}
             <ul class="tree-root">
               {% for ch in ind_view_tree.children %}{{ render_view_node(ch) }}{% endfor %}
             </ul>
           {% else %}
-            <div class="empty-state">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="1.5">
-                <circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line>
-                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-              </svg>
-              <p>Industries view ontology not found or empty.<br>
-                 Place <code>ind_view.owl</code> in the <code>ontology/</code> folder.</p>
-            </div>
+            <div class="empty-state"><p>Industries view not found.</p></div>
           {% endif %}
         </div>
       </div>
@@ -476,10 +435,16 @@
 
 </div><!-- .page -->
 
-<!-- Server-rendered string read by the "Copy source" button. The
-     application/json type means browsers do NOT parse this as code,
-     and VSCode does NOT lint Jinja inside it as JavaScript. -->
+<!-- Server-rendered Mermaid source for the Copy-source button. -->
 <script type="application/json" id="im-mermaid-src">{{ im_mermaid_source|tojson }}</script>
+
+<!-- Cytoscape.js elements for the IM interactive sub-tab. -->
+<script type="application/json" id="im-cytoscape-data">{{ im_cytoscape_data|tojson }}</script>
+
+<!-- Cytoscape.js + Dagre layout (UMD globals: cytoscape, dagre, cytoscapeDagre). -->
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.30.2/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dagre@0.8.5/dist/dagre.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.5.0/cytoscape-dagre.js"></script>
 
 </body>
 </html>
