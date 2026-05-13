@@ -12,16 +12,19 @@ and what these tests guard is the semantic content.
 
 from __future__ import annotations
 
+import hashlib
 import re
+import tempfile
 import unittest
 import warnings
+from pathlib import Path
 from typing import Any
 
 from openpyxl import load_workbook
 
 from app.graphs import OntologyGraphs
 from app.paths import REPO_ROOT
-from app.view_xlsx import generate_product_interest_xlsx
+from app.view_xlsx import DIST_FILENAME, generate_product_interest_xlsx, regenerate_dist
 
 RESOURCE_PATH = REPO_ROOT / "resources" / "AMT Taxonomy - Product Interest Category.xlsx"
 
@@ -244,6 +247,37 @@ class TestProductInterestCategoryXlsx(unittest.TestCase):
             label = leaves_to_label.get(leaves, "?")
             msg.append(f"  - resource '{label}': {sorted(leaves)[:5]}")
         self.fail("\n".join(msg))
+
+    # ── determinism ─────────────────────────────────────────────────────
+
+    def test_dist_xlsx_is_byte_deterministic(self):
+        """Two back-to-back `regenerate_dist` runs must produce identical
+        bytes — without this guard, the CI dist-drift check fails on every
+        commit even when the ontology hasn't changed.
+
+        openpyxl's `Workbook.save()` re-stamps `docProps/core.xml` with
+        `datetime.utcnow()` on every save, and the underlying zip archive
+        records per-file timestamps too. The exporter neutralises both
+        sources of drift; this test is the regression guard. If it ever
+        fails, someone has reintroduced a non-deterministic field in the
+        generated xlsx (most likely a future addition that touches
+        `docProps/`, ZipInfo timestamps, or anything timezone-/clock-
+        dependent).
+        """
+        with tempfile.TemporaryDirectory() as td:
+            tmp = Path(td)
+            regenerate_dist(tmp)
+            h1 = hashlib.md5((tmp / DIST_FILENAME).read_bytes()).hexdigest()
+            regenerate_dist(tmp)
+            h2 = hashlib.md5((tmp / DIST_FILENAME).read_bytes()).hexdigest()
+        self.assertEqual(
+            h1,
+            h2,
+            "Two regenerations of the dist xlsx produced different bytes "
+            f"(md5: {h1} vs {h2}). The exporter has reintroduced a "
+            "non-deterministic field — check app.view_xlsx for changes "
+            "to property pinning or core.xml post-processing.",
+        )
 
 
 if __name__ == "__main__":

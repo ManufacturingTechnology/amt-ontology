@@ -46,6 +46,7 @@ sheet for them in the current workbook is redundant.
 
 from __future__ import annotations
 
+from datetime import datetime, timezone
 from io import BytesIO
 from pathlib import Path
 
@@ -305,6 +306,87 @@ def _populate_lookup_sheet(ws, amtmeta_graph: rdflib.Graph) -> None:
 # ---------------------------------------------------------------------------
 
 
+def _resolve_pinned_datetime(view_graph: rdflib.Graph) -> datetime:
+    """Return the deterministic timestamp to use for the xlsx core
+    properties — midnight UTC of ``amtmeta:releaseDate`` if present,
+    else a fixed sentinel.
+    """
+    ont = _find_ontology_iri(view_graph)
+    release_date_str = _first_value(view_graph, ont, NS_AMTMETA.releaseDate) if ont else ""
+    if release_date_str:
+        try:
+            return datetime.fromisoformat(release_date_str).replace(tzinfo=timezone.utc)
+        except ValueError:
+            pass
+    return datetime(2000, 1, 1, tzinfo=timezone.utc)
+
+
+def _pin_deterministic_properties(wb: Workbook, view_graph: rdflib.Graph) -> None:
+    """Pin :class:`openpyxl.Workbook` core properties to deterministic values.
+
+    Only the *pre-save* fields are settable here — openpyxl re-stamps
+    ``modified`` inside its own ``save()`` regardless of any pre-save value,
+    so :func:`_overwrite_core_xml_after_save` is the companion fix that
+    rewrites ``docProps/core.xml`` after the workbook is on disk.
+    """
+    pinned_dt = _resolve_pinned_datetime(view_graph)
+    wb.properties.creator = "amt-ontology"
+    wb.properties.lastModifiedBy = "amt-ontology"
+    wb.properties.created = pinned_dt
+    wb.properties.modified = pinned_dt
+
+
+def _overwrite_core_xml_after_save(target: Path, view_graph: rdflib.Graph) -> None:
+    """Rewrite ``docProps/core.xml`` inside *target* with a fully pinned
+    payload, defeating openpyxl's save-time re-stamping of ``modified``.
+
+    Why this exists: ``wb.save()`` calls
+    ``DocumentProperties.modified = datetime.utcnow()`` immediately before
+    serializing the core-properties part, overriding any pre-save value we
+    set on the property. Pre-save pinning (see
+    :func:`_pin_deterministic_properties`) covers ``creator`` / ``created``
+    / ``lastModifiedBy``, all of which openpyxl preserves; only ``modified``
+    needs this post-save override.
+
+    Without this, three back-to-back ``make dist-xlsx`` runs produce three
+    different MD5s and the CI's binary-diff dist-drift check fails on every
+    commit. With this, the xlsx bytes are stable as long as the ontology
+    inputs (specifically: ``amtmeta:releaseDate``) haven't changed.
+    """
+    import shutil
+    import zipfile
+
+    pinned_iso = _resolve_pinned_datetime(view_graph).strftime("%Y-%m-%dT%H:%M:%SZ")
+    core_xml = (
+        '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'
+        "<cp:coreProperties "
+        'xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" '
+        'xmlns:dc="http://purl.org/dc/elements/1.1/" '
+        'xmlns:dcterms="http://purl.org/dc/terms/" '
+        'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'
+        "<dc:creator>amt-ontology</dc:creator>"
+        f'<dcterms:created xsi:type="dcterms:W3CDTF">{pinned_iso}</dcterms:created>'
+        f'<dcterms:modified xsi:type="dcterms:W3CDTF">{pinned_iso}</dcterms:modified>'
+        "<cp:lastModifiedBy>amt-ontology</cp:lastModifiedBy>"
+        "</cp:coreProperties>\n"
+    ).encode()
+
+    # Rebuild the zip with our core.xml replacing the auto-generated one.
+    tmp_target = target.with_suffix(target.suffix + ".tmp")
+    with (
+        zipfile.ZipFile(target, "r") as src,
+        zipfile.ZipFile(tmp_target, "w", zipfile.ZIP_DEFLATED) as dst,
+    ):
+        for item in src.infolist():
+            data = core_xml if item.filename == "docProps/core.xml" else src.read(item.filename)
+            # Pin ZipInfo timestamps too — without this, the zip's internal
+            # file dates drift across runs and add to the binary diff.
+            new_info = zipfile.ZipInfo(filename=item.filename, date_time=(1980, 1, 1, 0, 0, 0))
+            new_info.compress_type = zipfile.ZIP_DEFLATED
+            dst.writestr(new_info, data)
+    shutil.move(str(tmp_target), str(target))
+
+
 def generate_product_interest_xlsx(
     view_graph: rdflib.Graph,
     source_graph: rdflib.Graph,
@@ -321,6 +403,10 @@ def generate_product_interest_xlsx(
     * *amtmeta_graph* — sources Status individuals' labels (for
       resolving the IRI references in the view header) and the canonical
       Approval Status options for the Look-up values sheet.
+
+    The returned workbook has deterministic ``docProps/core.xml`` so
+    that byte-for-byte regeneration is stable as long as the ontology
+    inputs haven't changed (see :func:`_pin_deterministic_properties`).
     """
     wb = Workbook()
 
@@ -337,6 +423,7 @@ def generate_product_interest_xlsx(
     lv_sheet = wb.create_sheet("Look-up values")
     _populate_lookup_sheet(lv_sheet, amtmeta_graph)
 
+    _pin_deterministic_properties(wb, view_graph)
     return wb
 
 
@@ -368,6 +455,11 @@ def workbook_to_bytes(wb: Workbook) -> BytesIO:
 def regenerate_dist(out_dir: Path | str | None = None) -> list[Path]:
     """Regenerate the checked-in xlsx export under *out_dir* (default ``dist/``).
 
+    The written file has fully deterministic bytes (see
+    :func:`_pin_deterministic_properties` and
+    :func:`_overwrite_core_xml_after_save`) so the CI dist-drift check
+    passes whenever the ontology hasn't changed.
+
     Returns the list of files written.
     """
     from .graphs import OntologyGraphs
@@ -381,6 +473,7 @@ def regenerate_dist(out_dir: Path | str | None = None) -> list[Path]:
 
     target = out_dir / DIST_FILENAME
     wb.save(target)
+    _overwrite_core_xml_after_save(target, graphs.visitor)
     return [target]
 
 
