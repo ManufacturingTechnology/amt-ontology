@@ -43,7 +43,7 @@
     amtmeta:nextReviewDate      "2026-06-01"^^xsd:date ;
     amtmeta:nextReviewNote      "Need to discuss for Space Application." ;
 
-    amtmeta:relatedDocumentation <https://amtonline.sharepoint.com/sites/governance/Shared%20Documents/Taxonomy%20Change%20Process.docx> ;
+    amtmeta:relatedDocumentation <https://amtoffice.sharepoint.com/:w:/r/sites/AMTDataGovernanceTeam/Shared%20Documents/General/Documentation/Taxonomies/Taxonomy%20Change%20Process_DRAFT.docx?d=wc6ed90a2f7824da497111432f8052591&csf=1&web=1&e=2W687h> ;
 
     amtmeta:releaseDate     "2026-05-13"^^xsd:date ;
     amtmeta:scopeSummary    "Initial release — visitor view of product categories with bucket hierarchy and SHACL validation against the pc: taxonomy." ;
