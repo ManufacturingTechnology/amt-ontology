@@ -7,7 +7,7 @@
 
 PY ?= python
 
-.PHONY: help install serve test shacl reasoner-check lint format dist dist-csv dist-owl clean
+.PHONY: help install serve test shacl reasoner-check lint format dist dist-csv dist-owl dist-xlsx clean
 
 help:                  ## list available targets
 	@grep -E '^[a-zA-Z_-]+:.*?##' $(MAKEFILE_LIST) | \
@@ -35,13 +35,16 @@ lint:                  ## ruff check + format check
 format:                ## apply ruff formatter
 	ruff format .
 
-dist: dist-csv dist-owl  ## regenerate every artefact in dist/
+dist: dist-csv dist-owl dist-xlsx  ## regenerate every artefact in dist/
 
 dist-csv:              ## regenerate dist/imts_*.csv from the views
 	$(PY) -m app.view_csv dist
 
 dist-owl:              ## regenerate dist/amt-ontology.owl (merged RDF/XML)
 	$(PY) -m app.merge dist
+
+dist-xlsx:             ## regenerate dist/AMT Taxonomy - Product Interest Category.xlsx
+	$(PY) -m app.view_xlsx dist
 
 clean:                 ## remove caches
 	rm -rf .pytest_cache .ruff_cache build dist/.cache
