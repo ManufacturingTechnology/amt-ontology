@@ -49,14 +49,25 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from io import BytesIO
 from pathlib import Path
+from urllib.parse import unquote, urlparse
 
 import rdflib
 from openpyxl import Workbook
-from openpyxl.styles import Font
+from openpyxl.styles import Alignment, Font
+from openpyxl.utils import get_column_letter
 from rdflib.namespace import DCTERMS, OWL, RDF, RDFS, SKOS
 
 from .namespaces import NS_AMTMETA
 from .view_csv import generate_view_csv_rows
+
+# ---------------------------------------------------------------------------
+# Hyperlink styling
+# ---------------------------------------------------------------------------
+
+#: Excel's stock hyperlink font — Office blue (0563C1) with single underline.
+#: Applied by :func:`_set_hyperlink` so URL cells render as clickable
+#: hyperlinks matching the look of the historical resource workbook.
+HYPERLINK_FONT = Font(color="0563C1", underline="single")
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -302,6 +313,94 @@ def _populate_lookup_sheet(ws, amtmeta_graph: rdflib.Graph) -> None:
 
 
 # ---------------------------------------------------------------------------
+# Styling helpers
+# ---------------------------------------------------------------------------
+
+
+def _autosize_columns(ws, *, min_width: int = 8, max_width: int = 120) -> None:
+    """Size each column so the widest cell content fits.
+
+    Bounds the resulting width between *min_width* and *max_width* so a
+    single long value (e.g. the SharePoint URL or a paragraph-long use
+    case) doesn't blow the column out to absurd widths. For multi-line
+    cells, only the longest line is considered (Excel renders wrapped
+    text vertically anyway).
+
+    Deterministic — width is derived from cell content, which is itself
+    sourced from the ontology and stable across runs. Safe to call after
+    populating but before any post-save zip rewrite.
+    """
+    for col in ws.iter_cols():
+        if not col:
+            continue
+        max_len = 0
+        for cell in col:
+            if cell.value is None:
+                continue
+            text = str(cell.value)
+            # Multi-line cells: pick the longest individual line.
+            for line in text.splitlines() or [text]:
+                if len(line) > max_len:
+                    max_len = len(line)
+        width = min(max(min_width, max_len + 2), max_width)
+        ws.column_dimensions[get_column_letter(col[0].column)].width = width
+
+
+def _wrap_column(ws, column: int) -> None:
+    """Apply ``wrap_text=True`` to every cell in *column* of *ws*.
+
+    Used on free-form columns (the Taxonomy Metadata value column, the
+    Release Log scope-summary column) where contents can run to multiple
+    sentences or include long URLs. Combined with :func:`_autosize_columns`
+    capping at ``max_width``, this keeps the workbook readable in Excel
+    without forcing the user to widen columns by hand.
+    """
+    wrap = Alignment(wrap_text=True, vertical="top")
+    for row in ws.iter_rows(min_col=column, max_col=column):
+        for cell in row:
+            cell.alignment = wrap
+
+
+def _set_hyperlink(cell, url: str) -> None:
+    """Render *cell* as an Excel hyperlink to *url*.
+
+    Display text is the URL's filename segment (the last path component,
+    URL-decoded so ``%20`` becomes a space). For a SharePoint URL like
+    ``https://…/Documents/Taxonomy%20Change%20Process.docx?…``, the cell
+    shows ``Taxonomy Change Process.docx`` and clicking it opens the
+    underlying URL — same UX as the historical resource workbook's
+    hyperlinked filename. Applies the stock Office hyperlink font
+    (blue + underline).
+    """
+    parsed = urlparse(url)
+    filename = unquote(parsed.path.rsplit("/", 1)[-1])
+    cell.value = filename or url
+    cell.hyperlink = url
+    cell.font = HYPERLINK_FONT
+
+
+def _hyperlinkify_url_cells(ws) -> None:
+    """Walk every populated cell; convert any whose string value is an
+    ``http://`` / ``https://`` URL into a clickable hyperlink via
+    :func:`_set_hyperlink`.
+
+    Applied per-sheet after population so cells like Taxonomy Metadata's
+    ``Related documentation:`` row and Release Log's ``Release notes`` and
+    ``GitHub release`` URLs render with a friendly filename / tag display
+    rather than a raw URL string spanning a wrapped column. Idempotent on
+    a freshly-built workbook: subsequent passes don't re-touch the cell
+    because its value is no longer the URL.
+    """
+    for row in ws.iter_rows():
+        for cell in row:
+            if not isinstance(cell.value, str):
+                continue
+            text = cell.value.strip()
+            if text.startswith(("http://", "https://")):
+                _set_hyperlink(cell, text)
+
+
+# ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
 
@@ -422,6 +521,20 @@ def generate_product_interest_xlsx(
 
     lv_sheet = wb.create_sheet("Look-up values")
     _populate_lookup_sheet(lv_sheet, amtmeta_graph)
+
+    # Styling, in order:
+    #   1. Hyperlinkify URL cells first — display text becomes the URL's
+    #      filename segment, which then drives the auto-sized width.
+    #   2. Auto-size every column on every sheet.
+    #   3. Wrap the free-form value columns on Taxonomy Metadata (col B)
+    #      and Release Log (col C, Scope Summary) so long non-URL values
+    #      render cleanly.
+    for sheet in (md_sheet, rl_sheet, hm_sheet, lv_sheet):
+        _hyperlinkify_url_cells(sheet)
+    for sheet in (md_sheet, rl_sheet, hm_sheet, lv_sheet):
+        _autosize_columns(sheet)
+    _wrap_column(md_sheet, column=2)
+    _wrap_column(rl_sheet, column=3)
 
     _pin_deterministic_properties(wb, view_graph)
     return wb
