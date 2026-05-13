@@ -15,6 +15,7 @@
 
     dcterms:title    "Industry Classification Taxonomy" ;
     owl:versionInfo  "0.1.0" ;
+    owl:versionIRI   <http://ontology.amt.org/industries/0.1.0> ;
 
     amtmeta:status              amtmeta:Active ;
     amtmeta:taxonomyOwner       "Chris Downs" ;
@@ -33,6 +34,16 @@
         "Data repository (MySQL)" ;
 
     amtmeta:nextReviewDate      "2027-01-01"^^xsd:date ;
+
+    amtmeta:relatedDocumentation <https://amtonline.sharepoint.com/sites/governance/Shared%20Documents/Taxonomy%20Change%20Process.docx> ;
+
+    amtmeta:releaseDate     "2026-05-13"^^xsd:date ;
+    amtmeta:scopeSummary    "Initial release — industry classification taxonomy (17 industry Kinds under a single Category root)." ;
+    amtmeta:releaseOwner    "Shaurabh" ;
+    amtmeta:approvalStatus  amtmeta:Draft ;
+    amtmeta:gitTag          "v0.1.0" ;
+    amtmeta:githubRelease   <https://github.com/ManufacturingTechnology/amt-ontology/releases/tag/v0.1.0> ;
+    amtmeta:releaseNotes    <https://github.com/ManufacturingTechnology/amt-ontology/releases/tag/v0.1.0> ;
 
     amtmeta:useCase
         "Marketing uses this for targeted marketing",

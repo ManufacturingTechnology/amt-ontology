@@ -18,6 +18,7 @@
 
     dcterms:title    "Visitor View of Product Categories" ;
     owl:versionInfo  "0.1.0" ;
+    owl:versionIRI   <http://ontology.amt.org/views/visitor/0.1.0> ;
     amtmeta:viewOf   <http://ontology.amt.org/product-categories> ;
 
     amtmeta:status              amtmeta:Active ;
@@ -42,7 +43,15 @@
     amtmeta:nextReviewDate      "2026-06-01"^^xsd:date ;
     amtmeta:nextReviewNote      "Need to discuss for Space Application." ;
 
-    rdfs:seeAlso                "Taxonomy Change Process.docx" ;
+    amtmeta:relatedDocumentation <https://amtonline.sharepoint.com/sites/governance/Shared%20Documents/Taxonomy%20Change%20Process.docx> ;
+
+    amtmeta:releaseDate     "2026-05-13"^^xsd:date ;
+    amtmeta:scopeSummary    "Initial release — visitor view of product categories with bucket hierarchy and SHACL validation against the pc: taxonomy." ;
+    amtmeta:releaseOwner    "Shaurabh" ;
+    amtmeta:approvalStatus  amtmeta:Draft ;
+    amtmeta:gitTag          "v0.1.0" ;
+    amtmeta:githubRelease   <https://github.com/ManufacturingTechnology/amt-ontology/releases/tag/v0.1.0> ;
+    amtmeta:releaseNotes    <https://github.com/ManufacturingTechnology/amt-ontology/releases/tag/v0.1.0> ;
 
     amtmeta:useCase
         "Marketing uses this for targeted marketing",

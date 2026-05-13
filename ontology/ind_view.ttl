@@ -17,9 +17,20 @@
 
     dcterms:title    "View of Industries" ;
     owl:versionInfo  "0.1.0" ;
+    owl:versionIRI   <http://ontology.amt.org/views/industries/0.1.0> ;
     amtmeta:viewOf   <http://ontology.amt.org/industries> ;
 
-    amtmeta:status   amtmeta:Active .
+    amtmeta:status   amtmeta:Active ;
+
+    amtmeta:relatedDocumentation <https://amtonline.sharepoint.com/sites/governance/Shared%20Documents/Taxonomy%20Change%20Process.docx> ;
+
+    amtmeta:releaseDate     "2026-05-13"^^xsd:date ;
+    amtmeta:scopeSummary    "Initial release — flat-collection view of industries (17 ind: Kinds grouped into one ind_view:Industries collection)." ;
+    amtmeta:releaseOwner    "Shaurabh" ;
+    amtmeta:approvalStatus  amtmeta:Draft ;
+    amtmeta:gitTag          "v0.1.0" ;
+    amtmeta:githubRelease   <https://github.com/ManufacturingTechnology/amt-ontology/releases/tag/v0.1.0> ;
+    amtmeta:releaseNotes    <https://github.com/ManufacturingTechnology/amt-ontology/releases/tag/v0.1.0> .
 
 
 ################################################################################
