@@ -52,20 +52,36 @@ jobs:
         run: python -m unittest discover -s tests -v
 
       - name: dist/ matches current ontology (CSVs + amt-ontology.owl)
-        # ``make dist`` regenerates both kinds of artefact:
+        # ``make dist`` regenerates three kinds of artefact:
         #   * ``dist/imts_*.csv`` from the views (via app.view_csv)
         #   * ``dist/amt-ontology.owl`` — the merged RDF/XML (via app.merge)
-        # Both targets are content-idempotent: if the TTL state hasn't
-        # changed semantically, the files are left untouched. So a
-        # non-empty ``git diff`` here means a real ontology change went
-        # into the PR without the matching dist/ refresh.
+        #   * ``dist/AMT Taxonomy - Product Interest Category.xlsx`` (via
+        #     app.view_xlsx)
         #
-        # The semantic check (graph isomorphism for the OWL file) is also
-        # asserted by ``tests/test_merge.py::TestMergeSnapshotAgreement``,
-        # which runs as part of the previous step.
+        # The CSV exporter and the OWL merger are content-idempotent: if
+        # the TTL state hasn't changed semantically, the files are left
+        # untouched, so a non-empty ``git diff`` on those means a real
+        # ontology change went into the PR without the matching dist/
+        # refresh.
+        #
+        # The xlsx exporter (app.view_xlsx) IS deterministic per-machine
+        # but is NOT cross-platform byte-stable — openpyxl + zlib emit
+        # slightly different bytes between Windows (typical local dev)
+        # and Linux (CI). Forcing binary equality across platforms would
+        # mean either pinning openpyxl/zlib build options globally or
+        # rewriting the entire zip from scratch, neither of which adds
+        # real value: the xlsx's *semantic* equality with the resource
+        # workbook is already guarded by
+        # ``tests/test_xlsx_export.py::TestProductInterestCategoryXlsx``,
+        # which runs in the previous step and covers sheet structure,
+        # field values, Tier 3 leaves, and approval-status lookups.
+        # We therefore exclude the xlsx from this binary diff check.
+        #
+        # The semantic OWL check (graph isomorphism) is also asserted by
+        # ``tests/test_merge.py::TestMergeSnapshotAgreement``.
         run: |
           make dist
-          if ! git diff --exit-code dist/; then
+          if ! git diff --exit-code -- 'dist/' ':(exclude)dist/*.xlsx'; then
             echo "::error::dist/ is stale — run 'make dist' locally and commit."
             exit 1
           fi
