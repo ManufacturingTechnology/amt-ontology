@@ -39,8 +39,7 @@ on the source URI.
 │   ├── graphs.py               # load_graph + lazy OntologyGraphs container
 │   ├── properties.py           # IM per-class property + cardinality collector
 │   ├── trees.py                # class-tree + view-tree builders, cycle detector
-│   ├── im_diagram.py           # Mermaid classDiagram generator (static)
-│   ├── im_cytoscape.py         # Cytoscape.js elements generator (interactive IM tab)
+│   ├── im_cytoscape.py         # Cytoscape.js elements generator (sole IM diagram renderer)
 │   ├── view_csv.py             # (Major, Sub, Product Category) CSV exporter
 │   ├── view_xlsx.py            # Product Interest Category xlsx exporter
 │   ├── merge.py                # merges all seven ttl files into one RDF/XML OWL
@@ -52,7 +51,7 @@ on the source URI.
 │   └── ontology_browser.html   # Jinja template rendered by the browser
 ├── static/
 │   ├── browser.css             # styles for the browser
-│   └── browser.js              # tree controls + Mermaid kick
+│   └── browser.js              # tree controls + Cytoscape kick
 ├── tests/
 │   ├── test_csv_export.py      # CSV export regression vs. resources/ baseline
 │   ├── test_xlsx_export.py     # xlsx export semantic regression vs. resources/
@@ -123,13 +122,14 @@ snapshots (staging vs production).
 
 The browser exposes three top-level tabs:
 
-* **Information Model** — `im.ttl` as a containment tree, plus a full
-  Mermaid class diagram on the Detail sub-tab.
+* **Information Model** — `im.ttl` as a containment tree (Core sub-tab),
+  plus a Cytoscape.js movable graph on the Interactive sub-tab.
 * **Product Categories** — `pc.ttl` as a class taxonomy, plus the
-  Exhibitor and Visitor views derived from it. Each view tab has a
-  **Download CSV** button that streams a `Major, Sub, Product Category`
-  export.
+  Exhibitor and Visitor views derived from it.
 * **Industries** — `ind.ttl` taxonomy plus the industries view.
+
+CSV exports of the Exhibitor and Visitor views are produced via
+`make dist-csv` / `python -m app.view_csv`.
 
 ## Common commands (Makefile)
 
@@ -150,8 +150,9 @@ make clean           # remove caches
 
 ## CSV export
 
-The Exhibitor and Visitor tabs each have a **Download CSV** button that
-serialises the view to the historical three-column schema:
+The Exhibitor and Visitor views serialise to the historical three-column
+schema. Generate them with `make dist-csv` or
+`python -m app.view_csv`:
 
 | Major Category | Sub Category | Product Category |
 |---|---|---|
