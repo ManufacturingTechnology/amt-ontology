@@ -130,7 +130,6 @@ header a { color: #fffbcc; text-decoration: underline; font-weight: 600; }
 .sub-dot-ind-core     { background: var(--industry-color); }
 .sub-dot-ind-view     { background: var(--industry-view-color); }
 .sub-dot-im-core      { background: var(--im-color); }
-.sub-dot-im-detail    { background: #06596e; }
 .sub-dot-im-interactive { background: #d97706; }
 /* When the parent panel is "ind", colour the active sub-tab to match */
 .panel-ind .sub-tab-btn.active { color: var(--industry-color); border-bottom-color: var(--industry-color); }
@@ -393,55 +392,6 @@ header a { color: #fffbcc; text-decoration: underline; font-weight: 600; }
   font-size: 0.85rem;
 }
 
-/* ── IM Detail (Mermaid) ── */
-.mermaid-container {
-  margin-top: 10px;
-  padding: 16px;
-  background: #fafbfc;
-  border: 1px solid #e5e7eb;
-  border-radius: 6px;
-  overflow-x: auto;
-  text-align: center;
-}
-.mermaid-container .mermaid {
-  font-family: "Menlo", "Consolas", monospace;
-  font-size: 0.95rem;
-  color: #6b7280;
-  margin: 0;
-  white-space: pre;
-  text-align: left;
-  display: inline-block;
-}
-/* Once Mermaid renders, it replaces the <pre> contents with an SVG.
-   We deliberately do NOT set max-width:100% here -- the parent container's
-   overflow-x:auto handles wide diagrams, and clamping width forces Mermaid
-   to downscale the text below readability. */
-.mermaid-container .mermaid svg {
-  height: auto;
-  font-size: 16px;
-}
-/* Belt-and-braces: Mermaid emits inline font-size on its <text> elements,
-   so we boost label and stereotype text directly. The selectors mirror the
-   classes Mermaid's classDiagram renderer applies. */
-.mermaid-container .mermaid svg .nodeLabel,
-.mermaid-container .mermaid svg .edgeLabel,
-.mermaid-container .mermaid svg text.classTitle,
-.mermaid-container .mermaid svg text.classText,
-.mermaid-container .mermaid svg .label foreignObject div {
-  font-size: 16px !important;
-}
-.mermaid-container .mermaid svg text.classTitle {
-  font-size: 18px !important;
-  font-weight: 600;
-}
-.mermaid-copy-btn {
-  cursor: pointer;
-  border: none;
-  font: inherit;
-  transition: filter 0.15s;
-}
-.mermaid-copy-btn:hover { filter: brightness(0.92); }
-
 /* -- IM Interactive (Cytoscape.js) -- */
 .cy-container {
   margin-top: 10px;
@@ -467,3 +417,12 @@ select.badge.im-badge {
   background-repeat: no-repeat;
   background-position: right 6px center;
 }
+
+/* Reusable pill-shaped action button (Reset layout, etc.). */
+.action-btn {
+  cursor: pointer;
+  border: none;
+  font: inherit;
+  transition: filter 0.15s;
+}
+.action-btn:hover { filter: brightness(0.92); }

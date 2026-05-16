@@ -5,10 +5,10 @@ RDF namespaces and common URI constants used across the application.
 
 The four AMT-owned namespaces:
 
-* ``pc``       – ``http://ontology.amt.org/product-categories#``
-* ``ind``      – ``http://ontology.amt.org/industries#``
-* ``im``       – ``http://ontology.amt.org/im#``
-* ``amtmeta``  – ``http://ontology.amt.org/meta#``
+* ``pc``       - ``http://ontology.amt.org/product-categories#``
+* ``ind``      - ``http://ontology.amt.org/industries#``
+* ``im``       - ``http://ontology.amt.org/im#``
+* ``amtmeta``  - ``http://ontology.amt.org/meta#``
 
 The two ontology-IRI constants (``PC_ONTOLOGY_IRI``, ``IND_ONTOLOGY_IRI``)
 are the *ontology IRIs* (no trailing ``#``) used as the object of
@@ -42,8 +42,8 @@ PC_ONTOLOGY_IRI = rdflib.URIRef("http://ontology.amt.org/product-categories")
 IND_ONTOLOGY_IRI = rdflib.URIRef("http://ontology.amt.org/industries")
 IM_ONTOLOGY_IRI = rdflib.URIRef("http://ontology.amt.org/im")
 
-# Base URI string for the IM namespace, used by :mod:`app.im_diagram` to
-# distinguish IM-internal classes from external classes referenced by
+# Base URI string for the IM namespace, used by :mod:`app.im_cytoscape`
+# to distinguish IM-internal classes from external classes referenced by
 # object-property ranges.
 IM_BASE_NS = "http://ontology.amt.org/im#"
 

@@ -5,7 +5,7 @@
   <title>Ontology Browser</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='browser.css') }}">
 
-  <!-- Mermaid (loaded once; rendering is deferred until the diagram tab is active) -->
+  <!-- Browser module: tab wiring + Cytoscape kick. -->
   <script type="module" src="{{ url_for('static', filename='browser.js') }}"></script>
 </head>
 <body>
@@ -18,10 +18,6 @@
 
 <div class="page">
 
-  {% if error %}
-    <div class="error-banner">WARNING {{ error }}</div>
-  {% endif %}
-
   {#
      Resolve outer / inner tab selection. The query parameter `tab`
      can be a compound key like "pc-exhibitor" (outer "pc", inner
@@ -33,8 +29,7 @@
                   else ('visitor' if active_tab == 'pc-visitor'
                   else 'core') %}
   {% set ind_sub = 'view' if active_tab == 'ind-view' else 'core' %}
-  {% set im_sub  = 'detail' if active_tab == 'im-detail'
-                   else ('interactive' if active_tab == 'im-interactive' else 'core') %}
+  {% set im_sub  = 'interactive' if active_tab == 'im-interactive' else 'core' %}
 
   <!-- ========== OUTER TAB BAR ========== -->
   <div class="tab-bar" role="tablist">
@@ -52,7 +47,7 @@
     </button>
   </div>
 
-  {# Plain class tree: used for Product Categories (core) and Industries (core). #}
+  {# Plain class tree: Product Categories (core) and Industries (core). #}
   {% macro render_class_node(node) -%}
     <li class="tree-node" data-label="{{ node.label | lower }}" title="{{ node.iri }}">
       {% if node.children %}
@@ -138,7 +133,7 @@
     </li>
   {%- endmacro %}
 
-  <!-- ========== INFORMATION MODEL PANEL (with sub-tabs) ========== -->
+  <!-- ========== INFORMATION MODEL PANEL (Core + Interactive) ========== -->
   <div id="panel-im"
        class="tab-panel panel-im {% if outer_tab == 'im' %}active{% endif %}">
 
@@ -147,23 +142,19 @@
               role="tab" data-outer="im" data-sub="core" data-target="sub-im-core">
         <span class="sub-dot sub-dot-im-core"></span>Core
       </button>
-      <button class="sub-tab-btn {% if im_sub == 'detail' %}active{% endif %}"
-              role="tab" data-outer="im" data-sub="detail" data-target="sub-im-detail">
-        <span class="sub-dot sub-dot-im-detail"></span>Detailed Diagram
-      </button>
       <button class="sub-tab-btn {% if im_sub == 'interactive' %}active{% endif %}"
               role="tab" data-outer="im" data-sub="interactive" data-target="sub-im-interactive">
         <span class="sub-dot sub-dot-im-interactive"></span>Interactive
       </button>
     </div>
 
-    <!-- IM core (containment tree) sub-panel -->
+    <!-- IM Core (containment tree) sub-panel -->
     <div id="sub-im-core" class="sub-panel {% if im_sub == 'core' %}active{% endif %}">
       <div class="card card-im">
         <div class="card-header">
           <div class="card-header-text">
             <h2 class="im-title">Information Model -- Containment Tree</h2>
-            <p>Core entities (Visitor, Exhibitor, Company, IMTS, AMT) with their object and datatype property restrictions, expressed as <code>owl:Restriction</code> nodes on each class.</p>
+            <p>Core entities with their object and datatype property restrictions, expressed as <code>owl:Restriction</code> nodes on each class.</p>
           </div>
           <div class="stats-badge">
             <span class="badge im-badge" id="im-core-total-count">Loading...</span>
@@ -191,36 +182,16 @@
       </div>
     </div>
 
-    <!-- IM detailed diagram (Mermaid) sub-panel -->
-    <div id="sub-im-detail" class="sub-panel {% if im_sub == 'detail' %}active{% endif %}">
-      <div class="card card-im">
-        <div class="card-header">
-          <div class="card-header-text">
-            <h2 class="im-title">Information Model -- Detailed Class Diagram</h2>
-            <p>Full UML-style class diagram: every entity, its datatype properties (with cardinality), and all object-property associations. Multiplicity on a target end reflects the corresponding <code>owl:Restriction</code> on the source class.</p>
-          </div>
-          <div class="stats-badge">
-            <button class="badge im-badge mermaid-copy-btn" id="im-mermaid-copy" type="button"
-                    title="Copy Mermaid source to clipboard">Copy source</button>
-          </div>
-        </div>
-
-        <div class="mermaid-container">
-          <pre class="mermaid" id="im-mermaid">{{ im_mermaid_source }}</pre>
-        </div>
-      </div>
-    </div>
-
-    <!-- IM interactive (Cytoscape.js) sub-panel -->
+    <!-- IM Interactive (Cytoscape.js) sub-panel -->
     <div id="sub-im-interactive" class="sub-panel {% if im_sub == 'interactive' %}active{% endif %}">
       <div class="card card-im">
         <div class="card-header">
           <div class="card-header-text">
             <h2 class="im-title">Information Model -- Interactive Graph</h2>
-            <p>Drag any node to rearrange the diagram; scroll to zoom; drag the background to pan. Layout choices and per-node positions persist across reloads via <code>localStorage</code>.</p>
+            <p>Drag any node to rearrange the diagram; scroll to zoom; drag the background to pan. Layout choice and per-node positions persist across reloads via <code>localStorage</code>.</p>
           </div>
           <div class="stats-badge">
-            <button class="badge im-badge mermaid-copy-btn" id="im-cy-relayout" type="button"
+            <button class="badge im-badge action-btn" id="im-cy-relayout" type="button"
                     title="Re-run the auto-layout, discarding manual positions">Reset layout</button>
             <select class="badge im-badge" id="im-cy-layout" title="Layout algorithm">
               <option value="dagre">Hierarchical (Dagre)</option>
@@ -313,13 +284,6 @@
             <div class="empty-state"><p>Exhibitor view not found.</p></div>
           {% endif %}
         </div>
-        <div style="margin-top: 16px; border-top: 1px solid #eee; padding-top: 12px;">
-          <form method="POST" action="{{ url_for('index') }}">
-            <input type="hidden" name="action" value="csv">
-            <input type="hidden" name="result_source" value="exhibitor">
-            <button type="submit" class="expand-all-btn">Download CSV</button>
-          </form>
-        </div>
       </div>
     </div>
 
@@ -348,13 +312,6 @@
           {% else %}
             <div class="empty-state"><p>Visitor view not found.</p></div>
           {% endif %}
-        </div>
-        <div style="margin-top: 16px; border-top: 1px solid #eee; padding-top: 12px;">
-          <form method="POST" action="{{ url_for('index') }}">
-            <input type="hidden" name="action" value="csv">
-            <input type="hidden" name="result_source" value="visitor">
-            <button type="submit" class="expand-all-btn">Download CSV</button>
-          </form>
         </div>
       </div>
     </div>
@@ -435,10 +392,7 @@
 
 </div><!-- .page -->
 
-<!-- Server-rendered Mermaid source for the Copy-source button. -->
-<script type="application/json" id="im-mermaid-src">{{ im_mermaid_source|tojson }}</script>
-
-<!-- Cytoscape.js elements for the IM interactive sub-tab. -->
+<!-- Cytoscape.js elements for the IM Interactive sub-tab. -->
 <script type="application/json" id="im-cytoscape-data">{{ im_cytoscape_data|tojson }}</script>
 
 <!-- Cytoscape.js + Dagre layout (UMD globals: cytoscape, dagre, cytoscapeDagre). -->

@@ -1,73 +1,126 @@
 """
 app.im_cytoscape
 ================
-Cytoscape.js *elements* generator for the Information Model interactive tab.
+Cytoscape.js elements generator for the Information Model Interactive
+sub-tab. The only IM diagram renderer in the package (the static Mermaid
+generator was retired together with the Detailed Diagram sub-tab).
 
-Where :mod:`app.im_diagram` produces a static Mermaid ``classDiagram``
-string, this module produces a JSON-serialisable graph the browser hands
-to Cytoscape.js. The two views are intentionally redundant: Mermaid gives
-you the canonical UML notation for documentation / paste-into-docs, and
-Cytoscape gives you a movable, zoomable graph for exploration.
-
-Output shape
-------------
-A dict::
+Output shape: a JSON-serialisable dict ready for ``cy.add(elements)``::
 
     {
-        "nodes": [
-            {"data": {"id": ..., "label": ..., "kind": ...,
-                      "stereotype": ..., "attrs": [...]}},
-            ...
-        ],
-        "edges": [
-            {"data": {"id": ..., "source": ..., "target": ...,
-                      "kind": ..., "label": ..., "cardinality": ...}},
-            ...
-        ]
+        "nodes": [{"data": {"id", "label", "kind", "stereotype", "attrs"}}],
+        "edges": [{"data": {"id", "source", "target", "kind", "label",
+                            "cardinality"}}]
     }
 
-* ``kind`` on a node is one of ``"class"`` (IM-internal owl:Class),
-  ``"individual"`` (owl:NamedIndividual), or ``"external"`` (referenced
-  by an object-property range but declared outside the IM namespace).
-* ``stereotype`` carries the gUFO label (``"Kind"``, ``"Role"``,
-  ``"RoleMixin"``, ``"EventType"``, ``"Category"``, ...) for class
-  nodes, ``"NamedIndividual"`` for individuals, and ``"external"`` for
-  external boxes. Used by the browser-side stylesheet to colour and
-  shape each node.
-* ``attrs`` on class nodes mirrors the inline ``+name: range [card]``
-  rows from the Mermaid output, kept as structured data so the browser
-  can render them inside the node body.
-* ``kind`` on an edge is one of ``"subClassOf"`` (UML generalisation,
-  hollow triangle), ``"instanceOf"`` (UML realisation, dashed hollow
-  triangle), or ``"association"`` (filled arrow, optionally cardinality
-  on the target end).
-
-The generator reuses the same helpers as :mod:`app.im_diagram` so the
-two outputs stay in sync: any change to gUFO stereotype detection,
-``owl:unionOf`` domain expansion, or cardinality collection is picked
-up automatically.
+Node ``kind`` is one of ``class``, ``individual``, ``external``. Edge
+``kind`` is ``subClassOf`` (UML generalisation), ``instanceOf`` (UML
+realisation), ``association`` (TBOX domain/range), or ``assertion``
+(ABOX -- direct triple involving at least one NamedIndividual).
 """
 
 from __future__ import annotations
 
 import rdflib
+from rdflib.collection import Collection
 from rdflib.namespace import OWL, RDF, RDFS
 
-from .im_diagram import _collect_cardinalities, _expand_domains, _gufo_stereotype
 from .labels import local_name
 from .namespaces import in_im_namespace
 
+# --- gUFO stereotype lookup ------------------------------------------------
+
+GUFO = rdflib.Namespace("http://purl.org/nemo/gufo#")
+
+_GUFO_STEREOTYPES: tuple[tuple[str, rdflib.URIRef], ...] = (
+    ("Kind", GUFO.Kind),
+    ("SubKind", GUFO.SubKind),
+    ("Role", GUFO.Role),
+    ("RoleMixin", GUFO.RoleMixin),
+    ("Phase", GUFO.Phase),
+    ("PhaseMixin", GUFO.PhaseMixin),
+    ("Mixin", GUFO.Mixin),
+    ("Category", GUFO.Category),
+    ("EventType", GUFO.EventType),
+    ("SituationType", GUFO.SituationType),
+    ("Quality", GUFO.Quality),
+    ("Mode", GUFO.Mode),
+    ("Relator", GUFO.Relator),
+)
+
+_ABOX_SKIP_PREDS = frozenset(
+    {
+        RDF.type,
+        RDFS.subClassOf,
+        RDFS.label,
+        RDFS.comment,
+        RDFS.seeAlso,
+        RDFS.isDefinedBy,
+        RDFS.domain,
+        RDFS.range,
+        OWL.disjointWith,
+        OWL.equivalentClass,
+        OWL.sameAs,
+    }
+)
+
+
+def _gufo_stereotype(graph: rdflib.Graph, class_uri: rdflib.URIRef) -> str | None:
+    types = set(graph.objects(class_uri, RDF.type))
+    for label, uri in _GUFO_STEREOTYPES:
+        if uri in types:
+            return label
+    return None
+
+
+def _expand_domains(graph: rdflib.Graph, prop: rdflib.URIRef):
+    for d in graph.objects(prop, RDFS.domain):
+        if isinstance(d, rdflib.URIRef):
+            yield d
+            continue
+        for union_list in graph.objects(d, OWL.unionOf):
+            for item in Collection(graph, union_list):
+                if isinstance(item, rdflib.URIRef):
+                    yield item
+
+
+def _collect_cardinalities(graph: rdflib.Graph) -> tuple[dict, dict]:
+    cards: dict = {}
+    rest_props: dict = {}
+    for c in graph.subjects(RDF.type, OWL.Class):
+        if not in_im_namespace(c):
+            continue
+        c_l = local_name(c)
+        for r in graph.objects(c, RDFS.subClassOf):
+            if (r, RDF.type, OWL.Restriction) not in graph:
+                continue
+            prop = next(graph.objects(r, OWL.onProperty), None)
+            if not isinstance(prop, rdflib.URIRef):
+                continue
+            rest_props.setdefault(c_l, set()).add(prop)
+            ex = next(graph.objects(r, OWL.cardinality), None)
+            mn = next(graph.objects(r, OWL.minCardinality), None)
+            mx = next(graph.objects(r, OWL.maxCardinality), None)
+            if ex is not None:
+                card = str(int(ex))
+            elif mn is not None and mx is not None:
+                card = f"{int(mn)}..{int(mx)}"
+            elif mn is not None:
+                card = f"{int(mn)}..*"
+            elif mx is not None:
+                card = f"0..{int(mx)}"
+            else:
+                continue
+            cards[(c_l, local_name(prop))] = card
+    return cards, rest_props
+
+
+# --- Cytoscape elements generator -----------------------------------------
+
 
 def generate_im_cytoscape(graph: rdflib.Graph) -> dict:
-    """Return a Cytoscape.js elements dict for *graph*.
-
-    The dict is JSON-serialisable and ready to drop straight into
-    ``cy.add(elements)`` in the browser.
-    """
     cards, rest_props = _collect_cardinalities(graph)
 
-    # Datatype-property catalogue, keyed by class local name. Same shape
-    # and same rules as in im_diagram.generate_im_mermaid.
     dt_uris = set(graph.subjects(RDF.type, OWL.DatatypeProperty))
     dtprops: dict = {}
 
@@ -93,11 +146,9 @@ def generate_im_cytoscape(graph: rdflib.Graph) -> dict:
             card = cards.get((c_l, p_l), "")
             dtprops.setdefault(c_l, []).append({"name": p_l, "range": rng, "card": card})
 
-    # --- Nodes ------------------------------------------------------------
     nodes: list[dict] = []
     declared_ids: set[str] = set()
 
-    # IM-internal owl:Class boxes.
     im_classes = sorted(
         (c for c in graph.subjects(RDF.type, OWL.Class) if in_im_namespace(c)),
         key=local_name,
@@ -117,7 +168,6 @@ def generate_im_cytoscape(graph: rdflib.Graph) -> dict:
             }
         )
 
-    # IM-namespace named individuals.
     im_individuals = sorted(
         (i for i in graph.subjects(RDF.type, OWL.NamedIndividual) if in_im_namespace(i)),
         key=local_name,
@@ -137,7 +187,6 @@ def generate_im_cytoscape(graph: rdflib.Graph) -> dict:
             }
         )
 
-    # External classes referenced by object-property ranges.
     ext_ids: set[str] = set()
     for p in graph.subjects(RDF.type, OWL.ObjectProperty):
         for r in graph.objects(p, RDFS.range):
@@ -159,28 +208,24 @@ def generate_im_cytoscape(graph: rdflib.Graph) -> dict:
             }
         )
 
-    # --- Edges ------------------------------------------------------------
     edges: list[dict] = []
     edge_counter = 0
+    emitted_keys: set = set()
 
     def _add_edge(source: str, target: str, **data) -> None:
         nonlocal edge_counter
         if source not in declared_ids or target not in declared_ids:
             return
+        key = (source, target, data.get("label", ""), data.get("kind", ""))
+        if key in emitted_keys:
+            return
+        emitted_keys.add(key)
         edge_counter += 1
         edges.append(
-            {
-                "data": {
-                    "id": f"e{edge_counter}",
-                    "source": source,
-                    "target": target,
-                    **data,
-                }
-            }
+            {"data": {"id": f"e{edge_counter}", "source": source, "target": target, **data}}
         )
 
-    # subClassOf (IM-internal only).
-    sub_edges: set[tuple[str, str]] = set()
+    sub_edges: set = set()
     for c, sup in graph.subject_objects(RDFS.subClassOf):
         if not in_im_namespace(c):
             continue
@@ -192,7 +237,6 @@ def generate_im_cytoscape(graph: rdflib.Graph) -> dict:
     for child, parent in sorted(sub_edges):
         _add_edge(child, parent, kind="subClassOf", label="subClassOf")
 
-    # NamedIndividual --> class (instanceOf).
     for ind in im_individuals:
         i_l = local_name(ind)
         for t in graph.objects(ind, RDF.type):
@@ -204,7 +248,6 @@ def generate_im_cytoscape(graph: rdflib.Graph) -> dict:
                 continue
             _add_edge(i_l, local_name(t), kind="instanceOf", label="instanceOf")
 
-    # Object-property associations.
     for p in sorted(graph.subjects(RDF.type, OWL.ObjectProperty)):
         ranges = [r for r in graph.objects(p, RDFS.range) if isinstance(r, rdflib.URIRef)]
         if not ranges:
@@ -217,12 +260,19 @@ def generate_im_cytoscape(graph: rdflib.Graph) -> dict:
             for r in ranges:
                 r_l = local_name(r)
                 card = cards.get((d_l, p_l), "")
-                _add_edge(
-                    d_l,
-                    r_l,
-                    kind="association",
-                    label=p_l,
-                    cardinality=card,
-                )
+                _add_edge(d_l, r_l, kind="association", label=p_l, cardinality=card)
+
+    ind_uris = set(im_individuals)
+    for s, pred, o in graph:
+        if not isinstance(s, rdflib.URIRef) or not isinstance(o, rdflib.URIRef):
+            continue
+        if pred in _ABOX_SKIP_PREDS:
+            continue
+        if s not in ind_uris and o not in ind_uris:
+            continue
+        s_l, o_l = local_name(s), local_name(o)
+        if s_l not in declared_ids or o_l not in declared_ids:
+            continue
+        _add_edge(s_l, o_l, kind="assertion", label=local_name(pred))
 
     return {"nodes": nodes, "edges": edges}

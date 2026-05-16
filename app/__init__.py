@@ -5,18 +5,18 @@ The AMT ontology browser package.
 
 Modules:
 
-* :mod:`app.paths`       — absolute filesystem paths (CWD-independent)
-* :mod:`app.namespaces`  — RDF namespaces / common URIs
-* :mod:`app.labels`      — ``rdfs:label`` / ``skos:prefLabel`` resolution
-* :mod:`app.graphs`      — ``rdflib`` graph loader + lazy graph container
-* :mod:`app.properties`  — per-class property / cardinality collector
-* :mod:`app.trees`       — class-tree and view-tree builders + cycle detection
-* :mod:`app.im_diagram`  — Mermaid ``classDiagram`` generator for the IM
-* :mod:`app.view_csv`    — ``(Major, Sub, Product Category)`` CSV exporter
-* :mod:`app.validation`  — ``pyshacl`` wrapper for shape validation
-* :mod:`app.routes`      — Flask ``create_app`` factory
+* :mod:`app.paths`       -- absolute filesystem paths (CWD-independent)
+* :mod:`app.namespaces`  -- RDF namespaces / common URIs
+* :mod:`app.labels`      -- ``rdfs:label`` / ``skos:prefLabel`` resolution
+* :mod:`app.graphs`      -- ``rdflib`` graph loader + lazy graph container
+* :mod:`app.properties`  -- per-class property / cardinality collector
+* :mod:`app.trees`       -- class-tree and view-tree builders + cycle detection
+* :mod:`app.im_cytoscape` -- Cytoscape.js elements generator for the IM
+* :mod:`app.view_csv`    -- ``(Major, Sub, Product Category)`` CSV exporter
+* :mod:`app.validation`  -- ``pyshacl`` wrapper for shape validation
+* :mod:`app.routes`      -- Flask ``create_app`` factory
 
-Importing :mod:`app` itself is intentionally cheap — nothing is pulled in
+Importing :mod:`app` itself is intentionally cheap -- nothing is pulled in
 eagerly here, so ``python -m app.view_csv`` runs the submodule as
 ``__main__`` rather than triggering a duplicate-import RuntimeWarning.
 

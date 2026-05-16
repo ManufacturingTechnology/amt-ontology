@@ -1,25 +1,9 @@
-// -- module-mode import: Mermaid ESM bundle ---------------------------
-import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
-window.__mermaid = mermaid;
-mermaid.initialize({
-  startOnLoad: false,
-  securityLevel: "strict",
-  theme: "base",
-  themeVariables: {
-    primaryColor: "#e0f2f7",
-    primaryTextColor: "#06596e",
-    primaryBorderColor: "#0e7a91",
-    lineColor: "#0e7a91",
-    secondaryColor: "#f5f5f5",
-    tertiaryColor: "#fafbfc",
-    fontFamily: "ui-sans-serif, system-ui, sans-serif",
-    fontSize: "18px"
-  },
-  flowchart: { useMaxWidth: false },
-  classDiagram: { useMaxWidth: false }
-});
+// -- main browser script: tab wiring, tree controls, Cytoscape kick. --
+//
+// The Mermaid renderer was retired together with the IM Detailed Diagram
+// sub-tab; Cytoscape.js (loaded as UMD globals via classic <script> tags
+// in the template) is now the sole IM diagram renderer.
 
-// -- main browser script (DOM wiring + tree controls + Mermaid kick) --
 (function () {
   "use strict";
 
@@ -70,7 +54,6 @@ mermaid.initialize({
       url.searchParams.set("tab", outer + "-" + btn.dataset.sub);
       history.replaceState(null, "", url);
 
-      if (btn.dataset.target === "sub-im-detail")      initMermaidOnce();
       if (btn.dataset.target === "sub-im-interactive") initCytoscapeOnce();
     });
   });
@@ -192,63 +175,17 @@ mermaid.initialize({
     setBadge(pair[0], countNodes(pair[1]) + " total nodes");
   });
 
-  /* -- IM Detail (Mermaid) -- */
-  let mermaidRendered = false;
-  function initMermaidOnce() {
-    if (mermaidRendered) return;
-    if (!window.__mermaid) { setTimeout(initMermaidOnce, 80); return; }
-    const node = document.getElementById("im-mermaid");
-    if (!node) return;
-    mermaidRendered = true;
-    setTimeout(function () {
-      window.__mermaid.run({ nodes: [node] }).catch(function (err) {
-        console.error("Mermaid render error", err);
-        node.textContent = "Mermaid render failed: " + err.message;
-        mermaidRendered = false;
-      });
-    }, 0);
-  }
-
-  /* -- Copy Mermaid source button -- */
-  const copyBtn = document.getElementById("im-mermaid-copy");
-  if (copyBtn) {
-    copyBtn.addEventListener("click", function () {
-      const dataEl = document.getElementById("im-mermaid-src");
-      const src = dataEl ? JSON.parse(dataEl.textContent) : "";
-      const done = function () {
-        const original = copyBtn.textContent;
-        copyBtn.textContent = "Copied";
-        setTimeout(function () { copyBtn.textContent = original; }, 1400);
-      };
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(src).then(done, fallbackCopy);
-      } else {
-        fallbackCopy();
-      }
-      function fallbackCopy() {
-        const ta = document.createElement("textarea");
-        ta.value = src;
-        ta.style.position = "fixed"; ta.style.opacity = "0";
-        document.body.appendChild(ta);
-        ta.select();
-        try { document.execCommand("copy"); done(); } catch (e) { /* swallow */ }
-        document.body.removeChild(ta);
-      }
-    });
-  }
-
-  // If we landed directly on a panel via deep-link, render it now.
+  // If we landed directly on the Interactive sub-tab via deep-link,
+  // render Cytoscape immediately.
   document.addEventListener("DOMContentLoaded", function () {
-    const detail = document.getElementById("sub-im-detail");
-    if (detail && detail.classList.contains("active")) initMermaidOnce();
     const interactive = document.getElementById("sub-im-interactive");
     if (interactive && interactive.classList.contains("active")) initCytoscapeOnce();
   });
 
   /* -- IM Interactive (Cytoscape.js) -- */
-  // Renders the same Information Model as the Mermaid tab, but as a
-  // movable graph: drag nodes, scroll to zoom, drag-background to pan.
-  // Node positions persist to localStorage across reloads.
+  //
+  // Drag nodes, scroll to zoom, drag-background to pan. Node positions
+  // and layout choice persist to localStorage across reloads.
 
   const LS_POSITIONS_KEY = "im-cy-positions-v1";
   const LS_LAYOUT_KEY    = "im-cy-layout-v1";
@@ -339,19 +276,11 @@ mermaid.initialize({
             "border-color": "#06596e"
           }
         },
-        {
-          selector: "node[kind = 'individual']",
-          style: { "shape": "round-tag", "border-color": "#7c2d12" }
-        },
-        {
-          selector: "node[kind = 'external']",
-          style: {
-            "background-color": "#e5e7eb",
-            "color": "#374151",
-            "border-style": "dashed",
-            "border-color": "#9ca3af"
-          }
-        },
+        { selector: "node[kind = 'individual']",
+          style: { "shape": "round-tag", "border-color": "#7c2d12" } },
+        { selector: "node[kind = 'external']",
+          style: { "background-color": "#e5e7eb", "color": "#374151",
+                   "border-style": "dashed", "border-color": "#9ca3af" } },
         {
           selector: "edge",
           style: {
@@ -372,27 +301,17 @@ mermaid.initialize({
             }
           }
         },
-        {
-          selector: "edge[kind = 'subClassOf']",
-          style: {
-            "target-arrow-shape": "triangle",
-            "target-arrow-fill": "hollow",
-            "line-color": "#374151",
-            "target-arrow-color": "#374151",
-            "label": "",
-            "width": 1.8
-          }
-        },
-        {
-          selector: "edge[kind = 'instanceOf']",
-          style: {
-            "target-arrow-shape": "triangle",
-            "target-arrow-fill": "hollow",
-            "line-style": "dashed",
-            "line-color": "#d97706",
-            "target-arrow-color": "#d97706"
-          }
-        }
+        { selector: "edge[kind = 'subClassOf']",
+          style: { "target-arrow-shape": "triangle", "target-arrow-fill": "hollow",
+                   "line-color": "#374151", "target-arrow-color": "#374151",
+                   "label": "", "width": 1.8 } },
+        { selector: "edge[kind = 'instanceOf']",
+          style: { "target-arrow-shape": "triangle", "target-arrow-fill": "hollow",
+                   "line-style": "dashed", "line-color": "#d97706",
+                   "target-arrow-color": "#d97706" } },
+        { selector: "edge[kind = 'assertion']",
+          style: { "line-color": "#d97706", "target-arrow-color": "#d97706",
+                   "target-arrow-shape": "triangle", "width": 1.8 } }
       ],
       wheelSensitivity: 0.2,
       minZoom: 0.2,
@@ -404,10 +323,7 @@ mermaid.initialize({
     const savedLayout  = localStorage.getItem(LS_LAYOUT_KEY) || "dagre";
     if (layoutSelect) layoutSelect.value = savedLayout;
 
-    function runLayout(name) {
-      const opts = layoutOptions(name);
-      cyInstance.layout(opts).run();
-    }
+    function runLayout(name) { cyInstance.layout(layoutOptions(name)).run(); }
 
     const savedPositions = loadPositions();
     if (savedPositions) {
