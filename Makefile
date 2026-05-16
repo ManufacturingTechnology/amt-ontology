@@ -7,7 +7,7 @@
 
 PY ?= python
 
-.PHONY: help install serve test shacl reasoner-check lint format dist dist-csv dist-owl dist-xlsx clean
+.PHONY: help install serve test shacl reasoner-check lint lint-fix format dist dist-csv dist-owl dist-xlsx clean
 
 help:                  ## list available targets
 	@grep -E '^[a-zA-Z_-]+:.*?##' $(MAKEFILE_LIST) | \
@@ -31,6 +31,10 @@ reasoner-check:        ## run only the owlready2 (HermiT/Pellet) reasoner tests
 lint:                  ## ruff check + format check
 	ruff check .
 	ruff format --check .
+
+lint-fix:              ## auto-fix lint + apply formatter (most issues, no manual edits)
+	ruff check --fix .
+	ruff format .
 
 format:                ## apply ruff formatter
 	ruff format .
