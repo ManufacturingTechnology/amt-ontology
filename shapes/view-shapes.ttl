@@ -5,6 +5,7 @@
 @prefix skos:     <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
 @prefix amtmeta:  <http://ontology.amt.org/meta#> .
+@prefix cmns-cls: <https://www.omg.org/spec/Commons/Classifiers/> .
 
 ##
 ## SHACL shapes for AMT user-view ontologies.
@@ -44,7 +45,7 @@ amtmeta:CollectionShape
 
 ##
 ## Every target of amtmeta:groups must resolve to a known kind of entity in
-## the union (view + source) graph. The three legitimate shapes are:
+## the union (view + source) graph. The four legitimate shapes are:
 ##
 ##   * another amtmeta:Collection in the view  (Sub Category branch)
 ##   * an amtmeta:Collection from the source ontology
@@ -52,6 +53,10 @@ amtmeta:CollectionShape
 ##     e.g. LaserTechnologyCollection)
 ##   * an owl:Class in the source ontology
 ##     (a leaf Product Category — e.g. pc:LacqueringSystem)
+##   * a cmns-cls:Classifier in the source ontology
+##     (a leaf Industry classifier — e.g. ind:Aerospace; added in
+##     v0.2.0 when Industry adopted the OMG Commons pattern, see
+##     im.ttl D32 / ind.ttl D1).
 ##
 ## Anything else (a dangling URI, a typo'd reference, a value that exists
 ## only as a string somewhere) trips this shape.
@@ -62,8 +67,9 @@ amtmeta:GroupsTargetShape
     sh:or (
         [ sh:class amtmeta:Collection ]
         [ sh:class owl:Class ]
+        [ sh:class cmns-cls:Classifier ]
     ) ;
-    sh:message "amtmeta:groups targets must be either amtmeta:Collection or owl:Class in the source ontology." .
+    sh:message "amtmeta:groups targets must be amtmeta:Collection, owl:Class, or cmns-cls:Classifier in the source ontology." .
 
 
 ##

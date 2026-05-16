@@ -2,6 +2,7 @@
 @prefix ind:      <http://ontology.amt.org/industries#> .
 @prefix im:       <http://ontology.amt.org/im#> .
 @prefix amtmeta:  <http://ontology.amt.org/meta#> .
+@prefix cmns-cls: <https://www.omg.org/spec/Commons/Classifiers/> .
 @prefix sh:       <http://www.w3.org/ns/shacl#> .
 @prefix owl:      <http://www.w3.org/2002/07/owl#> .
 @prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -16,21 +17,21 @@
                 <http://ontology.amt.org/im> ;
 
     dcterms:title    "View of Industries" ;
-    owl:versionInfo  "0.1.0" ;
-    owl:versionIRI   <http://ontology.amt.org/views/industries/0.1.0> ;
+    owl:versionInfo  "0.2.0" ;
+    owl:versionIRI   <http://ontology.amt.org/views/industries/0.2.0> ;
     amtmeta:viewOf   <http://ontology.amt.org/industries> ;
 
     amtmeta:status   amtmeta:Active ;
 
     amtmeta:relatedDocumentation <https://amtonline.sharepoint.com/sites/governance/Shared%20Documents/Taxonomy%20Change%20Process.docx> ;
 
-    amtmeta:releaseDate     "2026-05-13"^^xsd:date ;
-    amtmeta:scopeSummary    "Initial release — flat-collection view of industries (17 ind: Kinds grouped into one ind_view:Industries collection)." ;
+    amtmeta:releaseDate     "2026-05-16"^^xsd:date ;
+    amtmeta:scopeSummary    "v0.2.0 — SHACL path swapped from im:isClassifiedUnder to cmns-cls:isClassifiedBy (OMG Commons). Same 17 ind: Classifier individuals in a single flat collection; hierarchical evolution still future-proofed via amtmeta:groups+." ;
     amtmeta:releaseOwner    "Shaurabh" ;
     amtmeta:approvalStatus  amtmeta:Draft ;
-    amtmeta:gitTag          "v0.1.0" ;
-    amtmeta:githubRelease   <https://github.com/ManufacturingTechnology/amt-ontology/releases/tag/v0.1.0> ;
-    amtmeta:releaseNotes    <https://github.com/ManufacturingTechnology/amt-ontology/releases/tag/v0.1.0> .
+    amtmeta:gitTag          "v0.2.0" ;
+    amtmeta:githubRelease   <https://github.com/ManufacturingTechnology/amt-ontology/releases/tag/v0.2.0> ;
+    amtmeta:releaseNotes    <https://github.com/ManufacturingTechnology/amt-ontology/releases/tag/v0.2.0> .
 
 
 ################################################################################
@@ -66,11 +67,16 @@ ind_view:Industries a owl:NamedIndividual, amtmeta:Collection ;
 ################################################################################
 # SHACL constraints
 ################################################################################
-# Two-part composition (logical AND), mirroring visitor_view / exhibitor_view:
-#   (i)  view-scoped membership — value must be transitively reachable via
+# Two-part composition (logical AND), applied directly to the value of
+# cmns-cls:isClassifiedBy (im.ttl D32 / ind.ttl D1: Industry is modelled
+# as an OMG Commons ClassificationScheme; Companies link to Classifier
+# individuals via cmns-cls:isClassifiedBy — Commons' standard Thing →
+# Classifier property):
+#   (i)  bucket membership — value must be transitively reachable via
 #        amtmeta:groups+ from an ind_view bucket;
 #   (ii) catalog-grade — value must satisfy amtmeta:CatalogValueShape, i.e.
-#        carry skos:prefLabel.
+#        carry skos:prefLabel (entities without prefLabel are abstract
+#        scaffolding and not assertable as data values).
 # The amtmeta:groups+ traversal handles depth-1 (current flat structure) and
 # any future deeper hierarchies without modification.
 
@@ -78,16 +84,16 @@ ind_view:IndustryShape a sh:NodeShape ;
     rdfs:label "Company Industry Constraint" ;
     sh:targetClass im:Company ;
 
-    # (i) View-scoped membership
+    # (i) View-scoped bucket membership.
     sh:sparql [
         a sh:SPARQLConstraint ;
         sh:message "Industry '{?value}' is not in the industries view's allowed set." ;
         sh:select """
-            PREFIX im:      <http://ontology.amt.org/im#>
-            PREFIX amtmeta: <http://ontology.amt.org/meta#>
-            PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+            PREFIX cmns-cls: <https://www.omg.org/spec/Commons/Classifiers/>
+            PREFIX amtmeta:  <http://ontology.amt.org/meta#>
+            PREFIX rdfs:     <http://www.w3.org/2000/01/rdf-schema#>
             SELECT $this ?value WHERE {
-                $this im:belongsTo ?value .
+                $this cmns-cls:isClassifiedBy ?value .
                 FILTER NOT EXISTS {
                     ?bucket amtmeta:groups+ ?value ;
                             rdfs:isDefinedBy <http://ontology.amt.org/views/industries> .
@@ -96,9 +102,10 @@ ind_view:IndustryShape a sh:NodeShape ;
         """ ;
     ] ;
 
-    # (ii) Catalog-grade (delegated to amtmeta:CatalogValueShape)
+    # (ii) Catalog-grade — CatalogValueShape applied to the
+    # cmns-cls:isClassifiedBy value directly.
     sh:property [
-        sh:path im:belongsTo ;
+        sh:path cmns-cls:isClassifiedBy ;
         sh:node amtmeta:CatalogValueShape ;
     ] .
 
@@ -106,21 +113,46 @@ ind_view:IndustryShape a sh:NodeShape ;
 ################################################################################
 # RESOLVED DECISIONS
 ################################################################################
-# D1 - View targets im:Company (im:belongsTo's domain). As of v0.2.0, the
-#      shape enforces (collection membership) ∧ (catalog-grade) on values of
-#      im:belongsTo via composition: sh:sparql for the first, sh:property +
-#      sh:node for the second. All 17 industry Kinds in ind: carry
-#      skos:prefLabel, so the catalog-grade check is currently always
-#      satisfied for in-collection values; the check is retained for
-#      uniformity with visitor_view / exhibitor_view and as a guard against
-#      future abstract ind: classes lacking prefLabel.
-# D2 - Single flat Collection (ind_view:Industries) chosen for current scope
-#      (17 industries with no sub-grouping). The amtmeta:groups+ traversal
-#      future-proofs the shape for hierarchical buckets — see F1.
-# D3 - im:belongsTo's range is im:Industry (the IM-side role-mixin marker),
-#      not ind:Industry (the taxonomy's rigid Category root). The IM layer
-#      adds a relational perspective on top; ind:Industry remains the
-#      taxonomy root in ind.ttl. See im.ttl D17.
+# D1 - View targets im:Company (im:isClassifiedUnder's domain). Shape
+#      enforces (collection membership) ∧ (catalog-grade) on values via
+#      composition: sh:sparql for the first, sh:property + sh:node for
+#      the second. All 17 ind: leaves carry skos:prefLabel, so the
+#      catalog-grade check is always satisfied for in-collection values;
+#      retained for uniformity with visitor_view / exhibitor_view and as
+#      a guard against future abstract ind: classes lacking prefLabel.
+#      (D4 / D5 below trace the property the shape validates over time.)
+# D2 - Single flat Collection (ind_view:Industries) chosen for current
+#      scope (17 industries with no sub-grouping). The amtmeta:groups+
+#      traversal future-proofs the shape for hierarchical buckets — see
+#      F1.
+# D3 - im:belongsTo's range was im:Industry (the IM-side classifier
+#      class), not ind:Industry (the taxonomy root). Superseded by D5:
+#      im:belongsTo retired; im:isClassifiedUnder now points directly at
+#      ind:Industry leaves via OWL 2 punning (im.ttl D31).
+# D4 - SHACL was rewritten under im.ttl D30 to dereference Industry one
+#      hop further (through a materialized im:Industry aspect to its
+#      externallyDependsOn topic). Superseded by D5 — materialization
+#      dropped, dereferencing collapsed back to a single hop.
+# D5 - SHACL collapsed back to single-hop validation on the
+#      im:isClassifiedUnder value (im.ttl D31). The path
+#      ( im:belongsTo gufo:externallyDependsOn ) was replaced by
+#      im:isClassifiedUnder. Superseded by D6 — see below.
+# D6 - SHACL path swapped from im:isClassifiedUnder to
+#      cmns-cls:isClassifiedBy (im.ttl D32 / ind.ttl D1, v0.2.0).
+#      Industry is now an OMG Commons ClassificationScheme; the IM-side
+#      alias property im:isClassifiedUnder is retired. Companies link to
+#      ind: Classifier individuals via Commons' standard
+#      cmns-cls:isClassifiedBy property directly.
+#      Both halves of the shape updated:
+#        - sh:sparql validates ?value bound from $this
+#          cmns-cls:isClassifiedBy ?value;
+#        - sh:property uses sh:path cmns-cls:isClassifiedBy so
+#          CatalogValueShape validates the Classifier individual directly.
+#      Data-shape change: Company rows now reference ind: Classifier
+#      IRIs via cmns-cls:isClassifiedBy. Same IRIs as before (e.g.
+#      ind:Aerospace) — only the predicate name changes from
+#      im:isClassifiedUnder to cmns-cls:isClassifiedBy. No materialized
+#      aspect, no IM-side alias.
 #
 ################################################################################
 # OPEN FLAGS (for human review)

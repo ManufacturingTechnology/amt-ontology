@@ -45,7 +45,6 @@ Defaults to ``DIST_DIR``. Called by ``make dist-owl`` (and therefore
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
 import rdflib
@@ -64,6 +63,14 @@ MERGED_IRI = rdflib.URIRef("http://ontology.amt.org/amt-ontology")
 EXTERNAL_IMPORTS: tuple[rdflib.URIRef, ...] = (
     rdflib.URIRef("http://purl.org/nemo/gufo"),
     rdflib.URIRef("http://www.w3.org/ns/shacl"),
+    # OMG Commons (v0.2.0+) — Industry classification uses cmns-cls
+    # directly; cmns-col is transitively required (ClassificationScheme ⊑
+    # Arrangement); cmns-av carries Commons' own annotations. cmns-cds
+    # and cmns-dsg are deferred until NAICS code mapping lands —
+    # see ind.ttl D1.
+    rdflib.URIRef("https://www.omg.org/spec/Commons/Classifiers/"),
+    rdflib.URIRef("https://www.omg.org/spec/Commons/Collections/"),
+    rdflib.URIRef("https://www.omg.org/spec/Commons/AnnotationVocabulary/"),
 )
 
 # Anything under this URI prefix is considered an "AMT-internal" IRI and
@@ -92,6 +99,9 @@ def _bind_prefixes(g: rdflib.Graph) -> None:
     g.bind("ind", "http://ontology.amt.org/industries#", replace=True)
     g.bind("im", "http://ontology.amt.org/im#", replace=True)
     g.bind("gufo", "http://purl.org/nemo/gufo#", replace=True)
+    g.bind("cmns-cls", "https://www.omg.org/spec/Commons/Classifiers/", replace=True)
+    g.bind("cmns-col", "https://www.omg.org/spec/Commons/Collections/", replace=True)
+    g.bind("cmns-av", "https://www.omg.org/spec/Commons/AnnotationVocabulary/", replace=True)
     g.bind("skos", "http://www.w3.org/2004/02/skos/core#", replace=True)
     g.bind("dcterms", "http://purl.org/dc/terms/", replace=True)
 
@@ -228,7 +238,7 @@ def _cli(argv: list[str] | None = None) -> None:
     out_dir = Path(args.out_dir) if args.out_dir else DIST_DIR
     target = out_dir / args.filename
     written = merge_ontologies(target)
-    print(f"wrote {written}", file=sys.stderr)
+    print(f"wrote {written}", file=__import__("sys").stderr)
 
 
 if __name__ == "__main__":

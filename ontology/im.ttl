@@ -17,8 +17,8 @@
                 <http://purl.org/nemo/gufo> ;
 
     dcterms:title    "AMT/IMTS Information Model" ;
-    owl:versionInfo  "0.1.0" ;
-    owl:versionIRI   <http://ontology.amt.org/im/0.1.0> ;
+    owl:versionInfo  "0.2.0" ;
+    owl:versionIRI   <http://ontology.amt.org/im/0.2.0> ;
 
     amtmeta:status              amtmeta:Active ;
     amtmeta:taxonomyOwner       "Chris Downs" ;
@@ -44,13 +44,13 @@
 
     amtmeta:relatedDocumentation <https://amtonline.sharepoint.com/sites/governance/Shared%20Documents/Taxonomy%20Change%20Process.docx> ;
 
-    amtmeta:releaseDate     "2026-05-13"^^xsd:date ;
-    amtmeta:scopeSummary    "Initial release — AMT/IMTS information model with gUFO-aligned Kinds, Roles, and relational aspects (Registration, Lead, Organizing)." ;
+    amtmeta:releaseDate     "2026-05-16"^^xsd:date ;
+    amtmeta:scopeSummary    "v0.2.0 — Industry classification re-modeled via OMG Commons (cmns-cls:isClassifiedBy used directly; no IM-side alias). Retires im:isClassifiedUnder and the gufo:HigherOrderType + RoleMixin punning design. Interest / ProductCategory unchanged (still materialized ExtrinsicMode-Kinds)." ;
     amtmeta:releaseOwner    "Shaurabh" ;
     amtmeta:approvalStatus  amtmeta:Draft ;
-    amtmeta:gitTag          "v0.1.0" ;
-    amtmeta:githubRelease   <https://github.com/ManufacturingTechnology/amt-ontology/releases/tag/v0.1.0> ;
-    amtmeta:releaseNotes    <https://github.com/ManufacturingTechnology/amt-ontology/releases/tag/v0.1.0> ;
+    amtmeta:gitTag          "v0.2.0" ;
+    amtmeta:githubRelease   <https://github.com/ManufacturingTechnology/amt-ontology/releases/tag/v0.2.0> ;
+    amtmeta:releaseNotes    <https://github.com/ManufacturingTechnology/amt-ontology/releases/tag/v0.2.0> ;
 
     amtmeta:useCase
         "Encodes registration data captured at IMTS shows",
@@ -62,8 +62,12 @@
 # Kinds — substantial entities
 #-------------------------------------------------------------------------------
 
-im:Association a owl:Class, gufo:Kind ;
+im:Organization a owl:Class, gufo:Category ;
     rdfs:subClassOf gufo:FunctionalComplex ;
+    rdfs:label "Organization" .
+
+im:Association a owl:Class, gufo:Kind ;
+    rdfs:subClassOf im:Organization ;
     rdfs:label "Association" .
 
 im:Person a owl:Class, gufo:Kind ;
@@ -71,8 +75,16 @@ im:Person a owl:Class, gufo:Kind ;
     rdfs:label "Person" .
 
 im:Company a owl:Class, gufo:Kind ;
-    rdfs:subClassOf gufo:FunctionalComplex ;
+    rdfs:subClassOf im:Organization ;
     rdfs:label "Company" .
+
+im:Department a owl:Class, gufo:Kind ;
+    rdfs:subClassOf gufo:FunctionalComplex ;
+    rdfs:label "Department" .
+
+im:ExhibitionDepartment a owl:Class, gufo:SubKind ;
+    rdfs:subClassOf im:Department ;
+    rdfs:label "Exhibition Department" .
 
 #-------------------------------------------------------------------------------
 # Event type — IMTS shows
@@ -98,28 +110,44 @@ im:BoothStaff a owl:Class, gufo:Role ;
     rdfs:subClassOf im:Visitor ;
     rdfs:label "Booth Staff" .
 
-im:EventOrganizer a owl:Class, gufo:Role ;
-    rdfs:subClassOf im:Association ;
-    rdfs:label "Event Organizer" .
-
 #-------------------------------------------------------------------------------
 # Cross-ontology classifiers — Aspect Kinds and Category
 #-------------------------------------------------------------------------------
-# im:Interest and im:ProductCategory are gufo:Kind ⊑ gufo:ExtrinsicMode — their
-# instances are concrete extrinsic-mode aspects (a Person's interest in a
-# topic; a Company's offering of a category). Each aspect inheres in one
-# bearer (Person / Company) and externally depends on one pc: topic, with
-# cardinality enforced at the class level.
+# im:Interest and im:ProductCategory are gufo:Kind ⊑ gufo:ExtrinsicMode —
+# their instances are concrete extrinsic-mode aspects (a Person's interest
+# in a topic; a Company's offering of a category). Each aspect inheres in
+# one bearer (Person / Company) and externally depends on one pc: topic,
+# with cardinality enforced at the class level.
 #
-# im:Industry is gufo:Category — a rigid non-sortal categorial classification
-# of Company instances. Not an aspect: industry-membership is stable rather
-# than anti-rigid, so the inheresIn / externallyDependsOn cardinalities do
-# not apply. Industry uses OWL 2 punning at the data layer (ind: Kinds serve
-# as direct values of im:belongsTo).
+# Industry is handled in a separate paradigm. Starting at v0.2.0 (D32),
+# Industry classification uses the OMG Commons Classifiers pattern
+# directly: ind:Industry is a cmns-cls:ClassificationScheme, each ind:
+# leaf is a cmns-cls:Classifier individual, and Companies are linked via
+# cmns-cls:isClassifiedBy — no IM-side property. No materialized aspect.
+# This file therefore declares only Interest and ProductCategory as
+# cross-ontology classifier-Kinds; Industry has no IM-side declaration
+# beyond the documentary references below.
 #
-# Runtime value-space validity (for all three) is enforced by the composition
-# of view-side SHACL and amtmeta:CatalogValueShape — see D24 (supersedes D3,
-# D16, D17).
+# The asymmetry between paradigms (gUFO ExtrinsicMode for Interest /
+# ProductCategory, OMG Commons Classifier for Industry) reflects two
+# different jobs:
+#   - Interest/ProductCategory: per-classification aspect instance, because
+#     we want to attach per-classification metadata (which visitor /
+#     exhibitor, which pc: topic, lifecycle state).
+#   - Industry: standardized Classifier — descriptive classification with
+#     OMG/FIBO interoperability and a clean path to NAICS code mapping
+#     (cmns-cds, deferred until needed).
+#
+# Note on Aspect: cmns-cls:Classifier ⊑ cmns-cls:Aspect — a Commons
+# "characteristic or feature that dimensionalizes a set of things." This
+# is unrelated to gufo:Aspect (an Endurant Aspect — Mode / Quality /
+# Relator). The two coexist in different namespaces; the name overlap is
+# coincidental.
+#
+# Runtime value-space validity (for the two remaining IM classifiers) is
+# enforced by the composition of view-side SHACL and
+# amtmeta:CatalogValueShape — see D24 (supersedes D3, D16, D17), D30
+# (superseded by D31), D31 (superseded by D32), and D32.
 
 im:Interest a owl:Class, gufo:Kind ;
     rdfs:subClassOf  gufo:ExtrinsicMode ;
@@ -137,12 +165,10 @@ im:ProductCategory a owl:Class, gufo:Kind ;
     rdfs:seeAlso     <http://ontology.amt.org/views/exhibitor#ExhibitorOfferingShape>,
                      <http://ontology.amt.org/meta#CatalogValueShape> .
 
-im:Industry a owl:Class, gufo:Category ;
-    rdfs:label       "Industry" ;
-    rdfs:comment     "Category (gufo:Category) classifying Company instances by industry. Rigid non-sortal: a Company's industry is a stable categorial identity rather than an aspect that comes and goes (contrast with im:Interest / im:ProductCategory, which are ExtrinsicModes). In this model, Industry instances are NOT materialized as distinct individuals — ind: Kinds serve as direct values of im:belongsTo, treated via OWL 2 punning as proxies for the categorial classification. Runtime value-space defined by ind_view:IndustryShape (collection membership) plus amtmeta:CatalogValueShape." ;
-    amtmeta:scopedBy <http://ontology.amt.org/views/industries> ;
-    rdfs:seeAlso     <http://ontology.amt.org/views/industries#IndustryShape>,
-                     <http://ontology.amt.org/meta#CatalogValueShape> .
+# Note: there is intentionally no im:Industry classifier-Kind declaration
+# here. Industry classification moved to OMG Commons in v0.2.0 — see D32.
+# Companies use cmns-cls:isClassifiedBy directly to point at
+# cmns-cls:Classifier individuals defined in ind.ttl.
 
 #-------------------------------------------------------------------------------
 # Relational aspect Kinds — registrations, leads, organizing
@@ -176,8 +202,12 @@ im:Organizing a owl:Class, gufo:Kind ;
 # Named individuals
 #-------------------------------------------------------------------------------
 
-im:AMT a owl:NamedIndividual, im:Association, im:EventOrganizer ;
+im:AMT a owl:NamedIndividual, im:Association ;
     rdfs:label "AMT — The Association For Manufacturing Technology" .
+
+im:AMTExhibitionDepartment a owl:NamedIndividual, im:ExhibitionDepartment ;
+    gufo:isComponentOf im:AMT ;
+    rdfs:label "AMT Exhibition Department" .
 
 #-------------------------------------------------------------------------------
 # Datatype properties
@@ -290,18 +320,20 @@ im:leadCapturedBy a owl:ObjectProperty ;
 #-------------------------------------------------------------------------------
 # Object properties — Organizing (gufo:ExtrinsicMode anchoring)
 #-------------------------------------------------------------------------------
-# An Organizing is an ExtrinsicMode: it inheres in the EventOrganizer (its
-# bearer — AMT-as-organizer) and is manifested in the IMTS edition it brings
-# about. The organizing is asymmetric — the EventOrganizer performs it; IMTS
-# is the result, not a co-author. Parallels the Lead pattern exactly: one
+# An Organizing is an ExtrinsicMode: it inheres in an ExhibitionDepartment
+# (its bearer — the Exhibition Department of the organising Association,
+# e.g. AMT) and is manifested in the IMTS edition it brings about. The
+# organizing is asymmetric — the ExhibitionDepartment performs it; IMTS is
+# the result, not a co-author. Parallels the Lead pattern exactly: one
 # privileged Endurant bearer, one Event-side relatum, no symmetric mediation.
 # Replaces the older im:organizes direct-property mechanism — see D27
-# (supersedes D23, D25).
+# (supersedes D23, D25) and D28 (EventOrganizer Role replaced by
+# ExhibitionDepartment Department).
 
 im:organizedBy a owl:ObjectProperty ;
     rdfs:subPropertyOf gufo:inheresIn ;
     rdfs:domain im:Organizing ;
-    rdfs:range  im:EventOrganizer ;
+    rdfs:range  im:ExhibitionDepartment ;
     rdfs:label  "organized by" .
 
 im:organizesEvent a owl:ObjectProperty ;
@@ -313,15 +345,27 @@ im:organizesEvent a owl:ObjectProperty ;
 #-------------------------------------------------------------------------------
 # Object properties — Cross-ontology
 #-------------------------------------------------------------------------------
-# Ranges point at IM-side classifier classes:
-#   - im:hasInterest / im:hasProductCategory → ExtrinsicMode-Kinds whose
-#     instances are materialized aspect individuals (inhering in Person /
-#     Company, externally depending on a pc: topic).
-#   - im:belongsTo → im:Industry (a gufo:Category); values are ind: Kinds
-#     directly via OWL 2 punning.
+# Two IM-side cross-ontology properties, both pointing at materialized
+# ExtrinsicMode-Kind instances:
+#   - im:hasInterest        → im:Interest         (Record → aspect that
+#                                                  inheres in Person,
+#                                                  externally depends on pc:)
+#   - im:hasProductCategory → im:ProductCategory  (Record → aspect that
+#                                                  inheres in Company,
+#                                                  externally depends on pc:)
+#
+# Industry classification is NOT declared here. Per D32, Industry uses
+# OMG Commons directly: Companies are linked to ind:Industry classifiers
+# via cmns-cls:isClassifiedBy. The corresponding view-side SHACL
+# (ind_view:IndustryShape) targets im:Company and validates over
+# cmns-cls:isClassifiedBy directly — no IM-side property to declare.
+#
 # Actual value-space validity is enforced at runtime by SHACL composition
-# (view shape AND amtmeta:CatalogValueShape). View SHACL dereferences
-# materialized aspects via gufo:externallyDependsOn one hop further. See D24.
+# (view shape AND amtmeta:CatalogValueShape). View SHACL for Interest /
+# ProductCategory dereferences materialized aspects via
+# gufo:externallyDependsOn one hop further; the industries view SHACL
+# validates the cmns-cls:isClassifiedBy value directly. See D24, D30,
+# D31, and D32.
 
 im:hasInterest a owl:ObjectProperty ;
     rdfs:domain  im:VisitorRecord ;
@@ -335,11 +379,8 @@ im:hasProductCategory a owl:ObjectProperty ;
     rdfs:label   "has product category" ;
     rdfs:comment "Connects an ExhibitorRecord to a materialized im:ProductCategory instance (an ExtrinsicMode of the exhibiting Company, externally depending on a pc: topic). Value space and catalog-grade check defined by exhibitor_view:ExhibitorOfferingShape composed with amtmeta:CatalogValueShape, applied to the ProductCategory's gufo:externallyDependsOn topic." .
 
-im:belongsTo a owl:ObjectProperty ;
-    rdfs:domain  im:Company ;
-    rdfs:range   im:Industry ;
-    rdfs:label   "belongs to" ;
-    rdfs:comment "Connects a Company to its industry classification. Values are ind: Kinds, treated via OWL 2 punning as instances of im:Industry (a gufo:Category). The categorial classification is not materialized as a distinct individual — the ind: Kind stands in as a proxy. Value space and catalog-grade check defined by ind_view:IndustryShape composed with amtmeta:CatalogValueShape." .
+# (im:isClassifiedUnder retired in v0.2.0; Industry classification uses
+# cmns-cls:isClassifiedBy directly — see D32.)
 
 #-------------------------------------------------------------------------------
 # Object properties — Domain relations
@@ -364,7 +405,7 @@ im:staffsFor a owl:ObjectProperty ;
 # (Note: im:BoothStaff ⊑ im:Visitor by design, so they are NOT disjoint.)
 
 [] a owl:AllDisjointClasses ;
-   owl:members ( im:Person im:Company im:Association ) .
+   owl:members ( im:Person im:Company im:Association im:Department ) .
 
 im:VisitorRecord owl:disjointWith im:ExhibitorRecord .
 im:Registration  owl:disjointWith im:Lead .
@@ -384,6 +425,18 @@ im:Company rdfs:subClassOf
 # BoothStaff sub-role anchors to a specific Exhibitor
 im:BoothStaff rdfs:subClassOf
     [ a owl:Restriction ; owl:onProperty im:staffsFor ; owl:cardinality "1"^^xsd:nonNegativeInteger ] .
+
+# Department is a component of exactly one Organization — every department
+# (Exhibition or otherwise) is part of one parent organization. The parent
+# MUST be an im:Organization (Association OR Company); a Department cannot
+# be componentOf, say, a Person or another Department. Uses
+# owl:qualifiedCardinality to constrain both arity and range of
+# gufo:isComponentOf in a single restriction.
+im:Department rdfs:subClassOf
+    [ a owl:Restriction ;
+      owl:onProperty           gufo:isComponentOf ;
+      owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+      owl:onClass              im:Organization ] .
 
 # Registration identity (inherited by VisitorRecord and ExhibitorRecord)
 im:Registration rdfs:subClassOf
@@ -426,8 +479,8 @@ im:ProductCategory rdfs:subClassOf
     [ a owl:Restriction ; owl:onProperty gufo:externallyDependsOn ; owl:minCardinality "1"^^xsd:nonNegativeInteger ] .
 
 # Organizing: every Organizing instance inheres in exactly one
-# EventOrganizer (its bearer) and is manifested in exactly one IMTS edition
-# — see D27.
+# ExhibitionDepartment (its bearer) and is manifested in exactly one IMTS
+# edition — see D27, D28.
 im:Organizing rdfs:subClassOf
     [ a owl:Restriction ; owl:onProperty im:organizedBy        ; owl:cardinality "1"^^xsd:nonNegativeInteger ] ,
     [ a owl:Restriction ; owl:onProperty im:organizesEvent ; owl:cardinality "1"^^xsd:nonNegativeInteger ] .
@@ -601,6 +654,9 @@ im:Organizing rdfs:subClassOf
 #       dereference the materialized Interest / ProductCategory aspects via
 #       gufo:externallyDependsOn one hop further (industries view unchanged
 #       since Industry is not materialized).
+#       Industry portion superseded twice: by D31 (gufo:HigherOrderType +
+#       RoleMixin punning) and then by D32 (OMG Commons Classifier). The
+#       Interest / ProductCategory portion still holds.
 # D25 - Association ↔ IMTS structural relationship encoded via class-level
 #       cardinality on im:IMTS: every IMTS edition has exactly one organizer
 #       (inverse of im:organizes, cardinality 1). Combined with im:organizes'
@@ -675,6 +731,182 @@ im:Organizing rdfs:subClassOf
 #       consumes im: yet, so the API break of retiring im:organizes is free.
 #       Cleanest UFO and exactly parallel to how the Lead asymmetry was
 #       resolved.
+#       Note: im:EventOrganizer was retired in favour of im:ExhibitionDepartment
+#       (D28). The Organizing aspect now inheres in a Department instance
+#       directly rather than in an anti-rigid role played by the Association.
+# D28 - im:Department + im:ExhibitionDepartment introduced as parthood-of-
+#       Association, replacing the im:EventOrganizer Role from D27. Rationale:
+#       an Exhibition Department is a real organizational unit at AMT — it
+#       has staff, a budget, continuity that survives any specific show — so
+#       modelling it as a first-class entity (gufo:Kind ⊑ gufo:FunctionalComplex)
+#       with parthood is more domain-honest than treating AMT itself as an
+#       anti-rigid Event Organizer. im:Department is the Kind (identity
+#       supplier); im:ExhibitionDepartment is a gufo:SubKind specialising
+#       it — avoids the Kind-of-Kind UFO uniqueness trap (cf. D10/D21).
+#       The parthood constraint is *typed*: every Department must be
+#       gufo:isComponentOf exactly one im:Organization
+#       (owl:qualifiedCardinality 1, owl:onClass im:Organization). A bare
+#       cardinality-1 restriction would have permitted a Department to be
+#       componentOf any IRI; the qualified form rules that out. See D29 for
+#       the Organization Category that replaced the originally-narrower
+#       Association-only constraint.
+# D29 - im:Organization introduced as gufo:Category ⊑ gufo:FunctionalComplex,
+#       grouping im:Association and im:Company as its Kind sub-classes.
+#       Motivation: Departments exist in both Associations and Companies in
+#       practice (AMT has departments; a typical Company has departments).
+#       The originally-narrower Department restriction (onClass
+#       im:Association) was too strict — it forbade modelling, e.g., a
+#       Company's R&D Department.
+#       Implementation choices considered:
+#         (a) Inline owl:unionOf inside the Department restriction —
+#             im:Association ∪ im:Company. Single-site, no new class, but
+#             not reusable; future additions (GovernmentAgency, etc.)
+#             require editing every restriction that uses the union.
+#         (b) Named gufo:Category — im:Organization with Company /
+#             Association as sub-Kinds. Picked because Category is exactly
+#             the gUFO meta-class for "rigid non-sortal that groups
+#             multiple Kinds," mirrors im:Industry's role, and lets future
+#             Organization-typed properties reuse the concept cleanly.
+#       Disjointness (D18: Person ⟂ Company ⟂ Association ⟂ Department) is
+#       unaffected — Organization is a non-sortal Category over Company and
+#       Association, so its sub-Kinds remain pairwise disjoint.
+#       Changes: (a) added im:Department and im:ExhibitionDepartment to the
+#       Kinds section; (b) retired im:EventOrganizer; (c) repointed
+#       im:organizedBy from EventOrganizer to ExhibitionDepartment;
+#       (d) im:AMT typed as plain Association (dropped EventOrganizer);
+#       (e) added im:AMTExhibitionDepartment as a NamedIndividual with
+#       gufo:isComponentOf im:AMT; (f) extended D18's owl:AllDisjointClasses
+#       to include im:Department alongside Person/Company/Association.
+#       Trade-off: forfeits the role-anti-rigidity story of D27 (AMT could
+#       in principle stop being an organizer in the role model; in the
+#       department model, the department either exists or it doesn't, with
+#       no in-between). Acceptable because AMT's exhibition function is
+#       not anti-rigid in practice — it's a permanent structural unit.
+# D30 - im:Industry reclassified from gufo:Category to gufo:Kind ⊑
+#       gufo:ExtrinsicMode (supersedes D24's Industry treatment). Industry
+#       instances are now materialized as distinct individuals: each Industry
+#       inheres in one Company (via gufo:inheresIn) and externally depends on
+#       one ind: Kind (via gufo:externallyDependsOn). im:belongsTo points at
+#       the materialized Industry aspect; the ind: topic is reached via
+#       gufo:externallyDependsOn one hop further.
+#       Rationale: D24's original framing used gufo:Category on the grounds
+#       that industry-membership is stable rather than anti-rigid. While
+#       ontologically defensible, this produced an asymmetric pipeline —
+#       hasInterest and hasProductCategory dereferenced via property paths
+#       through gufo:externallyDependsOn, but belongsTo was a direct
+#       ind:-Kind assertion via OWL 2 punning. The asymmetry showed up
+#       downstream (artifact exporters, query templates, SHACL shapes) and
+#       prevented the IM from using gUFO's gufo:inheresIn /
+#       gufo:externallyDependsOn anchoring on the membership relation.
+#       D30 trades a small loss of ontological precision (modeling a stable
+#       categorial classification as an aspect) for a uniform structural
+#       treatment across all three classifiers. Class-level cardinality
+#       (gufo:inheresIn cardinality 1, gufo:externallyDependsOn
+#       minCardinality 1) brings the same constraints that govern Interest
+#       and ProductCategory.
+#       Data-shape consequence: Company rows now reference materialized
+#       Industry IRIs, not ind: Kinds directly. Pipelines must materialize
+#       Industry instances with gufo:inheresIn (Company) and
+#       gufo:externallyDependsOn (ind: Kind) at company-record creation
+#       time. ind_view:IndustryShape updated to dereference the materialized
+#       aspect via gufo:externallyDependsOn (parallels visitor_view D4 and
+#       its exhibitor-side equivalent). No im:belongsTo minCardinality is
+#       added on im:Company at this stage — leave it 0..* for now; tighten
+#       to minCardinality 1 if/when domain commits every Company to having
+#       at least one industry-membership.
+#       Superseded by D31 — materialization dropped; im:belongsTo retired
+#       in favor of im:isClassifiedUnder over direct rdf:type-style
+#       classification with ind:Industry punned as gufo:HigherOrderType.
+#       Further superseded by D32 — im:isClassifiedUnder itself retired
+#       in favor of the OMG Commons cmns-cls:isClassifiedBy property used
+#       directly.
+# D31 - im:Industry materialized aspect dropped (supersedes D30 entirely
+#       and the Industry portion of D24). New design:
+#         - ind:Industry (in ind.ttl) becomes gufo:HigherOrderType ⊑
+#           gufo:RoleMixin. Its instances (ind:Aerospace etc.) are
+#           first-order owl:Class entities that, by punning, are also
+#           NamedIndividual values usable as targets of an object property.
+#           Each leaf inherits gufo:RoleMixin meta-classification from
+#           ind:Industry's rdfs:subClassOf — see ind.ttl D1.
+#         - im:Industry (the IM-side materialized aspect class) is
+#           retired. No more inheresIn / externallyDependsOn cardinality
+#           on the aspect; no aspect to attach metadata to.
+#         - im:belongsTo retired; im:isClassifiedUnder introduced
+#           (rdfs:domain im:Company, rdfs:range ind:Industry). Connects a
+#           Company directly to its punned-Industry value. Semantically
+#           parallel to rdf:type on the class side; the property form
+#           exists for SHACL-path and SPARQL-query addressability.
+#       Rigidity rationale: a Company can add and discontinue industry
+#       memberships without losing Company-identity, which rules out
+#       gufo:Category (rigid). gufo:Mixin would commit to some Companies
+#       being necessarily Aerospace (semi-rigid); that's not the case
+#       here — every membership is contingent. gufo:RoleMixin
+#       (anti-rigid, non-sortal, externally dependent) is the principled
+#       fit. The pure-play vs diversified distinction (Boeing vs GE) is
+#       not modeled at the type level because AMT's use cases don't
+#       require it; if it ever does, the right answer is a Mixin
+#       sub-meta-type, not promoting the whole Industry layer.
+#       gufo property anchoring for im:isClassifiedUnder remains an open
+#       question — F7 below. gufo:categorizes (HigherOrderType → Type) is
+#       NOT a viable inverse because acmeCorp is an individual, not a
+#       Type; an inverseOf categorizes would force acmeCorp into
+#       gufo:Type and contradict gufo:Kind. The earlier
+#       owl:inverseOf gufo:categorizes was dropped for this reason.
+#       Data-shape consequence: any pipeline that previously emitted
+#       :acmeCorp im:belongsTo :acmeAerospaceMembership (with
+#       gufo:inheresIn / gufo:externallyDependsOn triples on the
+#       aspect) must now emit
+#       :acmeCorp im:isClassifiedUnder ind:Aerospace . (Optionally
+#       :acmeCorp a ind:Aerospace . if rdf:type style is also desired —
+#       the two are semantically equivalent; pick one for round-trip
+#       hygiene.)
+#       Superseded by D32 — both the IM-side alias property and the
+#       gufo:HigherOrderType punning are retired in favor of the OMG
+#       Commons Classifier pattern.
+# D32 - Industry classification re-modeled on OMG Commons (Classifiers +
+#       Collections), v0.2.0. Supersedes D24 (Industry portion), D30, and
+#       D31. Closes F7.
+#       New shape (full details in ind.ttl D1):
+#         - ind:Industry is owl:NamedIndividual + cmns-cls:ClassificationScheme.
+#         - Each ind: leaf is owl:NamedIndividual + cmns-cls:Classifier
+#           scoped via cmns-cls:isDefinedIn ind:Industry.
+#         - Companies link to classifier values via cmns-cls:isClassifiedBy
+#           directly. The earlier IM-side alias im:isClassifiedUnder is
+#           dropped — no AMT-specific property layer over the Commons one.
+#         - The schema-level ind:Industry gufo:categorizes im:Company
+#           triple (D31) is retired; the Commons Classifier pattern
+#           supersedes the need for type-level gufo:categorizes
+#           documentation.
+#       Rationale: Commons provides a level-correct, OMG-standardized,
+#       FIBO-aligned pattern for individual-to-classifier classification.
+#       The earlier gufo:HigherOrderType + RoleMixin punning (D31) worked
+#       but stretched OWL 2 DL, forced a gufo-anchor-less IM property
+#       (F7), and didn't align with industry-standard vocabularies. The
+#       earlier ExtrinsicMode-Kind materialization (D30) imposed
+#       materialization ceremony with no current metadata to attach
+#       (primary/secondary, pavilion-of-record, NAICS codes are all
+#       deferred — when they arrive they go on the Classifier individual
+#       or on parallel Commons schemes).
+#       Imports added to ind.ttl: cmns-cls, cmns-col, cmns-av. NAICS
+#       imports (cmns-cds, cmns-dsg) deferred until codes actually
+#       arrive — see ind.ttl D1.
+#       Anti-rigid / non-sortal / externally-dependent character that
+#       gufo:RoleMixin formerly carried is preserved as documentation
+#       text on ind:Industry's rdfs:comment, not as an OWL axiom.
+#       Two paradigms coexist: gUFO (Kind / Role / ExtrinsicMode) for
+#       IM-side ontological grades on Person / Company / Visitor /
+#       Interest / ProductCategory etc.; OMG Commons (Classifier) for
+#       Industry classification specifically. They're orthogonal —
+#       gUFO characterizes what *kind of thing* something is; Commons
+#       standardizes the *pattern* used for classification.
+#       Name-collision warning: cmns-cls:Aspect (Commons' parent of
+#       Classifier) and gufo:Aspect (UFO Endurant Aspect) are unrelated
+#       despite the shared term. Both are now imported transitively;
+#       readers should attend to the namespace prefix.
+#       Data-shape consequence: pipelines emit
+#       :acmeCorp cmns-cls:isClassifiedBy ind:Aerospace, ind:Automotive .
+#       directly. No materialized aspect, no IM-side alias, no rdf:type
+#       on the ind: leaf (leaves are individuals, not classes).
 #
 ################################################################################
 # OPEN FLAGS (for human review)
@@ -701,4 +933,11 @@ im:Organizing rdfs:subClassOf
 #       per-view shapes, or (b) splitting into per-consumer markers
 #       (im:VisitorIndustry, im:ExhibitorIndustry). Choose when the second
 #       view appears and its semantics are concrete.
+# F7  - CLOSED by D32. The gufo-anchor question for Industry
+#       classification is resolved by adopting OMG Commons: the property
+#       (cmns-cls:isClassifiedBy) is its own anchor, standardized at the
+#       individual-to-Classifier level. The earlier observation that
+#       rdf:type cannot be sub-propertied in OWL still holds — but with
+#       Commons, the question no longer applies because we're not trying
+#       to anchor an rdf:type-equivalent at all.
 ################################################################################

@@ -1,21 +1,23 @@
-@prefix ind:     <http://ontology.amt.org/industries#> .
-@prefix amtmeta: <http://ontology.amt.org/meta#> .
-@prefix gufo:    <http://purl.org/nemo/gufo#> .
-@prefix owl:     <http://www.w3.org/2002/07/owl#> .
-@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
-@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
-@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ind:      <http://ontology.amt.org/industries#> .
+@prefix amtmeta:  <http://ontology.amt.org/meta#> .
+@prefix cmns-cls: <https://www.omg.org/spec/Commons/Classifiers/> .
+@prefix owl:      <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos:     <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms:  <http://purl.org/dc/terms/> .
 
 <http://ontology.amt.org/industries>
     a owl:Ontology, amtmeta:Taxonomy ;
     owl:imports <http://ontology.amt.org/meta>,
-                <http://purl.org/nemo/gufo> ;
+                <https://www.omg.org/spec/Commons/Classifiers/>,
+                <https://www.omg.org/spec/Commons/Collections/>,
+                <https://www.omg.org/spec/Commons/AnnotationVocabulary/> ;
 
     dcterms:title    "Industry Classification Taxonomy" ;
-    owl:versionInfo  "0.1.0" ;
-    owl:versionIRI   <http://ontology.amt.org/industries/0.1.0> ;
+    owl:versionInfo  "0.2.0" ;
+    owl:versionIRI   <http://ontology.amt.org/industries/0.2.0> ;
 
     amtmeta:status              amtmeta:Active ;
     amtmeta:taxonomyOwner       "Chris Downs" ;
@@ -37,13 +39,13 @@
 
     amtmeta:relatedDocumentation <https://amtonline.sharepoint.com/sites/governance/Shared%20Documents/Taxonomy%20Change%20Process.docx> ;
 
-    amtmeta:releaseDate     "2026-05-13"^^xsd:date ;
-    amtmeta:scopeSummary    "Initial release — industry classification taxonomy (17 industry Kinds under a single Category root)." ;
+    amtmeta:releaseDate     "2026-05-16"^^xsd:date ;
+    amtmeta:scopeSummary    "v0.2.0 -- re-modeled on OMG Commons (Classifiers, Collections). ind:Industry is a cmns-cls:ClassificationScheme; each of the 17 leaves is a cmns-cls:Classifier individual. Companies are linked via cmns-cls:isClassifiedBy. Replaces the v0.1.0 gufo:HigherOrderType + gufo:RoleMixin punning design." ;
     amtmeta:releaseOwner    "Shaurabh" ;
     amtmeta:approvalStatus  amtmeta:Draft ;
-    amtmeta:gitTag          "v0.1.0" ;
-    amtmeta:githubRelease   <https://github.com/ManufacturingTechnology/amt-ontology/releases/tag/v0.1.0> ;
-    amtmeta:releaseNotes    <https://github.com/ManufacturingTechnology/amt-ontology/releases/tag/v0.1.0> ;
+    amtmeta:gitTag          "v0.2.0" ;
+    amtmeta:githubRelease   <https://github.com/ManufacturingTechnology/amt-ontology/releases/tag/v0.2.0> ;
+    amtmeta:releaseNotes    <https://github.com/ManufacturingTechnology/amt-ontology/releases/tag/v0.2.0> ;
 
     amtmeta:useCase
         "Marketing uses this for targeted marketing",
@@ -53,99 +55,101 @@
         "IMTS uses this in post-show reports" .
 
 #-------------------------------------------------------------------------------
-# Top-level Category
+# Industry -- Classification Scheme (OMG Commons)
 #-------------------------------------------------------------------------------
 
-ind:Industry a owl:Class, gufo:Category ;
-    rdfs:subClassOf gufo:FunctionalComplex ;
-    rdfs:label "Industry" .
+ind:Industry a owl:NamedIndividual, cmns-cls:ClassificationScheme ;
+    rdfs:label          "Industry Classification Scheme" ;
+    skos:prefLabel      "Industry" ;
+    cmns-cls:isExclusive "false"^^xsd:boolean ;
+    rdfs:comment        "Classification scheme grouping the 17 AMT industries." .
 
 #-------------------------------------------------------------------------------
-# 17 Industry Kinds (one per * line)
+# 17 Industry classifiers
 #-------------------------------------------------------------------------------
 
-ind:AdditiveMachinery a owl:Class, gufo:Kind ;
-    rdfs:subClassOf ind:Industry ;
+ind:AdditiveMachinery a owl:NamedIndividual, cmns-cls:Classifier ;
+    cmns-cls:isDefinedIn ind:Industry ;
     rdfs:label     "Additive Machinery & Equipment" ;
     skos:prefLabel "Additive Machinery & Equipment" .
 
-ind:Aerospace a owl:Class, gufo:Kind ;
-    rdfs:subClassOf ind:Industry ;
+ind:Aerospace a owl:NamedIndividual, cmns-cls:Classifier ;
+    cmns-cls:isDefinedIn ind:Industry ;
     rdfs:label     "Aerospace" ;
     skos:prefLabel "Aerospace-Aircraft Space and Missiles" .
 
-ind:AgricultureConstructionOffRoad a owl:Class, gufo:Kind ;
-    rdfs:subClassOf ind:Industry ;
+ind:AgricultureConstructionOffRoad a owl:NamedIndividual, cmns-cls:Classifier ;
+    cmns-cls:isDefinedIn ind:Industry ;
     rdfs:label     "Agriculture/Construction/Off-Road" ;
     skos:prefLabel "Agriculture/Construction/Off-Road" .
 
-ind:AutomationEquipmentServices a owl:Class, gufo:Kind ;
-    rdfs:subClassOf ind:Industry ;
+ind:AutomationEquipmentServices a owl:NamedIndividual, cmns-cls:Classifier ;
+    cmns-cls:isDefinedIn ind:Industry ;
     rdfs:label     "Automation Equipment & Services" ;
     skos:prefLabel "Automation Equipment & Services" .
 
-ind:Automotive a owl:Class, gufo:Kind ;
-    rdfs:subClassOf ind:Industry ;
+ind:Automotive a owl:NamedIndividual, cmns-cls:Classifier ;
+    cmns-cls:isDefinedIn ind:Industry ;
     rdfs:label     "Automotive/Transportation" ;
     skos:prefLabel "Automotive/Transportation" .
 
-ind:ComputersElectronicsControls a owl:Class, gufo:Kind ;
-    rdfs:subClassOf ind:Industry ;
+ind:ComputersElectronicsControls a owl:NamedIndividual, cmns-cls:Classifier ;
+    cmns-cls:isDefinedIn ind:Industry ;
     rdfs:label     "Computers, Electronics & Industrial Controls" ;
     skos:prefLabel "Computers Electronics & Industrial Controls" .
 
-ind:ConsumerProducts a owl:Class, gufo:Kind ;
-    rdfs:subClassOf ind:Industry ;
+ind:ConsumerProducts a owl:NamedIndividual, cmns-cls:Classifier ;
+    cmns-cls:isDefinedIn ind:Industry ;
     rdfs:label     "Consumer Products/Appliances" ;
     skos:prefLabel "Consumer Products/Appliances" .
 
-ind:Defense a owl:Class, gufo:Kind ;
-    rdfs:subClassOf ind:Industry ;
+ind:Defense a owl:NamedIndividual, cmns-cls:Classifier ;
+    cmns-cls:isDefinedIn ind:Industry ;
     rdfs:label     "Defense/Military/Government" ;
     skos:prefLabel "Defense/Military/Government" .
 
-ind:Distribution a owl:Class, gufo:Kind ;
-    rdfs:subClassOf ind:Industry ;
+ind:Distribution a owl:NamedIndividual, cmns-cls:Classifier ;
+    cmns-cls:isDefinedIn ind:Industry ;
     rdfs:label     "Distribution" ;
     skos:prefLabel "Distribution" .
 
-ind:Education a owl:Class, gufo:Kind ;
-    rdfs:subClassOf ind:Industry ;
+ind:Education a owl:NamedIndividual, cmns-cls:Classifier ;
+    cmns-cls:isDefinedIn ind:Industry ;
     rdfs:label     "Education" ;
     skos:prefLabel "Educators, Students, School Administrators" .
 
-ind:EnergyEquipment a owl:Class, gufo:Kind ;
-    rdfs:subClassOf ind:Industry ;
+ind:EnergyEquipment a owl:NamedIndividual, cmns-cls:Classifier ;
+    cmns-cls:isDefinedIn ind:Industry ;
     rdfs:label     "Energy Exploration & Power Generation Equipment" ;
     skos:prefLabel "Energy Exploration & Power Generation Equipment" .
 
-ind:IndustrialMachinery a owl:Class, gufo:Kind ;
-    rdfs:subClassOf ind:Industry ;
+ind:IndustrialMachinery a owl:NamedIndividual, cmns-cls:Classifier ;
+    cmns-cls:isDefinedIn ind:Industry ;
     rdfs:label     "Industrial Machinery" ;
     skos:prefLabel "Industrial Machinery (Assembly Textile Food Processing and Material Handling Equipment)" .
 
-ind:MachineShops a owl:Class, gufo:Kind ;
-    rdfs:subClassOf ind:Industry ;
+ind:MachineShops a owl:NamedIndividual, cmns-cls:Classifier ;
+    cmns-cls:isDefinedIn ind:Industry ;
     rdfs:label     "Machine Shops/Contract Manufacturers" ;
     skos:prefLabel "Machine Shops/Contract Manufacturers" .
 
-ind:MedicalDental a owl:Class, gufo:Kind ;
-    rdfs:subClassOf ind:Industry ;
+ind:MedicalDental a owl:NamedIndividual, cmns-cls:Classifier ;
+    cmns-cls:isDefinedIn ind:Industry ;
     rdfs:label     "Medical/Dental" ;
     skos:prefLabel "Medical/Dental" .
 
-ind:MetalworkingMachinery a owl:Class, gufo:Kind ;
-    rdfs:subClassOf ind:Industry ;
+ind:MetalworkingMachinery a owl:NamedIndividual, cmns-cls:Classifier ;
+    cmns-cls:isDefinedIn ind:Industry ;
     rdfs:label     "Metalworking Machinery & Equipment" ;
     skos:prefLabel "Metalworking Machinery & Equipment (includes Metal Cutting & Fabrication)" .
 
-ind:SoftwareIndustry a owl:Class, gufo:Kind ;
-    rdfs:subClassOf ind:Industry ;
+ind:SoftwareIndustry a owl:NamedIndividual, cmns-cls:Classifier ;
+    cmns-cls:isDefinedIn ind:Industry ;
     rdfs:label     "Software Industry" ;
     skos:prefLabel "Software" .
 
-ind:FinancialServices a owl:Class, gufo:Kind ;
-    rdfs:subClassOf ind:Industry ;
+ind:FinancialServices a owl:NamedIndividual, cmns-cls:Classifier ;
+    cmns-cls:isDefinedIn ind:Industry ;
     rdfs:label     "Financial Services" ;
     skos:prefLabel "Venture Capital, Banking, Finance, Consulting" .
 
@@ -156,20 +160,3 @@ ind:FinancialServices a owl:Class, gufo:Kind ;
 ind:OtherCollection a owl:NamedIndividual, amtmeta:Collection ;
     rdfs:label     "Other (catalog residual)" ;
     skos:prefLabel "Other" .
-
-################################################################################
-# RESOLVED DECISIONS
-################################################################################
-# (none for v0.1.0 — straightforward generation)
-#
-################################################################################
-# OPEN FLAGS (for human review)
-################################################################################
-# F1 - "Computers Electronics & Industrial Controls" defaulted to single Kind
-#      under R2; may split into 3 Collections later
-# F2 - "Agriculture/Construction/Off-Road" defaulted to single Kind under R2
-# F3 - "Automation Equipment & Services" mixes equipment and services in one
-#      industry label
-# F4 - "Venture Capital, Banking, Finance, Consulting" defaulted to single Kind
-#      under R2
-################################################################################

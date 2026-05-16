@@ -6,7 +6,6 @@
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
-@prefix dcterms: <http://purl.org/dc/terms/> .
 
 <http://ontology.amt.org/meta>
     a owl:Ontology ;
@@ -16,7 +15,7 @@
     owl:versionIRI   <http://ontology.amt.org/meta/0.1.0> ;
 
     amtmeta:releaseDate     "2026-05-13"^^xsd:date ;
-    amtmeta:scopeSummary    "Initial release — governance vocabulary, status individuals, release-log properties, catalog-value SHACL shape." ;
+    amtmeta:scopeSummary    "Initial release -- governance vocabulary, status individuals, release-log properties, catalog-value SHACL shape." ;
     amtmeta:releaseOwner    "Shaurabh" ;
     amtmeta:approvalStatus  amtmeta:Draft ;
     amtmeta:gitTag          "v0.1.0" ;

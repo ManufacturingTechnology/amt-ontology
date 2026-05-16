@@ -4,22 +4,24 @@ app.trees
 Tree builders for the browser's tabs, plus the structural helpers the test
 suite uses to validate the view files.
 
-Two distinct tree shapes are produced:
+Three distinct tree shapes are produced:
 
-* **Class trees** (Core / Industries / Information Model tabs) — walk
-  ``rdfs:subClassOf`` from the root ``owl:Class`` declarations downward.
-  See :func:`build_class_tree`.
+* **Class trees** (Product Categories Core / Information Model Core tabs)
+  -- walk ``rdfs:subClassOf`` from the root ``owl:Class`` declarations
+  downward. See :func:`build_class_tree`.
 
-* **View trees** (Exhibitor / Visitor / Industries View tabs) — walk
+* **Classifier trees** (Industries Core tab) -- walk
+  ``cmns-cls:Classifier`` named individuals grouped under their
+  ``cmns-cls:ClassificationScheme`` via ``cmns-cls:isDefinedIn``. This
+  is the OMG Commons pattern adopted by ``ind.ttl`` v0.2.0 (replacing
+  the previous owl:Class / rdfs:subClassOf design). See
+  :func:`build_classifier_tree`.
+
+* **View trees** (Exhibitor / Visitor / Industries View tabs) -- walk
   ``amtmeta:Collection`` named individuals connected by ``amtmeta:groups``.
   A node with an ``skos:prefLabel`` (in either the source or the view graph)
-  is treated as a leaf — its grouped children are *not* expanded. See
+  is treated as a leaf -- its grouped children are *not* expanded. See
   :func:`build_view_tree`.
-
-The structural helpers (:func:`find_collections`,
-:func:`find_top_level_collections`, :func:`has_cycle`) are exported so the
-test suite can validate the view files against the same definitions the
-browser uses, instead of re-implementing them.
 """
 
 from __future__ import annotations
@@ -37,12 +39,7 @@ from .properties import collect_class_properties
 
 
 def find_root_classes(graph: rdflib.Graph) -> list[rdflib.URIRef]:
-    """Return URI classes with no class-typed parent in the same graph.
-
-    Anything either explicitly typed ``owl:Class`` or appearing as a subject
-    of ``rdfs:subClassOf`` counts as a class. ``owl:Thing`` is excluded so
-    that direct subclasses of Thing are themselves roots.
-    """
+    """Return URI classes with no class-typed parent in the same graph."""
     classes: set[rdflib.URIRef] = set()
     for s in graph.subjects(RDF.type, OWL.Class):
         if isinstance(s, rdflib.URIRef) and s != OWL.Thing:
@@ -63,18 +60,10 @@ def find_root_classes(graph: rdflib.Graph) -> list[rdflib.URIRef]:
     )
 
 
-def _build_class_subtree(
-    graph: rdflib.Graph,
-    cls: rdflib.URIRef,
-    visited: set,
-    *,
-    with_properties: bool,
-) -> dict | None:
-    """Depth-first traversal helper for :func:`build_class_tree`."""
+def _build_class_subtree(graph, cls, visited, *, with_properties):
     if cls in visited:
         return None
     visited.add(cls)
-
     children_uris = sorted(
         [
             s
@@ -90,8 +79,7 @@ def _build_class_subtree(
         is not None
     ]
     children.sort(key=lambda n: (0 if n["children"] else 1, n["label"].lower()))
-
-    node: dict = {
+    node = {
         "label": get_label(graph, cls),
         "iri": str(cls),
         "equiv_iris": [],
@@ -108,15 +96,7 @@ def build_class_tree(
     *,
     with_properties: bool = False,
 ) -> dict | None:
-    """Build a virtual-root tree covering every root class in *graph*.
-
-    Returns a dict shaped for the Jinja template renderer, or ``None`` when
-    the graph is empty / contains no URI classes.
-
-    ``with_properties=True`` attaches a ``properties`` list to each node via
-    :func:`app.properties.collect_class_properties`; used only by the
-    Information Model tab.
-    """
+    """Build a virtual-root tree covering every root class in *graph*."""
     if len(graph) == 0:
         return None
     visited: set = set()
@@ -147,11 +127,7 @@ def find_collections(graph: rdflib.Graph) -> set[rdflib.URIRef]:
 
 
 def find_top_level_collections(graph: rdflib.Graph) -> list[rdflib.URIRef]:
-    """Collections that are *not* the object of any ``amtmeta:groups`` edge.
-
-    These are the Major (top-level) categories of a view. The result is
-    sorted by ``rdfs:label`` for stable display.
-    """
+    """Collections that are NOT the object of any ``amtmeta:groups`` edge."""
     collections = find_collections(graph)
     grouped = {
         o for _, _, o in graph.triples((None, AMTMETA_GROUPS, None)) if isinstance(o, rdflib.URIRef)
@@ -163,12 +139,7 @@ def find_top_level_collections(graph: rdflib.Graph) -> list[rdflib.URIRef]:
 
 
 def has_cycle(graph: rdflib.Graph) -> tuple[bool, list]:
-    """Detect a cycle in the Collection-grouping DAG using DFS colouring.
-
-    Only edges whose target is itself a Collection in *graph* are followed
-    (class leaves are inherently acyclic). Returns ``(found, path)`` where
-    *path* is the cycle excerpt — empty when no cycle exists.
-    """
+    """Detect a cycle in the Collection-grouping DAG using DFS colouring."""
     WHITE, GREY, BLACK = 0, 1, 2
     color: dict = {c: WHITE for c in find_collections(graph)}
     parent: dict = {}
@@ -201,26 +172,11 @@ def has_cycle(graph: rdflib.Graph) -> tuple[bool, list]:
     return False, []
 
 
-def _build_view_subtree(
-    view_graph: rdflib.Graph,
-    source_graph: rdflib.Graph,
-    node: rdflib.URIRef,
-    visited: frozenset,
-) -> dict | None:
-    """Depth-first traversal helper for :func:`build_view_tree`.
-
-    Leaf rule: if *node* carries an ``skos:prefLabel`` in *either* graph it is
-    rendered as a leaf — its ``amtmeta:groups`` children (if any) are not
-    expanded. Otherwise the node's grouped children are recursed into and
-    rendered as a subtree.
-    """
+def _build_view_subtree(view_graph, source_graph, node, visited):
     if node in visited:
         return None
     visited = visited | {node}
-
     label = view_label(view_graph, source_graph, node)
-
-    # prefLabel anywhere → leaf, no recursion.
     if has_pref_label(source_graph, node) or has_pref_label(view_graph, node):
         return {
             "label": label,
@@ -228,7 +184,6 @@ def _build_view_subtree(
             "equiv_iris": [str(node)],
             "children": [],
         }
-
     target_uris = list(view_graph.objects(node, AMTMETA_GROUPS))
     target_uris += list(source_graph.objects(node, AMTMETA_GROUPS))
     unique_uris = sorted(
@@ -254,13 +209,7 @@ def build_view_tree(
     source_graph: rdflib.Graph,
     root_label: str = "View Root",
 ) -> dict | None:
-    """Build a tree of top-level Collections and their nested groups.
-
-    *source_graph* is the ontology this view is a view of (e.g. ``pc`` for
-    the exhibitor/visitor views, ``ind`` for the industries view). It
-    supplies the ``skos:prefLabel`` / ``rdfs:label`` fallbacks used to
-    render leaves.
-    """
+    """Build a tree of top-level Collections and their nested groups."""
     if len(view_graph) == 0:
         return None
     visited: frozenset = frozenset()
@@ -271,6 +220,81 @@ def build_view_tree(
     ]
     if not children:
         return None
+    return {
+        "label": root_label,
+        "iri": "",
+        "equiv_iris": [],
+        "children": children,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Classifier-tree helpers (OMG Commons cmns-cls pattern)
+# ---------------------------------------------------------------------------
+#
+# ind.ttl v0.2.0 represents the industry taxonomy as a flat list of
+# cmns-cls:Classifier named individuals, each scoped into a single
+# cmns-cls:ClassificationScheme (ind:Industry) via cmns-cls:isDefinedIn.
+# No owl:Class / rdfs:subClassOf is used. This builder walks that pattern
+# and emits a tree shaped the same as build_class_tree so the Jinja
+# render_class_node macro renders it without modification.
+
+CMNS_CLS_NS = rdflib.Namespace("https://www.omg.org/spec/Commons/Classifiers/")
+CMNS_CLS_CLASSIFICATION_SCHEME = CMNS_CLS_NS.ClassificationScheme
+CMNS_CLS_CLASSIFIER = CMNS_CLS_NS.Classifier
+CMNS_CLS_IS_DEFINED_IN = CMNS_CLS_NS.isDefinedIn
+
+
+def _classifier_children(graph: rdflib.Graph, scheme: rdflib.URIRef) -> list[rdflib.URIRef]:
+    """Return Classifier individuals scoped into *scheme* via isDefinedIn."""
+    return sorted(
+        [
+            c
+            for c in graph.subjects(CMNS_CLS_IS_DEFINED_IN, scheme)
+            if isinstance(c, rdflib.URIRef) and (c, RDF.type, CMNS_CLS_CLASSIFIER) in graph
+        ],
+        key=lambda c: get_label(graph, c).lower(),
+    )
+
+
+def build_classifier_tree(
+    graph: rdflib.Graph,
+    root_label: str = "Root",
+) -> dict | None:
+    """Build a tree of cmns-cls:ClassificationScheme roots plus the
+    cmns-cls:Classifier individuals scoped into each.
+    """
+    if len(graph) == 0:
+        return None
+    schemes = sorted(
+        (
+            s
+            for s in graph.subjects(RDF.type, CMNS_CLS_CLASSIFICATION_SCHEME)
+            if isinstance(s, rdflib.URIRef)
+        ),
+        key=lambda s: get_label(graph, s).lower(),
+    )
+    if not schemes:
+        return None
+    children: list[dict] = []
+    for scheme in schemes:
+        leaves = [
+            {
+                "label": get_label(graph, c),
+                "iri": str(c),
+                "equiv_iris": [],
+                "children": [],
+            }
+            for c in _classifier_children(graph, scheme)
+        ]
+        children.append(
+            {
+                "label": get_label(graph, scheme),
+                "iri": str(scheme),
+                "equiv_iris": [],
+                "children": leaves,
+            }
+        )
     return {
         "label": root_label,
         "iri": "",
